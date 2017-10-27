@@ -15,5 +15,5 @@ keymap M PREV_LINK
 keymap r RELOAD
 keymap R REINIT
 keymap ESC-r VERSION
-keymap . SAVE_LINK
 keymap v NEXT_PAGE
+keymap . EXTERN_LINK "wget --no-check-certificate --restrict-file-names=nocontrol --trust-server-names --content-disposition %s"

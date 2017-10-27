@@ -30,7 +30,7 @@ ssl_ca_path /etc/ssl/certs
 ssl_key_file 
 ssl_cert_file 
 ssl_verify_server 1
-ssl_forbid_method 
+ssl_forbid_method
 no_cache 0
 noproxy_netaddr 0
 no_proxy 
@@ -85,14 +85,14 @@ history 100
 use_history 1
 pagerline 10000
 visited_color magenta
-visited_anchor 0
-active_color cyan
-active_style 0
+visited_anchor 1
+active_color red
+active_style 1
 bg_color terminal
 mark_color cyan
-form_color red
+form_color yellow
 image_color green
-anchor_color blue
+anchor_color cyan
 basic_color terminal
 color 1
 nextpage_topline 0

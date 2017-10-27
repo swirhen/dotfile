@@ -57,6 +57,7 @@ setopt noautoremoveslash
 setopt nolistbeep
 
 setopt nocheckjobs
+setopt HIST_IGNORE_SPACE
 
 function chpwd() { ls }
 
@@ -166,6 +167,7 @@ alias mov='cd /data/share/movie'
 alias shr='cd /data/share'
 alias s0r='find . -type f -size 0 | perl -nle unlink'
 alias sr='screen -dRR'
+alias tm='if [ "`tmux ls`" != "" ]; then tmux a; else tmux new-session \; source-file ~/.tmux.startup; fi'
 alias sd='screen -d'
 alias isrv='/home/swirhen/sh/ircservice.sh'
 alias tig='/home/swirhen/sh/tigkw.sh'
@@ -179,6 +181,8 @@ alias fum='/home/swirhen/sh/uftpmount.sh'
 alias mnu='/data/share/movie/sh/mnu.sh'
 alias mnu2='/data/share/movie/sh/mnu2.sh'
 alias mmpc='/data/share/movie/sh/mmpc.sh'
+alias mmpc2='/data/share/movie/sh/mmpc2.sh'
+alias mmpc3='/data/share/movie/sh/mmpc3.sh'
 alias mbmpc='/data/share/movie/sh/mbmpc.sh'
 alias msmpc='/data/share/movie/sh/msmpc.sh'
 alias mpc98='/data/share/movie/sh/mpc98.sh'
@@ -194,23 +198,24 @@ alias 1692='/data/share/movie/sh/169mp42.sh'
 alias 1693='/data/share/movie/sh/169mp43.sh'
 alias 169f='/data/share/movie/sh/169f.sh'
 alias ae='/data/share/movie/sh/169f.sh'
-alias aeo='/data/share/movie/sh/169fo.sh'
 alias 169f2='/data/share/movie/sh/169f2.sh'
 alias ae2='/data/share/movie/sh/169f2.sh'
 alias 43f='/data/share/movie/sh/43f.sh'
 alias 43='/data/share/movie/sh/43mp4.sh'
-alias 432='/data/share/movie/sh/43mp42.sh'
-alias cq='/data/share/movie/sh/cqmp4.sh'
 alias menc='/data/share/movie/sh/menc.sh'
 alias mkr='/data/share/movie/mkvremarge.sh'
+alias aqr='/data/share/movie/sh/agqrrelease.sh'
+alias aqr2='/data/share/movie/sh/agqrrelease2.sh'
 alias ffm='/usr/bin/wine ffmpeg.exe'
+alias ffm3='/usr/bin/wine ffmpeg3.exe'
 alias m4b='/usr/bin/wine MP4Box.exe'
 alias takc='/usr/bin/wine /home/swirhen/takc.exe'
-alias tdl='/data/share/movie/sh/tdlstop.sh 38888 &;aria2c --listen-port=38888 --max-upload-limit=200K --seed-ratio=0.01 --seed-time=1 *.torrent'
-alias tdl2='/data/share/movie/sh/tdlstop.sh 38889 &;aria2c --listen-port=38889 --max-upload-limit=200K --seed-ratio=0.01 --seed-time=1 *.torrent'
-alias tdl3='/data/share/movie/sh/tdlstop.sh 38890 &;aria2c --listen-port=38890 --max-upload-limit=200K --seed-ratio=0.01 --seed-time=1 *.torrent'
-alias tdl4='/data/share/movie/sh/tdlstop.sh 38891 &;aria2c --listen-port=38891 --max-upload-limit=200K --seed-ratio=0.01 --seed-time=1 *.torrent'
-alias tdl5='/data/share/movie/sh/tdlstop.sh 38892 &;aria2c --listen-port=38892 --max-upload-limit=200K --seed-ratio=0.01 --seed-time=1 *.torrent'
+alias tdl='/data/share/movie/sh/tdlstop.sh 38888 &;/usr/bin/wine aria2c.exe --listen-port=38888 --max-upload-limit=200K --seed-ratio=0.01 --seed-time=1 *.torrent'
+alias tdl2='/data/share/movie/sh/tdlstop.sh 38889 &;/usr/bin/wine aria2c.exe --listen-port=38889 --max-upload-limit=200K --seed-ratio=0.01 --seed-time=1 *.torrent'
+alias tdl3='/data/share/movie/sh/tdlstop.sh 38890 &;/usr/bin/wine aria2c.exe --listen-port=38890 --max-upload-limit=200K --seed-ratio=0.01 --seed-time=1 *.torrent'
+alias tdl4='/data/share/movie/sh/tdlstop.sh 38891 &;/usr/bin/wine aria2c.exe --listen-port=38891 --max-upload-limit=200K --seed-ratio=0.01 --seed-time=1 *.torrent'
+alias tdl5='/data/share/movie/sh/tdlstop.sh 38892 &;/usr/bin/wine aria2c.exe --listen-port=38892 --max-upload-limit=200K --seed-ratio=0.01 --seed-time=1 *.torrent'
+alias rto='rtorrent *.torrent'
 alias sos='source /home/swirhen/.zshrc'
 alias vimrc='vim /home/swirhen/.zshrc'
 alias rms='rm *.torrent;ls'
@@ -226,6 +231,12 @@ alias gr='cd /home/swirhen/.gmailreader/;rm draft;gmailreader.py'
 alias mt='sudo /etc/init.d/mediatomb restart'
 alias zmv='noglob zmv'
 alias zget='wget -r -nd --http-user=dankogai --http-passwd=kogaidan --restrict-file-names=nocontrol -l 1'
+alias sget='wget --no-check-certificate'
+alias gn='geeknote'
+alias pb='pythonbrew'
+alias crontab="crontab -i"
+alias dstat='/usr/bin/python /usr/bin/dstat'
+alias ydl='/data/share/movie/sh/youtubedl.sh'
 
 ## terminal configuration
 #
@@ -278,3 +289,14 @@ if [ -s ${HOME}/.rvm/scripts/rvm ] ; then source ${HOME}/.rvm/scripts/rvm ; fi
 [ -f ~/.zshrc.mine ] && source ~/.zshrc.mine
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
+source $HOME/.pythonbrew/etc/bashrc
+### Virtualenvwrapper
+VIRTUALENVWRAPPER_PYTHON=$HOME/.pythonbrew/pythons/Python-3.4.3/bin/python
+if [ -f /home/swirhen/.pythonbrew/pythons/Python-3.4.3/bin/virtualenvwrapper.sh ]; then
+    export WORKON_HOME=$HOME/.virtualenvs
+    source /home/swirhen/.pythonbrew/pythons/Python-3.4.3/bin/virtualenvwrapper.sh
+fi
+if [[ -s ~/.nvm/nvm.sh ]];
+ then source ~/.nvm/nvm.sh
+fi

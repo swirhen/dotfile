@@ -1,4 +1,5 @@
 termcapinfo  xterm-color hs@:is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l
+shell -${SHELL}
 source $HOME/.screen-setting
 bind . source $HOME/.screen-setting
 bind ^. source $HOME/.screen-setting
@@ -10,9 +11,4 @@ screen -t movie 1
 chdir /data/share/movie
 screen -t movie 2
 chdir /data/share/movie
-screen -t w3m 3 w3m "http://www.nyaa.eu/?page=torrents&cats=1_11"
-screen -t irssi 4 irssi
-chdir $HOME/log
-screen -t log 5
-chdir /data/share
-screen -t share 6
+screen -t share 3

@@ -60,6 +60,8 @@ nmap ,f :HatenaUser<space>anime-podcast:swirhen<enter>:HatenaEdit<space>20990101
 nmap ,r :%s/ >/ )/<cr>:%s/ </ (/<cr>:%s/> /) /<cr>:%s/< /( /<cr>:%s/@.*\..*)/@)/<cr>
 " <C-n>でOmni補完
 imap <C-n> <C-x><C-o>
+" <C-e>をEscに
+imap <C-e> <Esc>
 
 "---------------------------------------
 " 一般:表示
@@ -148,3 +150,4 @@ nnoremap <silent> [ctrlp]b :<C-u>CtrlPBuffer<CR>
 
 set fencs=usc-bom,usc-21e,usc-2,iso-2022-jp-3,utf-8
 set fencs+=cp932
+set paste
