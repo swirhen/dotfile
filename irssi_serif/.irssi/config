@@ -5,13 +5,22 @@ servers = (
     port = "36667";
     password = "irankaeplum";
   },
-  { address = "192.168.0.51"; chatnet = "t"; port = "16668"; },
-  { address = "opentig.org"; chatnet = "ot"; port = "16668"; }
+  {
+    address = "192.168.0.108";
+    chatnet = "t";
+    port = "16668";
+  },
+  {
+    address = "192.168.0.108";
+    chatnet = "v";
+    port = "16668";
+    password = "irankae";
+  }
 );
 chatnets = {
   l = { type = "IRC"; };
   t = { type = "IRC"; };
-  ot = { type = "IRC"; };
+  v = { type = "IRC"; };
 };
 
 aliases = {
@@ -176,14 +185,14 @@ statusbar = {
 };
 settings = {
   core = {
-    real_name = "_swirhen_";
-    user_name = "_swirhen_";
-    nick = "_swirhen_";
     recode_autodetect_utf8 = "yes";
     recode_fallback = "UTF-8";
     recode = "yes";
     recode_out_default_charset = "UTF-8";
     recode_transliterate = "yes";
+    real_name = "swirhen";
+    user_name = "swirhen";
+    nick = "swirhen";
   };
   "fe-text" = { actlist_sort = "refnum"; };
   "fe-common/core" = { term_charset = "UTF-8"; };

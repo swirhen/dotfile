@@ -48,8 +48,8 @@ nmap gh :set hlsearch!<cr>
 " glでタブ・改行のON/OFF
 nmap gl :set list!<cr>
 
-nnoremap L       :bn<cr>
-nnoremap H       :bp<cr>
+nnoremap <C-m>   :bn<cr>
+nnoremap <C-n>   :bp<cr>
 nnoremap <C-c>   :badd<Space>
 nnoremap <C-d>   :bd<CR>
 
