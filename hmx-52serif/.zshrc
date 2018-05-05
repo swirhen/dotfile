@@ -307,3 +307,18 @@ PERL5LIB="/home/swirhen/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5L
 PERL_LOCAL_LIB_ROOT="/home/swirhen/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
 PERL_MB_OPT="--install_base \"/home/swirhen/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/home/swirhen/perl5"; export PERL_MM_OPT;
+
+# zplug
+source ~/.zplug/init.zsh
+# Install plugins if there are plugins that have not been installed
+if ! zplug check --verbose; then
+  printf "Install? [y/N]: "
+  if read -q; then
+    echo; zplug install
+  fi
+fi
+
+zplug "greymd/tmux-xpanes", as:command, use:"bin/*"
+
+# Then, source plugins and add commands to $PATH
+#zplug load
