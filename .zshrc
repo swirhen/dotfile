@@ -159,8 +159,8 @@ alias l='ls -CF'
 alias x=exit
 alias rf='rm -rf'
 alias pse='ps -ef | grep'
-alias apti='sudo aptitude install'
-alias aptr='sudo aptitude remove'
+alias apti='sudo apt install -y'
+alias aptr='sudo apt remove'
 alias df='df -h'
 alias su='sudo su'
 alias mov='cd /data/share/movie'
@@ -237,6 +237,7 @@ alias pb='pythonbrew'
 alias crontab="crontab -i"
 alias dstat='/usr/bin/python /usr/bin/dstat'
 alias ydl='/data/share/movie/sh/youtubedl.sh'
+alias tmp='cd /data/share/temp'
 
 ## terminal configuration
 #
@@ -290,7 +291,7 @@ if [ -s ${HOME}/.rvm/scripts/rvm ] ; then source ${HOME}/.rvm/scripts/rvm ; fi
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
-source $HOME/.pythonbrew/etc/bashrc
+#source $HOME/.pythonbrew/etc/bashrc
 ### Virtualenvwrapper
 VIRTUALENVWRAPPER_PYTHON=$HOME/.pythonbrew/pythons/Python-3.4.3/bin/python
 if [ -f /home/swirhen/.pythonbrew/pythons/Python-3.4.3/bin/virtualenvwrapper.sh ]; then
@@ -300,3 +301,9 @@ fi
 if [[ -s ~/.nvm/nvm.sh ]];
  then source ~/.nvm/nvm.sh
 fi
+
+PATH="/home/swirhen/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/home/swirhen/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/swirhen/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/swirhen/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/swirhen/perl5"; export PERL_MM_OPT;
