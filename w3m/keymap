@@ -16,4 +16,4 @@ keymap r RELOAD
 keymap R REINIT
 keymap ESC-r VERSION
 keymap v NEXT_PAGE
-keymap . EXTERN_LINK "wget --no-check-certificate --restrict-file-names=nocontrol --trust-server-names --content-disposition %s"
+keymap . EXTERN_LINK "curl -L -O -sS %s"
