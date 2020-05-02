@@ -1,9 +1,0 @@
-rename-window home
-new-window -n movie -c "/data/share/movie"
-new-window -n movie -c "/data/share/movie"
-new-window -n w3m -c "/data/share/movie"
-send-keys 'w3m -B' C-m
-new-window -n irssi
-send-keys 'irssi' C-m '/c l' C-m
-new-window -c "/data/share/temp"
-new-window -c "/data/share/temp"
