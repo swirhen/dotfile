@@ -1,9 +1,20 @@
 rename-window home
+select-pane -T 'home'
 new-window -n movie -c "/data/share/movie"
+select-pane -T 'movie(1)'
 new-window -n movie -c "/data/share/movie"
+select-pane -T 'movie(2)'
 new-window -n w3m -c "/data/share/movie"
+select-pane -T 'w3m'
 send-keys 'w3m -B' C-m
 new-window -n irssi
+select-pane -T 'irssi'
 send-keys 'irssi' C-m '/c l' C-m
 new-window -c "/data/share/temp"
-new-window -c "/data/share/temp"
+select-pane -T 'temp'
+new-window -c "/data/share/temp/d2004-06"
+select-pane -T 'dojin-seed'
+new-window -c "/data/share/temp/c2001-06"
+select-pane -T 'comic-seed'
+new-window -c "/data/share/temp/voiceactor_nico_ch"
+select-pane -T 'nico-release'

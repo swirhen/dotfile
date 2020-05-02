@@ -151,3 +151,8 @@ nnoremap <silent> [ctrlp]b :<C-u>CtrlPBuffer<CR>
 set fencs=usc-bom,usc-21e,usc-2,iso-2022-jp-3,utf-8
 set fencs+=cp932
 set paste
+set autoindent
+set cindent
+set expandtab
+set tabstop=4
+set shiftwidth=4
