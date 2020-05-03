@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<anyType xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Misuzilla.Applications.TwitterIrcGateway.AddIns.UserStream.UserStreamConfig">
-  <Enabled>false</Enabled>
-  <AllAtMode>false</AllAtMode>
-  <IsThroughMyPostFromUserStream>false</IsThroughMyPostFromUserStream>
-  <AutoRestart>true</AutoRestart>
-  <ShowEvent>false</ShowEvent>
-  <FavoriteColor xsi:nil="true" />
-</anyType>
