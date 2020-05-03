@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/share/!svn/ver/7640/lang/perl/tiarra/trunk/module/System/Inflate
+END
+Gzip.pm
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/share/!svn/ver/7640/lang/perl/tiarra/trunk/module/System/Inflate/Gzip.pm
+END
+Zlib.pm
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/share/!svn/ver/7640/lang/perl/tiarra/trunk/module/System/Inflate/Zlib.pm
+END

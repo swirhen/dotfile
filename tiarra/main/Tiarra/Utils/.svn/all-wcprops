@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/share/!svn/ver/11254/lang/perl/tiarra/trunk/main/Tiarra/Utils
+END
+Core.pm
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/share/!svn/ver/7640/lang/perl/tiarra/trunk/main/Tiarra/Utils/Core.pm
+END
+DefineHelper.pm
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/share/!svn/ver/11254/lang/perl/tiarra/trunk/main/Tiarra/Utils/DefineHelper.pm
+END
+CallWrapper.pm
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/share/!svn/ver/7640/lang/perl/tiarra/trunk/main/Tiarra/Utils/CallWrapper.pm
+END

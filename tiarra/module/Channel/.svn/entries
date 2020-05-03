@@ -1,0 +1,73 @@
+8
+
+dir
+14987
+http://svn.coderepos.org/share/lang/perl/tiarra/trunk/module/Channel
+http://svn.coderepos.org/share
+
+
+
+2008-05-10T14:58:28.934427Z
+11365
+topia
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+d0d07461-0603-4401-acd4-de1884942a52
+
+Join
+dir
+
+Rejoin.pm
+file
+
+
+
+
+2008-07-01T06:37:36.000000Z
+f4c6fa3419acfeb28858a8f99e34f72c
+2008-05-10T14:58:28.934427Z
+11365
+topia
+has-props
+
+Mode
+dir
+
+Freeze.pm
+file
+
+
+
+
+2008-07-01T06:37:36.000000Z
+6d7f3f31d3ca76d4ae19f3abe3981089
+2008-05-10T14:58:28.934427Z
+11365
+topia
+has-props
+
+Ignore.pm
+file
+
+
+
+
+2008-07-01T06:37:36.000000Z
+3162e2dae9b7474ef621f257c310be97
+2007-12-10T12:45:39.112515Z
+3004
+topia
+has-props
+

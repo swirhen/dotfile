@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/share/!svn/ver/12473/lang/perl/tiarra/trunk/module/Client
+END
+GetVersion.pm
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/Client/GetVersion.pm
+END
+ShowNick.pm
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/Client/ShowNick.pm
+END
+Cotton.pm
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/Client/Cotton.pm
+END
+Guess.pm
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/share/!svn/ver/7640/lang/perl/tiarra/trunk/module/Client/Guess.pm
+END
+Eval.pm
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/Client/Eval.pm
+END
+PatchworkMessage.pm
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/Client/PatchworkMessage.pm
+END
+Conservative.pm
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/Client/Conservative.pm
+END
+Rehash.pm
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/Client/Rehash.pm
+END
+List.pm
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/share/!svn/ver/12473/lang/perl/tiarra/trunk/module/Client/List.pm
+END
+ProtectMyself.pm
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/Client/ProtectMyself.pm
+END
+Cache.pm
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/Client/Cache.pm
+END

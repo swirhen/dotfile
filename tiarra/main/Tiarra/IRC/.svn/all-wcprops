@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/share/!svn/ver/14132/lang/perl/tiarra/trunk/main/Tiarra/IRC
+END
+Message.pm
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/share/!svn/ver/14132/lang/perl/tiarra/trunk/main/Tiarra/IRC/Message.pm
+END
+Prefix.pm
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/share/!svn/ver/14132/lang/perl/tiarra/trunk/main/Tiarra/IRC/Prefix.pm
+END
+NewMessageMixin.pm
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/share/!svn/ver/7640/lang/perl/tiarra/trunk/main/Tiarra/IRC/NewMessageMixin.pm
+END

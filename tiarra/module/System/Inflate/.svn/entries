@@ -1,0 +1,54 @@
+8
+
+dir
+14987
+http://svn.coderepos.org/share/lang/perl/tiarra/trunk/module/System/Inflate
+http://svn.coderepos.org/share
+
+
+
+2007-12-10T12:45:39.112515Z
+3004
+topia
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+d0d07461-0603-4401-acd4-de1884942a52
+
+Gzip.pm
+file
+
+
+
+
+2008-07-01T06:37:35.000000Z
+c5917d97625a330a8f0d4d6d140c17b3
+2007-12-10T12:45:39.112515Z
+3004
+topia
+has-props
+
+Zlib.pm
+file
+
+
+
+
+2008-07-01T06:37:35.000000Z
+f0275cc9d7c80a35a7cdccc46224c340
+2007-12-10T12:45:39.112515Z
+3004
+topia
+has-props
+

@@ -1,0 +1,54 @@
+8
+
+dir
+14987
+http://svn.coderepos.org/share/lang/perl/tiarra/trunk/module/Log/Writer
+http://svn.coderepos.org/share
+
+
+
+2008-05-10T14:58:28.934427Z
+11365
+topia
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+d0d07461-0603-4401-acd4-de1884942a52
+
+Base.pm
+file
+
+
+
+
+2008-07-01T06:37:35.000000Z
+4be408a4d669174f5224acf50a932d5a
+2007-12-10T12:45:39.112515Z
+3004
+topia
+has-props
+
+File.pm
+file
+
+
+
+
+2008-07-01T06:37:35.000000Z
+2eaccbc15f790bf8e5ef3a385ded7e23
+2008-05-10T14:58:28.934427Z
+11365
+topia
+has-props
+

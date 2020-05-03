@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/Channel/Join
+END
+Connect.pm
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/Channel/Join/Connect.pm
+END
+Kicked.pm
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/Channel/Join/Kicked.pm
+END
+Invite.pm
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/Channel/Join/Invite.pm
+END

@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <DisabledAddInsList />
+  <OAuthUserPasswordHash>e9b19a0dad569034d599b403b930148549b02ec35d1b3c10dfaab2b3cc5881cf</OAuthUserPasswordHash>
+  <OAuthAccessToken>615855496-jNreL0PwkICYcMjCNNvrRRX4CzeGJYlpMJPDUpik</OAuthAccessToken>
+  <OAuthTokenSecret>GIsePTXu9iyrwkNpYftpjlc1lcZKGrIPmiSqtiaVv0TfY</OAuthTokenSecret>
+  <EnableTypableMap>true</EnableTypableMap>
+  <TypableMapKeyColorNumber>14</TypableMapKeyColorNumber>
+  <TypableMapKeySize>2</TypableMapKeySize>
+  <EnableRemoveRedundantSuffix>false</EnableRemoveRedundantSuffix>
+  <EnableOldStyleReply>false</EnableOldStyleReply>
+  <BufferSize>250</BufferSize>
+  <Interval>180</Interval>
+  <IntervalDirectMessage>180</IntervalDirectMessage>
+  <EnableRepliesCheck>true</EnableRepliesCheck>
+  <IntervalReplies>300</IntervalReplies>
+  <IgnoreWatchError>false</IgnoreWatchError>
+  <ResolveTinyUrl>true</ResolveTinyUrl>
+  <EnableDropProtection>true</EnableDropProtection>
+  <SetTopicOnStatusChanged>true</SetTopicOnStatusChanged>
+  <EnableTrace>false</EnableTrace>
+  <ChannelName>#Twitter</ChannelName>
+  <DisableUserList>true</DisableUserList>
+  <BroadcastUpdate>true</BroadcastUpdate>
+  <ClientMessageWait>0</ClientMessageWait>
+  <BroadcastUpdateMessageIsNotice>true</BroadcastUpdateMessageIsNotice>
+  <POSTFetchMode>false</POSTFetchMode>
+  <FetchCount>50</FetchCount>
+  <EnableCompression>false</EnableCompression>
+  <DisableNoticeAtFirstTime>true</DisableNoticeAtFirstTime>
+  <FriendsPerPageThreshold>100</FriendsPerPageThreshold>
+  <UpdateDelayTime>5</UpdateDelayTime>
+</Config>

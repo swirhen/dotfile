@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/share/!svn/ver/11869/lang/perl/tiarra/trunk/module/CTCP
+END
+Version.pm
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/CTCP/Version.pm
+END
+ClientInfo.pm
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/CTCP/ClientInfo.pm
+END
+UserInfo.pm
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/CTCP/UserInfo.pm
+END
+Ping.pm
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/CTCP/Ping.pm
+END
+Time.pm
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/CTCP/Time.pm
+END

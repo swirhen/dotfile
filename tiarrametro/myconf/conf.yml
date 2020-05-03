@@ -1,0 +1,166 @@
+# user setting
+
+my_name: 'swirhen'
+#default pass 0000
+#password_md5: "4a7d1ed414474e4033ac29ccb8653d9b"
+#password_md5: "ce9c477387b6fcdbee3150e290d1168e" -t1arra
+password_md5: "fc5e70d22a531608dad86bb77f903e9d"
+
+
+# 発言用のソケット名
+tiarra_socket_name: 'tyoro'
+
+mountPoint: '/tm/public'
+#theme: 'light'
+template: 'simple'
+style: 'style-swirhen.css'
+channel_list_label: 'list'
+#channel_list_sort: 'read'
+#channel_list_sort: [ 'network', 'read' ]
+channel_list_sort:
+    network: 'DESC'
+    read: 'ASC'
+cookie_save_time: 86400
+
+on_icon: true
+on_image: 2
+update_time: 3
+pickup_word: [ 'swirhen', 'すいれん', '翠蓮' ]
+# アイコンサーバーの設定(このあとに{id}が来るようなURIを想定)
+icon_server_uri: 'http://v2.backspace.jp/~takasago/t/twitterIcon.pl/'
+
+
+# 新着通知バーによる巡回 以下2行のどちらかの書式でも可
+#patrol_channel: '#test@irc'
+patrol_channel: [ '#ちょろ@w', '#おともだちtwitter@t', '#Twitter@t3', '#シンデレラ一門@t', '#ミリオン一座@t' ]
+
+#log_popup_menu:
+#    separator: '@'
+#    network:
+#        @t:
+#            match: '\((\w+)\)'
+#            menu:
+#                re: 
+#                    type: 'typablemap_comment'
+#                cr: 
+#                    type: 'typablemap'
+#                    label: 'rt'
+#                rr: 
+#                    type: 'typablemap'
+#                t: 
+#                    type: 'typablemap_comment'
+#                fav: 
+#                    type: 'typablemap'
+#                    label: 'f'
+#                h: 
+#                    type: 'typablemap'
+#        @t3:
+#            match: '\((\w+)\)'
+#            menu:
+#                re: 
+#                    type: 'typablemap_comment'
+#                cr: 
+#                    type: 'typablemap'
+#                    label: 'rt'
+#                rr: 
+#                    type: 'typablemap'
+#                t: 
+#                    type: 'typablemap_comment'
+#                fav: 
+#                    type: 'typablemap'
+#                    label: 'f'
+#                h: 
+#                    type: 'typablemap'
+#        @f:
+#            match: '\((\w+)\)'
+#            menu:
+#                re: 
+#                    type: 'typablemap_comment'
+#                    label: 're'
+#                arr: 
+#                    type: 'typablemap'
+#                    label: 'arr'
+#                hr: 
+#                    type: 'typablemap'
+#                    label: 'hr'
+#                uoo: 
+#                    type: 'typablemap'
+#                    label: 'uoo'
+#                trp: 
+#                    type: 'typablemap'
+#                    label: 'trp'
+#                swr: 
+#                    type: 'typablemap'
+#                    label: 'swr'
+#                alias: 
+#                    type: 'typablemap_comment'
+#                    label: 'ali'
+#                full: 
+#                    type: 'typablemap'
+#                    label: 'ful'
+#                ci: 
+#                    type: 'typablemap'
+#                    label: 'ci'
+#        @w: 'quickpost'
+#        @ty: 'quickpost'
+
+# Databaseの設定
+
+DATABASE_HOST: '127.0.0.1'
+DATABASE_ID: 'tiarra'
+DATABASE_PASS: 'arrati'
+DATABASE_NAME: 'tiarra'
+
+# nickの末尾の_を削除する
+auto_tail_delete: false
+
+# url展開
+expand_url: false
+
+# alias setting
+alias:
+  mumu: 'mu_mu_'
+  mu_mu: 'mu_mu_'
+  kenan: 'kenan_'
+  mashiron: 'mashiro'
+  rimd2r_ipw: 'rimd2r'
+  amin: 'amin_530'
+  kushii: '941'
+  hadeadama: 'hageatama'
+  hageatama: 'hageatama'
+  DHC: 'DHC_'
+  AP: 'AP_P'
+  trashkids: 'tribekids'
+  mapi2: 'mapi'
+  yukiusaDTI: 'yukiusa'
+  syam: 'syamn'
+  syam_cx: 'syamn'
+  kaji: 'kaji2'
+  egu1127: 'kuma1127'
+  mayuki-t: 'mayuki'
+  amaaaaaaa: 'amaaaaaaa_'
+  aihara_k: 'aihara_k_'
+  _datex: '_datex_'
+  shineka: 'shineka_'
+  _swirhen: '_swirhen_'
+  _namori: '_namori_'
+
+#  キーボードショートカット
+keymapping:
+  channel_list:
+    up: 'k'
+    down: 'j'
+    open: 'o'
+    channel_toggle: 'e'
+  pivot_controller:
+    next: 'l'
+    prev: 'h'
+    close: 'c'
+  action:
+    tour: 'n'
+    input_focus: 'f'
+    input_blur: 'esc'
+  channel:
+    re: 'r'
+    popup: 'p'
+  input_histry: true

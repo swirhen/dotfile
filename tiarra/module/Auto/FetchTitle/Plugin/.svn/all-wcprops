@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/share/!svn/ver/12996/lang/perl/tiarra/trunk/module/Auto/FetchTitle/Plugin
+END
+Mixi.pm
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/share/!svn/ver/12072/lang/perl/tiarra/trunk/module/Auto/FetchTitle/Plugin/Mixi.pm
+END
+ExtractHeading.pm
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/share/!svn/ver/12996/lang/perl/tiarra/trunk/module/Auto/FetchTitle/Plugin/ExtractHeading.pm
+END
+TouhouReplay.pm
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/share/!svn/ver/10891/lang/perl/tiarra/trunk/module/Auto/FetchTitle/Plugin/TouhouReplay.pm
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/share/!svn/ver/11479/lang/perl/tiarra/trunk/main/Tiarra/Socket
+END
+Win32Errno.pm
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/share/!svn/ver/7640/lang/perl/tiarra/trunk/main/Tiarra/Socket/Win32Errno.pm
+END
+Connect.pm
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/share/!svn/ver/11479/lang/perl/tiarra/trunk/main/Tiarra/Socket/Connect.pm
+END
+Lined.pm
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/main/Tiarra/Socket/Lined.pm
+END
+Buffered.pm
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/share/!svn/ver/11477/lang/perl/tiarra/trunk/main/Tiarra/Socket/Buffered.pm
+END

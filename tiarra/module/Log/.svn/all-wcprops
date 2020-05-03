@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/share/!svn/ver/12214/lang/perl/tiarra/trunk/module/Log
+END
+ChannelList.pm
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/Log/ChannelList.pm
+END
+Channel.pm
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/share/!svn/ver/12214/lang/perl/tiarra/trunk/module/Log/Channel.pm
+END
+Raw.pm
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/Log/Raw.pm
+END
+Writer.pm
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/Log/Writer.pm
+END
+Logger.pm
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/Log/Logger.pm
+END
+Recent.pm
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/module/Log/Recent.pm
+END

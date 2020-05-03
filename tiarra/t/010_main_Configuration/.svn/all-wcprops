@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/share/!svn/ver/14151/lang/perl/tiarra/trunk/t/010_main_Configuration
+END
+001_basic_test.t
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/share/!svn/ver/14151/lang/perl/tiarra/trunk/t/010_main_Configuration/001_basic_test.t
+END
+testdata1.conf
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/share/!svn/ver/14151/lang/perl/tiarra/trunk/t/010_main_Configuration/testdata1.conf
+END

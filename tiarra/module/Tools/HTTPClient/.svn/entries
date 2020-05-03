@@ -1,0 +1,41 @@
+8
+
+dir
+14987
+http://svn.coderepos.org/share/lang/perl/tiarra/trunk/module/Tools/HTTPClient
+http://svn.coderepos.org/share
+
+
+
+2008-05-02T13:24:15.623027Z
+10954
+hio
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+d0d07461-0603-4401-acd4-de1884942a52
+
+SSL.pm
+file
+
+
+
+
+2008-07-01T06:37:35.000000Z
+a992f309f802ee0f785ccba208f4834d
+2008-05-02T13:24:15.623027Z
+10954
+hio
+has-props
+

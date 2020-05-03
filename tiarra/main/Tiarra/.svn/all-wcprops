@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/share/!svn/ver/14132/lang/perl/tiarra/trunk/main/Tiarra
+END
+DefineEnumMixin.pm
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/share/!svn/ver/7640/lang/perl/tiarra/trunk/main/Tiarra/DefineEnumMixin.pm
+END
+ShorthandConfMixin.pm
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/share/!svn/ver/7640/lang/perl/tiarra/trunk/main/Tiarra/ShorthandConfMixin.pm
+END
+Encoding.pm
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/share/!svn/ver/7640/lang/perl/tiarra/trunk/main/Tiarra/Encoding.pm
+END
+WrapMainLoop.pm
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/share/!svn/ver/13831/lang/perl/tiarra/trunk/main/Tiarra/WrapMainLoop.pm
+END
+Socket.pm
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/share/!svn/ver/13831/lang/perl/tiarra/trunk/main/Tiarra/Socket.pm
+END
+SessionMixin.pm
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/share/!svn/ver/7640/lang/perl/tiarra/trunk/main/Tiarra/SessionMixin.pm
+END
+SharedMixin.pm
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/share/!svn/ver/7640/lang/perl/tiarra/trunk/main/Tiarra/SharedMixin.pm
+END
+OptionalModules.pm
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/share/!svn/ver/13829/lang/perl/tiarra/trunk/main/Tiarra/OptionalModules.pm
+END
+ModifiedFlagMixin.pm
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/share/!svn/ver/7640/lang/perl/tiarra/trunk/main/Tiarra/ModifiedFlagMixin.pm
+END
+Utils.pm
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/main/Tiarra/Utils.pm
+END
+Resolver.pm
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/share/!svn/ver/12926/lang/perl/tiarra/trunk/main/Tiarra/Resolver.pm
+END
+TerminateManager.pm
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/share/!svn/ver/7640/lang/perl/tiarra/trunk/main/Tiarra/TerminateManager.pm
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/share/!svn/ver/14151/lang/perl/tiarra/trunk/main/Configuration
+END
+Preprocessor.pm
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/main/Configuration/Preprocessor.pm
+END
+LexicalAnalyzer.pm
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/share/!svn/ver/11365/lang/perl/tiarra/trunk/main/Configuration/LexicalAnalyzer.pm
+END
+Block.pm
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/share/!svn/ver/14151/lang/perl/tiarra/trunk/main/Configuration/Block.pm
+END
+Parser.pm
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/share/!svn/ver/14151/lang/perl/tiarra/trunk/main/Configuration/Parser.pm
+END
