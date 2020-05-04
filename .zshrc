@@ -238,6 +238,7 @@ alias crontab="crontab -i"
 alias dstat='/usr/bin/python /usr/bin/dstat'
 alias ydl='/data/share/movie/sh/youtubedl.sh'
 alias tmp='cd /data/share/temp'
+alias tmv='/home/swirhen/torrentsearch/moveseed.sh'
 
 ## terminal configuration
 #

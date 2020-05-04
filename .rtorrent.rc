@@ -1,0 +1,3 @@
+port_range = 38888-38892
+port_random = yes
+upload_rate = 200
