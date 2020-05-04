@@ -1,19 +1,19 @@
 servers = (
   {
-    address = "192.168.0.108";
+    address = "localhost";
     chatnet = "l";
     port = "36667";
     password = "irankaeplum";
   },
-  { address = "192.168.0.108"; chatnet = "t"; port = "16668"; },
+  { address = "localhost"; chatnet = "t"; port = "16668"; },
   {
-    address = "192.168.0.108";
+    address = "localhost";
     chatnet = "v";
     port = "16668";
     password = "irankae";
   },
   {
-    address = "192.168.0.108";
+    address = "localhost";
     chatnet = "z";
     port = "36668";
     password = "irankae";
