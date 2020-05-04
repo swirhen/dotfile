@@ -1,0 +1,235 @@
+import sys
+import clr
+import re
+import thread
+import time
+
+import Misuzilla.Applications.TwitterIrcGateway
+import Misuzilla.Applications.TwitterIrcGateway.AddIns
+import Misuzilla.Applications.TwitterIrcGateway.AddIns.Console
+
+from System import *
+from System.Text import *
+from System.Threading import Thread, ThreadStart
+from System.Collections.Generic import *
+from System.Diagnostics import Trace
+from System.Net import *
+from System.IO import *
+clr.AddReference("System.Web")
+from System.Web import *
+
+from Misuzilla.Applications.TwitterIrcGateway import Status, Statuses, User, Users, Utility
+from Misuzilla.Applications.TwitterIrcGateway.AddIns import IConfiguration
+from Misuzilla.Applications.TwitterIrcGateway.AddIns.Console import ConsoleAddIn, Console, Context
+from Misuzilla.Applications.TwitterIrcGateway.AddIns.DLRIntegration import DLRIntegrationAddIn, DLRBasicConfiguration, DLRContextHelper
+
+class ScrapingContext(Context):
+	def Initialize(self):
+		self.scraping = Scraping.instance()
+		self.scraping.context = self
+		self.config = self.scraping.config
+		pass
+
+	def GetCommands(self):
+		dict = Context.GetCommands(self)
+		dict["Interval"] = "取得間隔を設定します。"
+		dict["Relogin"] = "再ログインします。"
+		dict["Enable"] = "スクレイピングを有効にします。"
+		dict["Disable"] = "スクレイピングを無効にします。"
+		dict["Password"] = "パスワードを設定します"
+		return dict
+
+	def OnUninitialize(self):
+		pass
+
+	def get_Configurations(self):
+		return Array[IConfiguration]([ self.config ])
+		
+	def get_Password(self):
+		if String.IsNullOrEmpty(self.config.GetValue("Password")):
+			return ""
+		enc = Encoding.Default
+		return enc.GetString(Convert.FromBase64String(self.config.GetValue("Password")))
+		
+	def set_Password(self, str):
+		enc = Encoding.Default
+		self.config.SetValue("Password", Convert.ToBase64String(enc.GetBytes(str)))
+		
+
+	# Implementation
+	def Interval(self, args):
+		if String.IsNullOrEmpty(args):
+			self.Console.NotifyMessage("取得間隔を指定してください。")
+			return
+		interval = int(args, 10)
+		self.scraping.interval = interval
+		self.config.SetValue("Interval", interval)
+		self.Console.NotifyMessage("取得間隔を %s 秒に設定しました。" % args)
+		self.scraping.start()
+
+	def Relogin(self, args):
+		self.Console.NotifyMessage("ログインしています...")
+		if self.scraping.Relogin():
+			self.Console.NotifyMessage("ログインしました。")
+		else:
+			self.Console.NotifyMessage("ログインに失敗しました。")
+
+	def Enable(self, args):
+		self.config.SetValue("Enable", "True")
+		self.scraping.enable = True
+		self.scraping.start()
+		self.Console.NotifyMessage("スクレイピングを有効にしました")
+
+	def Disable(self, args):
+		self.config.SetValue("Enable", "False")
+		self.scraping.enable = False
+		self.Console.NotifyMessage("スクレイピングを無効にしました")
+
+	def Password(self, args):
+		self.set_Password(args)
+		self.Console.NotifyMessage("パスワードを設定しました。再ログインしてください。")
+		
+
+class Scraping(Object):
+	@classmethod
+	def instance(klass):
+		if not hasattr(klass, 'instance_'):
+			klass.instance_ = Scraping()
+		return klass.instance_
+
+	def __init__(self):
+		# 普通の #Console にコンテキストを追加する
+		CurrentSession.AddInManager.GetAddIn[ConsoleAddIn]().RegisterContext(DLRContextHelper.Wrap(CurrentSession, "ScrapingContext", ScrapingContext), "Scraping", "スクレイピングの設定を行うコンテキストに切り替えます")
+		CurrentSession.AddInManager.GetAddIn[DLRIntegrationAddIn]().BeforeUnload += self.onBeforeUnload
+		CurrentSession.PostProcessTimelineStatuses += self.onPostProcessTimelineStatuses
+		self.running = False
+		self.thread = None
+		
+		self.config = DLRBasicConfiguration(CurrentSession, "ScrapingContext", Dictionary[String,String]({ "Interval": "取得間隔", "DisableTimelineApi": "APIによるタイムライン取得を停止するかどうか", "Password": "認証に使用するパスワード", "Enable": "スクレイピングを利用するかどうか" }))
+		self.interval = int(self.config.GetValue("Interval") or "30", 10)
+
+		self.re_source = re.compile(r"<span>(.*?)</span>")
+		self.re_statuses = re.compile(r"<li class=\"hentry u.*?</li>",re.S)
+		self.re_content = re.compile(r"class=\"entry-content\">(.*?)</span>",re.S)
+		self.re_user = re.compile(r"class=\"tweet-url screen-name\" title=\"([^\"]+)\">(.*?)</a>")
+		self.re_anchor = re.compile(r"<a href=\"(http://[^\"]*)\"[^>]*>.*?</a>")
+		self.re_tag = re.compile(r"<[^>]*>")
+		self.re_status_id = re.compile(r"id=\"status_(\d+)\"")
+		self.re_in_reply_to_status_id = re.compile(r"status/(\d+)\">in reply to")
+		
+		self.session = ""
+		self.enable = "False"
+	
+	def get_Password(self):
+		if String.IsNullOrEmpty(self.config.GetValue("Password")):
+			return ""
+		enc = Encoding.Default
+		return enc.GetString(Convert.FromBase64String(self.config.GetValue("Password")))
+	
+	def Relogin(self):
+		## 自力でがんばってログインする
+		w = WebClient()
+		login = ""
+		## ログイントークンの取得
+		try:
+			login = w.DownloadString("http://twitter.com/login")
+		except (Exception, WebException), e:
+			return False
+		re_token = re.compile("<input name=\"authenticity_token\" type=\"hidden\" value=\"([^\"]+)\" />")
+		m = re_token.search(login)
+		token = m.group(1)
+		## リクエストの構築
+		reqStr = "authenticity_token=" + token + "&session[username_or_email]=" + CurrentSession.TwitterService.VerifyCredential().ScreenName + "&session[password]=" + HttpUtility.UrlEncode(self.get_Password(), Encoding.Default)+"&commit=Sign+In"
+		postDataBytes = Encoding.ASCII.GetBytes(reqStr)
+		req = WebRequest.Create("http://twitter.com/sessions")
+		req.CookieContainer = CookieContainer()
+		req.Method = "POST"
+		req.ServicePoint.Expect100Continue = False
+		req.ContentType = "application/x-www-form-urlencoded"
+		req.ContentLength = postDataBytes.Length
+		req.AllowAutoRedirect = False
+		reqStream = req.GetRequestStream()
+		reqStream.Write(postDataBytes, 0 , postDataBytes.Length)
+		reqStream.Close()
+		## レスポンスを読む
+		try:
+			res = req.GetResponse()
+			if res.StatusCode != HttpStatusCode.Found:
+				return False
+			for c in res.Cookies:
+				if(c.Name == "_twitter_sess"):
+					self.session = c.Value
+					break
+		except (Exception, WebException), e:
+			return False
+		##
+		return True
+		
+	def httpGetWithCookie(self, url):
+		## リクエストの構築
+		req = WebRequest.Create("http://twitter.com"+url)
+		req.ServicePoint.Expect100Continue = False;
+		req.Headers.Add("Cookie", "_twitter_sess="+self.session)
+		## レスポンスを読む
+		res = req.GetResponse()
+		rs = res.GetResponseStream()
+		sr = StreamReader(rs)
+		return sr.ReadToEnd()
+		##
+
+	def start(self):
+		if not self.running:
+			self.Relogin()
+			self.thread = Thread(ThreadStart(self.runProc))
+			self.thread.Start()
+
+	def runProc(self):
+		self.running = True
+		while self.interval > 0:
+			try:
+				self.fetchHome()
+			except:
+				Trace.WriteLine(sys.exc_info().ToString())
+			Thread.Sleep(self.interval * 1000)
+		self.running = False
+
+	def fetchHome(self):
+		home = self.httpGetWithCookie("/home")
+		statuses = self.re_statuses.findall(home)
+		statuses.reverse()
+		for status in statuses:
+			s = Status()
+			# User
+			match = self.re_user.search(status)
+			s.User            = User()
+			s.User.Id         = 0
+			s.User.Name       = match.group(1)
+			s.User.ScreenName = match.group(2)
+			# Status
+			s.Source    = self.re_source.search(status).group(1)
+			s.Text      = Utility.UnescapeCharReference(self.re_tag.sub(r"", self.re_anchor.sub(r"\1", self.re_content.search(status).group(1))))
+			s.Id        = int(self.re_status_id.search(status).group(1), 10)
+			match = self.re_in_reply_to_status_id.search(status)
+			if match:
+				s.InReplyToStatusId = match.group(1)
+			s.CreatedAt = DateTime.Now
+			#Trace.WriteLine(s.ToString())
+			CurrentSession.TwitterService.ProcessStatus(s, Action[Status](lambda s1: CurrentSession.ProcessTimelineStatus(s1, False, False)))
+
+	def onPostProcessTimelineStatuses(self, sender, e):
+		if e.IsFirstTime and self.requireDisableApi():
+			CurrentSession.TwitterService.Interval = 360000
+			CurrentSession.TwitterService.Stop()
+			CurrentSession.TwitterService.Start()
+
+	def onBeforeUnload(self, sender, e):
+		CurrentSession.AddInManager.GetAddIn[ConsoleAddIn]().UnregisterContext(DLRContextHelper.Wrap(CurrentSession, "ScrapingContext", ScrapingContext))
+		CurrentSession.PostProcessTimelineStatuses -= self.onPostProcessTimelineStatuses
+		self.interval = 0
+		self.thread.Join()
+		
+	def requireDisableApi(self):
+		return (self.config.GetValue("DisableTimelineApi") or "") != ""
+
+scraping = Scraping.instance()
+scraping.start()

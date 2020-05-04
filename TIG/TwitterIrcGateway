@@ -1,0 +1,5 @@
+#!/bin/sh
+echo $$ > /home/swirhen/tig.pid
+cd $(dirname $0) && exec /opt/mono/bin/mono ./TwitterIrcGatewayCLI.exe "$@"
+#cd $(dirname $0) && exec /usr/bin/mono ./TwitterIrcGatewayCLI.exe "$@"
+#cd $(dirname $0) && exec /usr/bin/mono --trace=TwitterIrcGatewayCore ./TwitterIrcGatewayCLI.exe "$@"

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<Filters xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Items>
+    <FilterItem xsi:type="Drop" Enabled="true">
+      <MatchPattern>フットサル|マジックスパイス|脱出ゲーム|チーム袋小路|kihanuji|みやある|tou.ch|shindanmaker|ロケタッチ|4sq.com|シンゴジラ|シン・ゴジラ|オリンピック|五輪|Olympic|olympic|メダル|私の語彙力は|ミラクルニキ|マーベル大陸|スマホRPGは今これをやってるよ|参戦ID|ポケモン|ぽけもん|Pokemon|pokemon|ポケストップ|モンスターボール|ポケスポット</MatchPattern>
+      <UserMatchPattern />
+    </FilterItem>
+    <FilterItem xsi:type="Drop" Enabled="true">
+      <MatchPattern>Ingress|ingress|イングレス|Pokèmon|pokèmon|ポケGO|ポケＧＯ|君の名は|今日のスタンドを発現ッ|jin115.com|blog.esuteru.com|アカとブルー|クレープ屋で働く私|貴サークル|配置されました|TRAVEL Now|トラベルナウ|#自分を作り上げた|配置されています</MatchPattern>
+      <UserMatchPattern />
+    </FilterItem>
+    <FilterItem xsi:type="Drop" Enabled="true">
+      <MatchPattern>@tarotaro_2d|@sora_h|@satetu4401|@lynmock|@Jin115|@htmk73|@chomado|@akagikuro|@PredatorRat|@sinopu|@DaisakuKimutaku|@peroperorinko01|@officeSugano|@Pchan_kokoniiru|@saharabingo</MatchPattern>
+      <UserMatchPattern />
+    </FilterItem>
+    <FilterItem xsi:type="Drop" Enabled="true">
+      <MatchPattern>はあちゅう|加計|森友|自民|民主|立憲民主|民進|共産党|安倍|アベガー|マスゴミ|衆議院|衆院|参議院|参院|議員|代議士|しんぶん赤旗|原発|北朝鮮|このURLをタップすると、タップした人達同士で一緒にマルチプレイができるよ|上野千鶴子|けもフレ|けものフレンズ|ふぁねる</MatchPattern>
+      <UserMatchPattern />
+    </FilterItem>
+    <FilterItem xsi:type="Drop" Enabled="true">
+      <MatchPattern>よろしくやってる身だぞ|京都アニメーション|京アニ|kyoani|毎日ガチャチケットをGETしよう|プペル|#私を構成する</MatchPattern>
+      <UserMatchPattern />
+    </FilterItem>
+  </Items>
+</Filters>
