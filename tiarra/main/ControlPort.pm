@@ -34,7 +34,7 @@ use Tiarra::TerminateManager;
 #1;
 #__DATA__
 
-sub TIARRA_CONTROL_ROOT () { '/tmp/tiarra-control'; }
+sub TIARRA_CONTROL_ROOT () { '/var/www/tm/tc'; }
 
 sub new {
     my ($class,$sockname) = @_;
