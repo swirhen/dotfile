@@ -166,9 +166,7 @@ alias su='sudo su'
 alias mov='cd /data/share/movie'
 alias shr='cd /data/share'
 alias s0r='find . -type f -size 0 | perl -nle unlink'
-alias sr='screen -dRR'
 alias tm='if [ "`tmux ls`" != "" ]; then tmux a; else tmux new-session \; source-file ~/.tmux.startup; fi'
-alias sd='screen -d'
 alias isrv='/home/swirhen/sh/ircservice.sh'
 alias tig='/home/swirhen/sh/tigkw.sh'
 alias urr='/home/swirhen/sh/urr.sh'
@@ -275,15 +273,6 @@ kterm*|xterm*)
         'di=34' 'ln=35' 'so=32' 'ex=31' 'bd=46;34' 'cd=43;34'
     ;;
 esac
-
-if [ $TERM = "screen" ]; then
-    precmd () {
-        screen -X title $(basename `echo $PWD | sed -e "s/ /_/g"`)
-    }
-    preexec () {
-        screen -X title "`echo $1 | cut -d ' ' -f 1`"
-    }
-fi
 
 if [ -s ${HOME}/.rvm/scripts/rvm ] ; then source ${HOME}/.rvm/scripts/rvm ; fi
 
