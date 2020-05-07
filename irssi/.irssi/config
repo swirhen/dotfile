@@ -9,7 +9,7 @@ servers = (
   {
     address = "localhost";
     chatnet = "v";
-    port = "16669";
+    port = "16668";
     password = "irankae";
   },
   {

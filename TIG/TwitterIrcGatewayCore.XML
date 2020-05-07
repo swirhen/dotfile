@@ -1,20 +1,13 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>obj/Release/TwitterIrcGatewayCore</name>
+        <name>TwitterIrcGatewayCore</name>
     </assembly>
     <members>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.AddInManager">
             <summary>
             アドインを管理する機能を提供します。
             </summary>
-        </member>
-        <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddInManager.#ctor(Misuzilla.Applications.TwitterIrcGateway.Server,Misuzilla.Applications.TwitterIrcGateway.Session)">
-            <summary>
-                <see cref="T:Misuzilla.Applications.TwitterIrcGateway.AddInManager" /> クラスのインスタンスを初期化します。
-            </summary>
-            <param name="server">サーバのインスタンス</param>
-            <param name="session">接続中のセッション情報のインスタンス</param>
         </member>
         <member name="P:Misuzilla.Applications.TwitterIrcGateway.AddInManager.SessionProxy">
             <summary>
@@ -26,13 +19,13 @@
             </remarks>
         </member>
         <member name="P:Misuzilla.Applications.TwitterIrcGateway.AddInManager.ServerProxy">
-            <summary>
-            セッション情報インスタンスへのプロキシを取得・設定します。
+             <summary>
+             セッション情報インスタンスへのプロキシを取得・設定します。
             </summary>
-            <remarks>
-            このプロキシは接続されているイベントを管理して、アドインが破棄されるときにすべてのイベントを解除できるようにします。
-            特別な理由がない限り、<see cref="T:Misuzilla.Applications.TwitterIrcGateway.Server" />を利用してください。
-            </remarks>
+             <remarks>
+             このプロキシは接続されているイベントを管理して、アドインが破棄されるときにすべてのイベントを解除できるようにします。
+             特別な理由がない限り、<see cref="T:Misuzilla.Applications.TwitterIrcGateway.Server" />を利用してください。
+             </remarks>
         </member>
         <member name="P:Misuzilla.Applications.TwitterIrcGateway.AddInManager.AddIns">
             <summary>
@@ -43,6 +36,13 @@
             <summary>
             アドインの型のコレクションを取得します
             </summary>
+        </member>
+        <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddInManager.#ctor(Misuzilla.Applications.TwitterIrcGateway.Server,Misuzilla.Applications.TwitterIrcGateway.Session)">
+            <summary>
+            <see cref="T:Misuzilla.Applications.TwitterIrcGateway.AddInManager"/> クラスのインスタンスを初期化します。
+            </summary>
+            <param name="server">サーバのインスタンス</param>
+            <param name="session">接続中のセッション情報のインスタンス</param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddInManager.Load">
             <summary>
@@ -105,39 +105,32 @@
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.RootContext">
             <summary>
+            
             </summary>
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.ConfigContext">
             <summary>
+            
             </summary>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Console.Attach(System.String,Misuzilla.Applications.TwitterIrcGateway.Server,Misuzilla.Applications.TwitterIrcGateway.Session,System.Type)">
             <summary>
             コンソールを有効にします。
             </summary>
-            <param name="channelName">
-            </param>
-            <param name="server">
-            </param>
-            <param name="session">
-            </param>
-            <param name="rootContextType">
-            </param>
+            <param name="channelName"></param>
+            <param name="server"></param>
+            <param name="session"></param>
+            <param name="rootContextType"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Console.Attach(System.String,Misuzilla.Applications.TwitterIrcGateway.Server,Misuzilla.Applications.TwitterIrcGateway.Session,System.Type,System.Boolean)">
             <summary>
             コンソールを有効にします。
             </summary>
-            <param name="channelName">
-            </param>
-            <param name="server">
-            </param>
-            <param name="session">
-            </param>
-            <param name="rootContextType">
-            </param>
-            <param name="autoJoin">
-            </param>
+            <param name="channelName"></param>
+            <param name="server"></param>
+            <param name="session"></param>
+            <param name="rootContextType"></param>
+            <param name="autoJoin"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Console.Detach">
             <summary>
@@ -148,19 +141,15 @@
             <summary>
             IRCメッセージを受け取ってTIG本体に処理が渡る前の処理
             </summary>
-            <param name="sender">
-            </param>
-            <param name="e">
-            </param>
+            <param name="sender"></param>
+            <param name="e"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Console.Session_PostMessageReceived(System.Object,Misuzilla.Applications.TwitterIrcGateway.MessageReceivedEventArgs)">
             <summary>
             IRCメッセージを受け取ってTIG本体が処理を終えた後の処理
             </summary>
-            <param name="sender">
-            </param>
-            <param name="e">
-            </param>
+            <param name="sender"></param>
+            <param name="e"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Console.ProcessInput(System.String,System.Boolean)">
             <summary>
@@ -191,87 +180,71 @@
             <summary>
             コンテキストを追加します。
             </summary>
-            <typeparam name="T">
-            </typeparam>
+            <typeparam name="T"></typeparam>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Console.RegisterContext(System.Type)">
             <summary>
             コンテキストを追加します。
             </summary>
-            <param name="contextType">
-            </param>
+            <param name="contextType"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Console.RegisterContext(System.Type,System.String,System.String)">
             <summary>
             コンテキストを追加します。
             </summary>
-            <param name="contextType">
-            </param>
+            <param name="contextType"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Console.UnregisterContext``1">
             <summary>
             コンテキストを削除します。
             </summary>
-            <typeparam name="T">
-            </typeparam>
+            <typeparam name="T"></typeparam>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Console.UnregisterContext(System.Type)">
             <summary>
             コンテキストを削除します。
             </summary>
-            <param name="contextType">
-            </param>
+            <param name="contextType"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Console.GetContext``1(Misuzilla.Applications.TwitterIrcGateway.Server,Misuzilla.Applications.TwitterIrcGateway.Session)">
             <summary>
             コンテキストをインスタンス化して返します。
             </summary>
-            <typeparam name="T">
-            </typeparam>
-            <param name="server">
-            </param>
-            <param name="session">
-            </param>
-            <returns>
-            </returns>
+            <typeparam name="T"></typeparam>
+            <param name="server"></param>
+            <param name="session"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Console.GetContext(System.Type,Misuzilla.Applications.TwitterIrcGateway.Server,Misuzilla.Applications.TwitterIrcGateway.Session)">
             <summary>
             コンテキストをインスタンス化して返します。
             </summary>
-            <param name="t">
-            </param>
-            <param name="server">
-            </param>
-            <param name="session">
-            </param>
-            <returns>
-            </returns>
+            <param name="t"></param>
+            <param name="server"></param>
+            <param name="session"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Console.RegisterAliasByType(System.Type,System.String,System.String)">
             <summary>
             指定したタイプのコマンドのエイリアスを登録します。
             </summary>
-            <param name="contextType">
-            </param>
-            <param name="aliasName">
-            </param>
-            <param name="aliasCommand">
-            </param>
+            <param name="contextType"></param>
+            <param name="aliasName"></param>
+            <param name="aliasCommand"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Console.UnregisterAliasByType(System.Type,System.String)">
             <summary>
+            
             </summary>
-            <param name="contextType">
-            </param>
-            <param name="aliasName">
-            </param>
+            <param name="contextType"></param>
+            <param name="aliasName"></param>
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Context">
             <summary>
+            
             </summary>
         </member>
-        <!--FIXME: Invalid documentation markup was found for member P:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Context.Server-->
+        <!-- Badly formed XML comment ignored for member "P:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Context.Server" -->
         <member name="P:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Context.Session">
             <summary>
             関連づけられているセッション情報のインスタンスを取得します。
@@ -290,88 +263,79 @@
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Context.Initialize">
             <summary>
+            
             </summary>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Context.OnUninitialize">
             <summary>
+            
             </summary>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Context.OnConfigurationBeforeChange(Misuzilla.Applications.TwitterIrcGateway.AddIns.IConfiguration,System.Reflection.MemberInfo,System.Object,System.Object)">
             <summary>
             設定が変更される直前に行う処理
             </summary>
-            <param name="config">
-            </param>
-            <param name="memberInfo">
-            </param>
-            <param name="valueOld">
-            </param>
-            <param name="valueNew">
-            </param>
+            <param name="config"></param>
+            <param name="memberInfo"></param>
+            <param name="valueOld"></param>
+            <param name="valueNew"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Context.OnConfigurationChanged(Misuzilla.Applications.TwitterIrcGateway.AddIns.IConfiguration,System.Reflection.MemberInfo,System.Object)">
             <summary>
             設定が変更された際に行う処理
             </summary>
-            <param name="config">
-            </param>
-            <param name="memberInfo">
-            </param>
-            <param name="value">
-            </param>
+            <param name="config"></param>
+            <param name="memberInfo"></param>
+            <param name="value"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Context.OnCallMissingCommand(System.String,System.String)">
             <summary>
             存在しないコマンドが呼ばれた場合の処理
             </summary>
-            <param name="commandName">
-            </param>
-            <param name="rawInputLine">
-            </param>
+            <param name="commandName"></param>
+            <param name="rawInputLine"></param>
             <returns>コマンドを処理したかどうかを表す値。falseを返す場合、該当するコマンドは存在しなかった扱いとなります。</returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Context.OnPreProcessInput(System.String)">
             <summary>
             コンソールでコマンドを解釈する前に実行する処理
             </summary>
-            <param name="inputLine">
-            </param>
+            <param name="inputLine"></param>
             <returns>処理を横取りして、コマンド解釈を行なわない場合にはtrueを返します。</returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Context.GetCommands">
             <summary>
+            
             </summary>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Context.GetCommand(System.String)">
             <summary>
             コマンドを名前で取得します。
             </summary>
-            <param name="commandName">
-            </param>
+            <param name="commandName"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.Context.SetConfigurationValue(System.String,System.String)">
             <summary>
+            
             </summary>
-            <param name="configName">
-            </param>
-            <param name="value">
-            </param>
+            <param name="configName"></param>
+            <param name="value"></param>
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.FilterContext">
             <summary>
+            
             </summary>
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.EditFilterContext`1">
             <summary>
             編集用のジェネリックコンテキスト
             </summary>
-            <typeparam name="T">
-            </typeparam>
+            <typeparam name="T"></typeparam>
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.GroupContext">
             <summary>
+            
             </summary>
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.AddIns.DLRIntegration.DLRContextHelper">
@@ -386,8 +350,7 @@
             <param name="session">保持しているセッション</param>
             <param name="contextName">コンテキスト名</param>
             <param name="dlrContextType">DLRの型オブジェクト(PythonTypeなど)</param>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.AddIns.DLRIntegration.DLRBasicConfiguration">
             <summary>
@@ -403,10 +366,8 @@
             <summary>
             指定したディレクトリ以下のスクリプトを読み込む
             </summary>
-            <param name="rootDir">
-            </param>
-            <param name="scriptExecutionCallback">
-            </param>
+            <param name="rootDir"></param>
+            <param name="scriptExecutionCallback"></param>
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.AddIns.IAddIn">
             <summary>
@@ -450,26 +411,6 @@
             設定可能なパラメータを表すクラスです。
             </summary>
         </member>
-        <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.ConfigurationPropertyInfo.#ctor">
-            <summary>
-            ConfigurationPropertyInfo クラスのインスタンスを作成します。
-            </summary>
-        </member>
-        <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.ConfigurationPropertyInfo.#ctor(System.String,System.String,System.Type,System.Object,System.Reflection.MemberInfo)">
-            <summary>
-            ConfigurationPropertyInfo クラスのインスタンスを作成して指定されたパラメータで初期化します。
-            </summary>
-            <param name="name">
-            </param>
-            <param name="description">
-            </param>
-            <param name="type">
-            </param>
-            <param name="defaultValue">
-            </param>
-            <param name="memberInfo">
-            </param>
-        </member>
         <member name="P:Misuzilla.Applications.TwitterIrcGateway.AddIns.ConfigurationPropertyInfo.Name">
             <summary>
             設定名
@@ -495,25 +436,35 @@
             デフォルトの値
             </summary>
         </member>
+        <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.ConfigurationPropertyInfo.#ctor">
+            <summary>
+            ConfigurationPropertyInfo クラスのインスタンスを作成します。
+            </summary>
+        </member>
+        <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.ConfigurationPropertyInfo.#ctor(System.String,System.String,System.Type,System.Object,System.Reflection.MemberInfo)">
+            <summary>
+            ConfigurationPropertyInfo クラスのインスタンスを作成して指定されたパラメータで初期化します。
+            </summary>
+            <param name="name"></param>
+            <param name="description"></param>
+            <param name="type"></param>
+            <param name="defaultValue"></param>
+            <param name="memberInfo"></param>
+        </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.ConfigurationPropertyInfo.GetValue(Misuzilla.Applications.TwitterIrcGateway.AddIns.IConfiguration)">
             <summary>
             値を取得します。
             </summary>
-            <param name="config">
-            </param>
-            <returns>
-            </returns>
+            <param name="config"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.ConfigurationPropertyInfo.SetValue(Misuzilla.Applications.TwitterIrcGateway.AddIns.IConfiguration,System.Object)">
             <summary>
             値を設定します。
             </summary>
-            <param name="config">
-            </param>
-            <param name="value">
-            </param>
-            <returns>
-            </returns>
+            <param name="config"></param>
+            <param name="value"></param>
+            <returns></returns>
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.AddIns.AddInBase">
             <summary>
@@ -561,8 +512,7 @@
             </summary>
             <param name="text">対象の文字列</param>
             <param name="hintTexts">ヒントとなる文字列のコレクション</param>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.ShortenUrlService.ShortenUrlInMessage(System.String,System.Int32)">
             <summary>
@@ -570,8 +520,7 @@
             </summary>
             <param name="message">メッセージ</param>
             <param name="timeOut">タイムアウトするまでの時間</param>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.AddIns.ShortenUrlService.ShortenUrl(System.String,System.Int32)">
             <summary>
@@ -579,27 +528,12 @@
             </summary>
             <param name="message">メッセージ</param>
             <param name="timeOut">タイムアウトするまでの時間</param>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.AuthenticateResult">
             <summary>
             認証結果を保持します。
             </summary>
-        </member>
-        <member name="M:Misuzilla.Applications.TwitterIrcGateway.AuthenticateResult.#ctor">
-            <summary>
-            認証が成功した状態で初期化します。
-            </summary>
-        </member>
-        <member name="M:Misuzilla.Applications.TwitterIrcGateway.AuthenticateResult.#ctor(Misuzilla.Net.Irc.ErrorReply,System.String)">
-            <summary>
-            認証に失敗しその理由を指定して初期化します。
-            </summary>
-            <param name="errorReply">
-            </param>
-            <param name="message">
-            </param>
         </member>
         <member name="P:Misuzilla.Applications.TwitterIrcGateway.AuthenticateResult.IsAuthenticated">
             <summary>
@@ -615,6 +549,18 @@
             <summary>
             認証が失敗した理由を返します。
             </summary>
+        </member>
+        <member name="M:Misuzilla.Applications.TwitterIrcGateway.AuthenticateResult.#ctor">
+            <summary>
+            認証が成功した状態で初期化します。
+            </summary>
+        </member>
+        <member name="M:Misuzilla.Applications.TwitterIrcGateway.AuthenticateResult.#ctor(Misuzilla.Net.Irc.ErrorReply,System.String)">
+            <summary>
+            認証に失敗しその理由を指定して初期化します。
+            </summary>
+            <param name="errorReply"></param>
+            <param name="message"></param>
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.TwitterAuthenticateResult">
             <summary>
@@ -693,6 +639,7 @@
         </member>
         <member name="P:Misuzilla.Applications.TwitterIrcGateway.ConnectionBase.Encoding">
             <summary>
+            
             </summary>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.ConnectionBase.Start">
@@ -704,36 +651,31 @@
             <summary>
             IRCメッセージを送信します
             </summary>
-            <param name="msg">
-            </param>
+            <param name="msg"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.ConnectionBase.SendServer(Misuzilla.Net.Irc.IRCMessage)">
             <summary>
             JOIN などクライアントに返すメッセージを送信します
             </summary>
-            <param name="msg">
-            </param>
+            <param name="msg"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.ConnectionBase.SendServerMessage(Misuzilla.Net.Irc.IRCMessage)">
             <summary>
             IRCサーバからのメッセージを送信します
             </summary>
-            <param name="msg">
-            </param>
+            <param name="msg"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.ConnectionBase.SendGatewayServerMessage(System.String)">
             <summary>
             Gatewayからのメッセージを送信します
             </summary>
-            <param name="message">
-            </param>
+            <param name="message"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.ConnectionBase.SendServerErrorMessage(System.String)">
             <summary>
             サーバのエラーメッセージを送信します
             </summary>
-            <param name="message">
-            </param>
+            <param name="message"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.ConnectionBase.SendErrorReply(Misuzilla.Net.Irc.ErrorReply,System.String[])">
             <summary>
@@ -751,21 +693,21 @@
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.ConnectionBase.Close">
             <summary>
+            
             </summary>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.ConnectionBase.CheckDisposed">
             <summary>
+            
             </summary>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.ConnectionBase.FireEvent``1(System.EventHandler{``0},``0)">
             <summary>
+            
             </summary>
-            <typeparam name="TEventArgs">
-            </typeparam>
-            <param name="handlers">
-            </param>
-            <param name="e">
-            </param>
+            <typeparam name="TEventArgs"></typeparam>
+            <param name="handlers"></param>
+            <param name="e"></param>
             <returns>キャンセルされた場合にはfalseが返ります。</returns>
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.Deferred">
@@ -777,8 +719,7 @@
             <summary>
             遅延実行の状態を表します。
             </summary>
-            <typeparam name="TResult">
-            </typeparam>
+            <typeparam name="TResult"></typeparam>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Deferred.DeferredState`1.Cancel">
             <summary>
@@ -790,277 +731,182 @@
             <summary>
             遅延実行結果を取得します。処理が実行されていない場合には完了を待ちます。
             </summary>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Deferred.DeferredInvokeInternal``1(System.Func{``0},System.Int32,System.AsyncCallback)">
             <summary>
+            
             </summary>
-            <typeparam name="TResult">
-            </typeparam>
-            <param name="func">
-            </param>
-            <param name="millisecond">
-            </param>
-            <param name="asyncCallback">
-            </param>
-            <returns>
-            </returns>
+            <typeparam name="TResult"></typeparam>
+            <param name="func"></param>
+            <param name="millisecond"></param>
+            <param name="asyncCallback"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Deferred.DeferredInvoke``1(System.Func{``0},System.Int32)">
             <summary>
             メソッドを遅延実行します。
             </summary>
-            <typeparam name="TResult">
-            </typeparam>
-            <param name="func">
-            </param>
-            <param name="millisecond">
-            </param>
-            <returns>
-            </returns>
+            <typeparam name="TResult"></typeparam>
+            <param name="func"></param>
+            <param name="millisecond"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Deferred.DeferredInvoke``1(System.Func{``0},System.Int32,System.AsyncCallback)">
             <summary>
             コールバックを指定してメソッドを遅延実行します。
             </summary>
-            <typeparam name="TResult">
-            </typeparam>
-            <param name="func">
-            </param>
-            <param name="millisecond">
-            </param>
-            <param name="asyncCallback">
-            </param>
-            <returns>
-            </returns>
+            <typeparam name="TResult"></typeparam>
+            <param name="func"></param>
+            <param name="millisecond"></param>
+            <param name="asyncCallback"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Deferred.DeferredInvoke``2(System.Func{``0,``1},System.Int32,``0)">
             <summary>
             メソッドを遅延実行します。
             </summary>
-            <typeparam name="T">
-            </typeparam>
-            <typeparam name="TResult">
-            </typeparam>
-            <param name="func">
-            </param>
-            <param name="millisecond">
-            </param>
-            <param name="arg1">
-            </param>
-            <returns>
-            </returns>
+            <typeparam name="T"></typeparam>
+            <typeparam name="TResult"></typeparam>
+            <param name="func"></param>
+            <param name="millisecond"></param>
+            <param name="arg1"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Deferred.DeferredInvoke``2(System.Func{``0,``1},System.Int32,System.AsyncCallback,``0)">
             <summary>
             コールバックを指定してメソッドを遅延実行します。
             </summary>
-            <typeparam name="T">
-            </typeparam>
-            <typeparam name="TResult">
-            </typeparam>
-            <param name="func">
-            </param>
-            <param name="millisecond">
-            </param>
-            <param name="asyncCallback">
-            </param>
-            <param name="arg1">
-            </param>
-            <returns>
-            </returns>
+            <typeparam name="T"></typeparam>
+            <typeparam name="TResult"></typeparam>
+            <param name="func"></param>
+            <param name="millisecond"></param>
+            <param name="asyncCallback"></param>
+            <param name="arg1"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Deferred.DeferredInvoke``3(System.Func{``0,``1,``2},System.Int32,``0,``1)">
             <summary>
             メソッドを遅延実行します。
             </summary>
-            <typeparam name="T1">
-            </typeparam>
-            <typeparam name="T2">
-            </typeparam>
-            <typeparam name="TResult">
-            </typeparam>
-            <param name="func">
-            </param>
-            <param name="millisecond">
-            </param>
-            <param name="arg1">
-            </param>
-            <param name="arg2">
-            </param>
-            <returns>
-            </returns>
+            <typeparam name="T1"></typeparam>
+            <typeparam name="T2"></typeparam>
+            <typeparam name="TResult"></typeparam>
+            <param name="func"></param>
+            <param name="millisecond"></param>
+            <param name="arg1"></param>
+            <param name="arg2"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Deferred.DeferredInvoke``3(System.Func{``0,``1,``2},System.Int32,System.AsyncCallback,``0,``1)">
             <summary>
             コールバックを指定してメソッドを遅延実行します。
             </summary>
-            <typeparam name="T1">
-            </typeparam>
-            <typeparam name="T2">
-            </typeparam>
-            <typeparam name="TResult">
-            </typeparam>
-            <param name="func">
-            </param>
-            <param name="millisecond">
-            </param>
-            <param name="asyncCallback">
-            </param>
-            <param name="arg1">
-            </param>
-            <param name="arg2">
-            </param>
-            <returns>
-            </returns>
+            <typeparam name="T1"></typeparam>
+            <typeparam name="T2"></typeparam>
+            <typeparam name="TResult"></typeparam>
+            <param name="func"></param>
+            <param name="millisecond"></param>
+            <param name="asyncCallback"></param>
+            <param name="arg1"></param>
+            <param name="arg2"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Deferred.DeferredInvoke``4(System.Func{``0,``1,``2,``3},System.Int32,``0,``1,``2)">
             <summary>
             メソッドを遅延実行します。
             </summary>
-            <typeparam name="T1">
-            </typeparam>
-            <typeparam name="T2">
-            </typeparam>
-            <typeparam name="T3">
-            </typeparam>
-            <typeparam name="TResult">
-            </typeparam>
-            <param name="func">
-            </param>
-            <param name="millisecond">
-            </param>
-            <param name="arg1">
-            </param>
-            <param name="arg2">
-            </param>
-            <param name="arg3">
-            </param>
-            <returns>
-            </returns>
+            <typeparam name="T1"></typeparam>
+            <typeparam name="T2"></typeparam>
+            <typeparam name="T3"></typeparam>
+            <typeparam name="TResult"></typeparam>
+            <param name="func"></param>
+            <param name="millisecond"></param>
+            <param name="arg1"></param>
+            <param name="arg2"></param>
+            <param name="arg3"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Deferred.DeferredInvoke``4(System.Func{``0,``1,``2,``3},System.Int32,System.AsyncCallback,``0,``1,``2)">
             <summary>
             コールバックを指定してメソッドを遅延実行します。
             </summary>
-            <typeparam name="T1">
-            </typeparam>
-            <typeparam name="T2">
-            </typeparam>
-            <typeparam name="T3">
-            </typeparam>
-            <typeparam name="TResult">
-            </typeparam>
-            <param name="func">
-            </param>
-            <param name="millisecond">
-            </param>
-            <param name="asyncCallback">
-            </param>
-            <param name="arg1">
-            </param>
-            <param name="arg2">
-            </param>
-            <param name="arg3">
-            </param>
-            <returns>
-            </returns>
+            <typeparam name="T1"></typeparam>
+            <typeparam name="T2"></typeparam>
+            <typeparam name="T3"></typeparam>
+            <typeparam name="TResult"></typeparam>
+            <param name="func"></param>
+            <param name="millisecond"></param>
+            <param name="asyncCallback"></param>
+            <param name="arg1"></param>
+            <param name="arg2"></param>
+            <param name="arg3"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Deferred.DeferredInvoke``5(System.Func{``0,``1,``2,``3,``4},System.Int32,``0,``1,``2,``3)">
             <summary>
             メソッドを遅延実行します。
             </summary>
-            <typeparam name="T1">
-            </typeparam>
-            <typeparam name="T2">
-            </typeparam>
-            <typeparam name="T3">
-            </typeparam>
-            <typeparam name="T4">
-            </typeparam>
-            <typeparam name="TResult">
-            </typeparam>
-            <param name="func">
-            </param>
-            <param name="millisecond">
-            </param>
-            <param name="arg1">
-            </param>
-            <param name="arg2">
-            </param>
-            <param name="arg3">
-            </param>
-            <param name="arg4">
-            </param>
-            <returns>
-            </returns>
+            <typeparam name="T1"></typeparam>
+            <typeparam name="T2"></typeparam>
+            <typeparam name="T3"></typeparam>
+            <typeparam name="T4"></typeparam>
+            <typeparam name="TResult"></typeparam>
+            <param name="func"></param>
+            <param name="millisecond"></param>
+            <param name="arg1"></param>
+            <param name="arg2"></param>
+            <param name="arg3"></param>
+            <param name="arg4"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Deferred.DeferredInvoke``5(System.Func{``0,``1,``2,``3,``4},System.Int32,System.AsyncCallback,``0,``1,``2,``3)">
             <summary>
             コールバックを指定してメソッドを遅延実行します。
             </summary>
-            <typeparam name="T1">
-            </typeparam>
-            <typeparam name="T2">
-            </typeparam>
-            <typeparam name="T3">
-            </typeparam>
-            <typeparam name="T4">
-            </typeparam>
-            <typeparam name="TResult">
-            </typeparam>
-            <param name="func">
-            </param>
-            <param name="millisecond">
-            </param>
-            <param name="asyncCallback">
-            </param>
-            <param name="arg1">
-            </param>
-            <param name="arg2">
-            </param>
-            <param name="arg3">
-            </param>
-            <param name="arg4">
-            </param>
-            <returns>
-            </returns>
+            <typeparam name="T1"></typeparam>
+            <typeparam name="T2"></typeparam>
+            <typeparam name="T3"></typeparam>
+            <typeparam name="T4"></typeparam>
+            <typeparam name="TResult"></typeparam>
+            <param name="func"></param>
+            <param name="millisecond"></param>
+            <param name="asyncCallback"></param>
+            <param name="arg1"></param>
+            <param name="arg2"></param>
+            <param name="arg3"></param>
+            <param name="arg4"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.IIrcMessageSendable.Send(Misuzilla.Net.Irc.IRCMessage)">
             <summary>
             IRCメッセージを送信します
             </summary>
-            <param name="msg">
-            </param>
+            <param name="msg"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.IIrcMessageSendable.SendServer(Misuzilla.Net.Irc.IRCMessage)">
             <summary>
             JOIN などクライアントに返すメッセージを送信します
             </summary>
-            <param name="msg">
-            </param>
+            <param name="msg"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.IIrcMessageSendable.SendServerMessage(Misuzilla.Net.Irc.IRCMessage)">
             <summary>
             IRCサーバからのメッセージを送信します
             </summary>
-            <param name="msg">
-            </param>
+            <param name="msg"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.IIrcMessageSendable.SendGatewayServerMessage(System.String)">
             <summary>
             Gatewayからのメッセージを送信します
             </summary>
-            <param name="message">
-            </param>
+            <param name="message"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.IIrcMessageSendable.SendServerErrorMessage(System.String)">
             <summary>
             サーバのエラーメッセージを送信します
             </summary>
-            <param name="message">
-            </param>
+            <param name="message"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.IIrcMessageSendable.SendErrorReply(Misuzilla.Net.Irc.ErrorReply,System.String[])">
             <summary>
@@ -1075,120 +921,6 @@
             </summary>
             <param name="numReply">リプライ番号</param>
             <param name="commandParams">リプライコマンドパラメータ</param>
-        </member>
-        <member name="T:OAuth.OAuthBase.SignatureTypes">
-            <summary>
-            Provides a predefined set of algorithms that are supported officially by the protocol
-            </summary>
-        </member>
-        <member name="T:OAuth.OAuthBase.QueryParameter">
-            <summary>
-            Provides an internal structure to sort the query parameter
-            </summary>
-        </member>
-        <member name="T:OAuth.OAuthBase.QueryParameterComparer">
-            <summary>
-            Comparer class used to perform the sorting of the query parameters
-            </summary>
-        </member>
-        <member name="P:OAuth.OAuthBase.CallbackUrl">
-            <summary>
-            Callback url (oauth_callback)
-            </summary>
-        </member>
-        <member name="P:OAuth.OAuthBase.Verifier">
-            <summary>
-            (oauth_verifier)
-            </summary>
-        </member>
-        <member name="M:OAuth.OAuthBase.ComputeHash(System.Security.Cryptography.HashAlgorithm,System.String)">
-            <summary>
-            Helper function to compute a hash value
-            </summary>
-            <param name="hashAlgorithm">The hashing algoirhtm used. If that algorithm needs some initialization, like HMAC and its derivatives, they should be initialized prior to passing it to this function</param>
-            <param name="data">The data to hash</param>
-            <returns>a Base64 string of the hash value</returns>
-        </member>
-        <member name="M:OAuth.OAuthBase.GetQueryParameters(System.String)">
-            <summary>
-            Internal function to cut out all non oauth query string parameters (all parameters not begining with "oauth_")
-            </summary>
-            <param name="parameters">The query string part of the Url</param>
-            <returns>A list of QueryParameter each containing the parameter name and value</returns>
-        </member>
-        <member name="M:OAuth.OAuthBase.UrlEncode(System.String)">
-            <summary>
-            This is a different Url Encode implementation since the default .NET one outputs the percent encoding in lower case.
-            While this is not a problem with the percent encoding spec, it is used in upper case throughout OAuth
-            </summary>
-            <param name="value">The value to Url encode</param>
-            <returns>Returns a Url encoded string</returns>
-        </member>
-        <member name="M:OAuth.OAuthBase.NormalizeRequestParameters(System.Collections.Generic.IList{OAuth.OAuthBase.QueryParameter})">
-            <summary>
-            Normalizes the request parameters according to the spec
-            </summary>
-            <param name="parameters">The list of parameters already sorted</param>
-            <returns>a string representing the normalized parameters</returns>
-        </member>
-        <member name="M:OAuth.OAuthBase.GenerateSignatureBase(System.Uri,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String@,System.String@)">
-            <summary>
-            Generate the signature base that is used to produce the signature
-            </summary>
-            <param name="url">The full url that needs to be signed including its non OAuth url parameters</param>
-            <param name="consumerKey">The consumer key</param>
-            <param name="token">The token, if available. If not available pass null or an empty string</param>
-            <param name="tokenSecret">The token secret, if available. If not available pass null or an empty string</param>
-            <param name="httpMethod">The http method used. Must be a valid HTTP method verb (POST,GET,PUT, etc)</param>
-            <param name="signatureType">The signature type. To use the default values use <see cref="T:OAuth.OAuthBase.SignatureTypes">OAuthBase.SignatureTypes</see>.</param>
-            <returns>The signature base</returns>
-        </member>
-        <member name="M:OAuth.OAuthBase.GenerateSignatureUsingHash(System.String,System.Security.Cryptography.HashAlgorithm)">
-            <summary>
-            Generate the signature value based on the given signature base and hash algorithm
-            </summary>
-            <param name="signatureBase">The signature based as produced by the GenerateSignatureBase method or by any other means</param>
-            <param name="hash">The hash algorithm used to perform the hashing. If the hashing algorithm requires initialization or a key it should be set prior to calling this method</param>
-            <returns>A base64 string of the hash value</returns>
-        </member>
-        <member name="M:OAuth.OAuthBase.GenerateSignature(System.Uri,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String@,System.String@)">
-            <summary>
-            Generates a signature using the HMAC-SHA1 algorithm
-            </summary>
-            <param name="url">The full url that needs to be signed including its non OAuth url parameters</param>
-            <param name="consumerKey">The consumer key</param>
-            <param name="consumerSecret">The consumer seceret</param>
-            <param name="token">The token, if available. If not available pass null or an empty string</param>
-            <param name="tokenSecret">The token secret, if available. If not available pass null or an empty string</param>
-            <param name="httpMethod">The http method used. Must be a valid HTTP method verb (POST,GET,PUT, etc)</param>
-            <returns>A base64 string of the hash value</returns>
-        </member>
-        <member name="M:OAuth.OAuthBase.GenerateSignature(System.Uri,System.String,System.String,System.String,System.String,System.String,System.String,System.String,OAuth.OAuthBase.SignatureTypes,System.String@,System.String@)">
-            <summary>
-            Generates a signature using the specified signatureType
-            </summary>
-            <param name="url">The full url that needs to be signed including its non OAuth url parameters</param>
-            <param name="consumerKey">The consumer key</param>
-            <param name="consumerSecret">The consumer seceret</param>
-            <param name="token">The token, if available. If not available pass null or an empty string</param>
-            <param name="tokenSecret">The token secret, if available. If not available pass null or an empty string</param>
-            <param name="httpMethod">The http method used. Must be a valid HTTP method verb (POST,GET,PUT, etc)</param>
-            <param name="signatureType">The type of signature to use</param>
-            <returns>A base64 string of the hash value</returns>
-        </member>
-        <member name="M:OAuth.OAuthBase.GenerateTimeStamp">
-            <summary>
-            Generate the timestamp for the signature
-            </summary>
-            <returns>
-            </returns>
-        </member>
-        <member name="M:OAuth.OAuthBase.GenerateNonce">
-            <summary>
-            Generate a nonce
-            </summary>
-            <returns>
-            </returns>
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.RateLimitStatus">
             <summary>
@@ -1229,124 +961,71 @@
             <summary>
             リソースへのアクセスが可能かどうかを返します。
             </summary>
-            <param name="resourceEndpoint">
-            </param>
-            <returns>
-            </returns>
+            <param name="resourceEndpoint"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterOAuth.Request(System.Uri,Misuzilla.Applications.TwitterIrcGateway.TwitterOAuth.HttpMethod)">
             <summary>
             リソースへアクセスし、レスポンスボディを返します。
             </summary>
-            <param name="requestUrl">
-            </param>
-            <param name="method">
-            </param>
-            <returns>
-            </returns>
+            <param name="requestUrl"></param>
+            <param name="method"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterOAuth.Request(System.Uri,Misuzilla.Applications.TwitterIrcGateway.TwitterOAuth.HttpMethod,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             パラメータを指定してリソースへアクセスし、レスポンスボディを返します。
             </summary>
-            <param name="requestUrl">
-            </param>
-            <param name="method">
-            </param>
-            <param name="parameters">
-            </param>
-            <returns>
-            </returns>
+            <param name="requestUrl"></param>
+            <param name="method"></param>
+            <param name="parameters"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterOAuth.Request(System.Uri,Misuzilla.Applications.TwitterIrcGateway.TwitterOAuth.HttpMethod,System.Collections.Generic.Dictionary{System.String,System.String},System.String)">
             <summary>
             パラメータを指定してリソースへアクセスし、レスポンスボディを返します。
             </summary>
-            <param name="requestUrl">
-            </param>
-            <param name="method">
-            </param>
-            <param name="parameters">
-            </param>
+            <param name="requestUrl"></param>
+            <param name="method"></param>
+            <param name="parameters"></param>
             <param name="resourceEndpoint">Rate Limitを認識するためのリソースのエンドポイント</param>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterOAuth.Request(System.Uri,Misuzilla.Applications.TwitterIrcGateway.TwitterOAuth.HttpMethod,System.String,System.String)">
             <summary>
             パラメータを指定してリソースへアクセスし、レスポンスボディを返します。
             </summary>
-            <param name="requestUrl">
-            </param>
-            <param name="method">
-            </param>
-            <param name="parameters">
-            </param>
+            <param name="requestUrl"></param>
+            <param name="method"></param>
+            <param name="parameters"></param>
             <param name="resourceEndpoint">Rate Limitを認識するためのリソースのエンドポイント</param>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterOAuth.CreateRequest(System.Uri,Misuzilla.Applications.TwitterIrcGateway.TwitterOAuth.HttpMethod)">
             <summary>
             リソースへアクセス開始し、HttpWebRequestを返します。
             </summary>
-            <param name="requestUrl">
-            </param>
-            <param name="method">
-            </param>
-            <returns>
-            </returns>
+            <param name="requestUrl"></param>
+            <param name="method"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterOAuth.CreateRequest(System.Uri,Misuzilla.Applications.TwitterIrcGateway.TwitterOAuth.HttpMethod,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             リソースへアクセス開始し、HttpWebRequestを返します。
             </summary>
-            <param name="requestUrl">
-            </param>
-            <param name="method">
-            </param>
-            <param name="parameters">
-            </param>
-            <returns>
-            </returns>
+            <param name="requestUrl"></param>
+            <param name="method"></param>
+            <param name="parameters"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterOAuth.CreateRequest(System.Uri,Misuzilla.Applications.TwitterIrcGateway.TwitterOAuth.HttpMethod,System.String)">
             <summary>
             リソースへアクセス開始し、HttpWebRequestを返します。
             </summary>
-            <param name="requestUrl">
-            </param>
-            <param name="method">
-            </param>
-            <param name="parameters">
-            </param>
-            <returns>
-            </returns>
-        </member>
-        <member name="E:Misuzilla.Applications.TwitterIrcGateway.SessionBase.ConnectionAttached">
-            <summary>
-            セッションに接続が開始された際に発生するイベントです。
-            </summary>
-        </member>
-        <member name="E:Misuzilla.Applications.TwitterIrcGateway.SessionBase.ConnectionDetached">
-            <summary>
-            セッションから接続が切断された際に発生するイベントです。
-            </summary>
-        </member>
-        <member name="E:Misuzilla.Applications.TwitterIrcGateway.SessionBase.BeforeClosing">
-            <summary>
-            セッションが終了する際に発生するイベントです。
-            </summary>
-        </member>
-        <member name="E:Misuzilla.Applications.TwitterIrcGateway.SessionBase.Closing">
-            <summary>
-            セッションが終了中に発生するイベントです。
-            </summary>
-        </member>
-        <member name="E:Misuzilla.Applications.TwitterIrcGateway.SessionBase.AfterClosing">
-            <summary>
-            セッションが終了する処理を終えた際に発生するイベントです。
-            </summary>
+            <param name="requestUrl"></param>
+            <param name="method"></param>
+            <param name="parameters"></param>
+            <returns></returns>
         </member>
         <member name="P:Misuzilla.Applications.TwitterIrcGateway.SessionBase.IsClosing">
             <summary>
@@ -1373,40 +1052,60 @@
             現在セッションにある接続のコレクションを取得します。
             </summary>
         </member>
+        <member name="E:Misuzilla.Applications.TwitterIrcGateway.SessionBase.ConnectionAttached">
+            <summary>
+            セッションに接続が開始された際に発生するイベントです。
+            </summary>
+        </member>
+        <member name="E:Misuzilla.Applications.TwitterIrcGateway.SessionBase.ConnectionDetached">
+            <summary>
+            セッションから接続が切断された際に発生するイベントです。
+            </summary>
+        </member>
+        <member name="E:Misuzilla.Applications.TwitterIrcGateway.SessionBase.BeforeClosing">
+            <summary>
+            セッションが終了する際に発生するイベントです。
+            </summary>
+        </member>
+        <member name="E:Misuzilla.Applications.TwitterIrcGateway.SessionBase.Closing">
+            <summary>
+            セッションが終了中に発生するイベントです。
+            </summary>
+        </member>
+        <member name="E:Misuzilla.Applications.TwitterIrcGateway.SessionBase.AfterClosing">
+            <summary>
+            セッションが終了する処理を終えた際に発生するイベントです。
+            </summary>
+        </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.SessionBase.Attach(Misuzilla.Applications.TwitterIrcGateway.ConnectionBase)">
             <summary>
             接続をセッションに結びつけます。
             </summary>
-            <param name="connection">
-            </param>
+            <param name="connection"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.SessionBase.Detach(Misuzilla.Applications.TwitterIrcGateway.ConnectionBase)">
             <summary>
             接続をセッションから切り離します。キープアライブが有効な場合を除き接続数が0となるとセッションは終了します。
             </summary>
-            <param name="connection">
-            </param>
+            <param name="connection"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.SessionBase.OnAttached(Misuzilla.Applications.TwitterIrcGateway.ConnectionBase)">
             <summary>
             接続が結びつけられたときの処理です。
             </summary>
-            <param name="connection">
-            </param>
+            <param name="connection"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.SessionBase.OnDetached(Misuzilla.Applications.TwitterIrcGateway.ConnectionBase)">
             <summary>
             接続が切り離されたときの処理です。
             </summary>
-            <param name="connection">
-            </param>
+            <param name="connection"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.SessionBase.OnMessageReceivedFromClient(Misuzilla.Applications.TwitterIrcGateway.MessageReceivedEventArgs)">
             <summary>
             クライアントからIRCメッセージを受け取ったときの処理です。
             </summary>
-            <param name="e">
-            </param>
+            <param name="e"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.SessionBase.OnBeforeClosing">
             <summary>
@@ -1432,36 +1131,31 @@
             <summary>
             IRCメッセージを送信します
             </summary>
-            <param name="msg">
-            </param>
+            <param name="msg"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.SessionBase.SendServer(Misuzilla.Net.Irc.IRCMessage)">
             <summary>
             JOIN などクライアントに返すメッセージを送信します
             </summary>
-            <param name="msg">
-            </param>
+            <param name="msg"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.SessionBase.SendServerMessage(Misuzilla.Net.Irc.IRCMessage)">
             <summary>
             IRCサーバからのメッセージを送信します
             </summary>
-            <param name="msg">
-            </param>
+            <param name="msg"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.SessionBase.SendGatewayServerMessage(System.String)">
             <summary>
             Gatewayからのメッセージを送信します
             </summary>
-            <param name="message">
-            </param>
+            <param name="message"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.SessionBase.SendServerErrorMessage(System.String)">
             <summary>
             サーバのエラーメッセージを送信します
             </summary>
-            <param name="message">
-            </param>
+            <param name="message"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.SessionBase.SendErrorReply(Misuzilla.Net.Irc.ErrorReply,System.String[])">
             <summary>
@@ -1480,11 +1174,6 @@
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.Config">
             <summary>
             TwitterIrcGateway 本体の設定情報を表します。
-            </summary>
-        </member>
-        <member name="F:Misuzilla.Applications.TwitterIrcGateway.Config.Default">
-            <summary>
-            デフォルトの設定
             </summary>
         </member>
         <member name="P:Misuzilla.Applications.TwitterIrcGateway.Config.Interval">
@@ -1587,26 +1276,32 @@
             更新時に何秒待機したのちリクエストを送信するかどうかを指定します。
             </summary>
         </member>
+        <member name="F:Misuzilla.Applications.TwitterIrcGateway.Config.Default">
+            <summary>
+            デフォルトの設定
+            </summary>
+        </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Config.Load(System.String)">
             <summary>
+            
             </summary>
-            <param name="path">
-            </param>
-            <returns>
-            </returns>
+            <param name="path"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Config.Save(System.String)">
             <summary>
+            
             </summary>
-            <param name="path">
-            </param>
+            <param name="path"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Config.LoadConfig(System.String)">
             <summary>
+            
             </summary>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Config.SaveConfig(System.String,Misuzilla.Applications.TwitterIrcGateway.Config)">
             <summary>
+            
             </summary>
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.MessageReceivedEventArgs">
@@ -1763,30 +1458,27 @@
             <summary>
             接続されたイベントを管理するプロクシです。
             </summary>
-            <typeparam name="T">
-            </typeparam>
+            <typeparam name="T"></typeparam>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Filter.Filters.ExecuteFilters(Misuzilla.Applications.TwitterIrcGateway.Filter.FilterArgs)">
             <summary>
             メッセージをフィルタします
             </summary>
-            <param name="args">
-            </param>
+            <param name="args"></param>
             <returns>メッセージを捨てるかどうか</returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Filter.Filters.Load(System.String)">
             <summary>
+            
             </summary>
-            <param name="path">
-            </param>
-            <returns>
-            </returns>
+            <param name="path"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Filter.Filters.Save(System.String)">
             <summary>
+            
             </summary>
-            <param name="path">
-            </param>
+            <param name="path"></param>
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.Groups">
             <summary>
@@ -1795,33 +1487,21 @@
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Groups.Load(System.String)">
             <summary>
+            
             </summary>
-            <param name="path">
-            </param>
-            <returns>
-            </returns>
+            <param name="path"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Groups.Save(System.String)">
             <summary>
+            
             </summary>
-            <param name="path">
-            </param>
+            <param name="path"></param>
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.Group">
             <summary>
             IRC上でチャンネルとして表現されるメッセージ送信対象のグループを表します。
             </summary>
-        </member>
-        <member name="M:Misuzilla.Applications.TwitterIrcGateway.Group.#ctor">
-            <summary>
-            グループのインスタンスを初期化します。
-            </summary>
-        </member>
-        <member name="M:Misuzilla.Applications.TwitterIrcGateway.Group.#ctor(System.String)">
-            <summary>
-            指定した名前でグループのインスタンスを初期化します。
-            </summary>
-            <param name="name">#で始まるチャンネル名</param>
         </member>
         <member name="P:Misuzilla.Applications.TwitterIrcGateway.Group.Name">
             <summary>
@@ -1854,27 +1534,22 @@
             チャンネルのモードを取得・設定します
             </summary>
         </member>
-        <member name="P:Misuzilla.Applications.TwitterIrcGateway.Group.IgnoreEchoBack">
+        <member name="M:Misuzilla.Applications.TwitterIrcGateway.Group.#ctor">
             <summary>
-            グループに送信されたメッセージのエコーバックを無視するかどうかを取得します。
-            </summary>
-        </member>
-        <member name="P:Misuzilla.Applications.TwitterIrcGateway.Group.IsOrMatch">
-            <summary>
-            グループのトピックを利用したマッチがメンバとOR条件になっているかどうかを取得します。
-            </summary>
-        </member>
-        <member name="P:Misuzilla.Applications.TwitterIrcGateway.Group.IsRoutable">
-            <summary>
-            TwitterIrcGatewayがトピックなどを考慮してメッセージ送信先として選択できるかどうかを取得します。
+            グループのインスタンスを初期化します。
             </summary>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Group.Clone">
             <summary>
             グループを複製します。
             </summary>
-            <returns>
-            </returns>
+            <returns></returns>
+        </member>
+        <member name="M:Misuzilla.Applications.TwitterIrcGateway.Group.#ctor(System.String)">
+            <summary>
+            指定した名前でグループのインスタンスを初期化します。
+            </summary>
+            <param name="name">#で始まるチャンネル名</param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Group.Exists(System.String)">
             <summary>
@@ -1894,6 +1569,21 @@
             指定したユーザをグループのメンバから削除します。
             </summary>
             <param name="id">ユーザのID</param>
+        </member>
+        <member name="P:Misuzilla.Applications.TwitterIrcGateway.Group.IgnoreEchoBack">
+            <summary>
+            グループに送信されたメッセージのエコーバックを無視するかどうかを取得します。
+            </summary>
+        </member>
+        <member name="P:Misuzilla.Applications.TwitterIrcGateway.Group.IsOrMatch">
+            <summary>
+            グループのトピックを利用したマッチがメンバとOR条件になっているかどうかを取得します。
+            </summary>
+        </member>
+        <member name="P:Misuzilla.Applications.TwitterIrcGateway.Group.IsRoutable">
+            <summary>
+            TwitterIrcGatewayがトピックなどを考慮してメッセージ送信先として選択できるかどうかを取得します。
+            </summary>
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.RoutedGroup">
             <summary>
@@ -1935,11 +1625,6 @@
             APIアクセスに利用するプロクシサーバの設定
             </summary>
         </member>
-        <member name="E:Misuzilla.Applications.TwitterIrcGateway.Server.ConnectionAttached">
-            <summary>
-            新たなセッションが開始されたイベント
-            </summary>
-        </member>
         <member name="P:Misuzilla.Applications.TwitterIrcGateway.Server.OAuthClientKey">
             <summary>
             APIアクセスに利用するOAuthのクライアントキー
@@ -1968,6 +1653,11 @@
         <member name="P:Misuzilla.Applications.TwitterIrcGateway.Server.StartTime">
             <summary>
             サーバーが開始された時刻を取得します
+            </summary>
+        </member>
+        <member name="E:Misuzilla.Applications.TwitterIrcGateway.Server.ConnectionAttached">
+            <summary>
+            新たなセッションが開始されたイベント
             </summary>
         </member>
         <member name="P:Misuzilla.Applications.TwitterIrcGateway.Server.Encoding">
@@ -2189,150 +1879,122 @@
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.LoadFilters">
             <summary>
+            
             </summary>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.SaveFilters">
             <summary>
+            
             </summary>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.LoadGroups">
             <summary>
+            
             </summary>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.SaveGroups">
             <summary>
+            
             </summary>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.LoadConfig">
             <summary>
+            
             </summary>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.SaveConfig">
             <summary>
+            
             </summary>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.UpdateStatusWithReceiverDeferred(System.String,System.String)">
             <summary>
             設定された時間待機した後Twitterのステータスを更新し、失敗した場合には指定されたチャンネルに通知し、リトライします。
             </summary>
-            <param name="receiver">
-            </param>
-            <param name="message">
-            </param>
-            <returns>
-            </returns>
+            <param name="receiver"></param>
+            <param name="message"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.UpdateStatusWithReceiverDeferred(System.String,System.String,System.Int64)">
             <summary>
             設定された時間待機した後Twitterのステータスを更新し、失敗した場合には指定されたチャンネルに通知し、リトライします。
             </summary>
-            <param name="receiver">
-            </param>
-            <param name="message">
-            </param>
-            <param name="inReplyToId">
-            </param>
-            <returns>
-            </returns>
+            <param name="receiver"></param>
+            <param name="message"></param>
+            <param name="inReplyToId"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.UpdateStatusWithReceiverDeferred(System.String,System.String,System.Int64,System.Action{Misuzilla.Applications.TwitterIrcGateway.Status})">
             <summary>
             設定された時間待機した後Twitterのステータスを更新し、失敗した場合には指定されたチャンネルに通知し、リトライします。完了時に指定されたコールバックメソッドを呼び出します。
             </summary>
-            <param name="receiver">
-            </param>
-            <param name="message">
-            </param>
-            <param name="inReplyToId">
-            </param>
-            <param name="callback">
-            </param>
-            <returns>
-            </returns>
+            <param name="receiver"></param>
+            <param name="message"></param>
+            <param name="inReplyToId"></param>
+            <param name="callback"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.UpdateStatusWithReceiver(System.String,System.String)">
             <summary>
             Twitterのステータスを更新し、失敗した場合には指定されたチャンネルに通知し、リトライします。
             </summary>
-            <param name="receiver">
-            </param>
-            <param name="message">
-            </param>
-            <returns>
-            </returns>
+            <param name="receiver"></param>
+            <param name="message"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.UpdateStatusWithReceiver(System.String,System.String,System.Int64)">
             <summary>
             Twitterのステータスを更新し、失敗した場合には指定されたチャンネルに通知し、リトライします。
             </summary>
-            <param name="receiver">
-            </param>
-            <param name="message">
-            </param>
-            <param name="inReplyToId">
-            </param>
-            <returns>
-            </returns>
+            <param name="receiver"></param>
+            <param name="message"></param>
+            <param name="inReplyToId"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.UpdateStatusWithReceiver(System.String,System.String,System.Int64,System.Action{Misuzilla.Applications.TwitterIrcGateway.Status})">
             <summary>
             Twitterのステータスを更新し、失敗した場合には指定されたチャンネルに通知し、リトライします。完了時に指定されたコールバックメソッドを呼び出します。
             </summary>
-            <param name="receiver">
-            </param>
-            <param name="message">
-            </param>
-            <param name="inReplyToId">
-            </param>
-            <param name="callback">
-            </param>
-            <returns>
-            </returns>
+            <param name="receiver"></param>
+            <param name="message"></param>
+            <param name="inReplyToId"></param>
+            <param name="callback"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.CheckMessageLength(System.String,System.String)">
             <summary>
             メッセージの長さをチェックして、長すぎる場合には送信元チャンネルにメッセージを返します。
             </summary>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.UpdateStatusAsync(System.String)">
             <summary>
             設定された時間待機した後Twitterのステータスを更新します。
             </summary>
-            <param name="message">
-            </param>
-            <returns>
-            </returns>
+            <param name="message"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.UpdateStatusAsync(System.String,System.Int64)">
             <summary>
             設定された時間待機した後Twitterのステータスを更新します。
             </summary>
-            <param name="message">
-            </param>
-            <returns>
-            </returns>
+            <param name="message"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.UpdateStatus(System.String)">
             <summary>
             Twitterのステータスを更新します。
             </summary>
-            <param name="message">
-            </param>
-            <returns>
-            </returns>
+            <param name="message"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.UpdateStatus(System.String,System.Int64)">
             <summary>
             Twitterのステータスを更新します。
             </summary>
-            <param name="message">
-            </param>
-            <param name="inReplyToStatusId">
-            </param>
-            <returns>
-            </returns>
+            <param name="message"></param>
+            <param name="inReplyToStatusId"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.TryCancelDeferredUpdate">
             <summary>
@@ -2344,8 +2006,7 @@
             <summary>
             TwitterIrcGatewayからのメッセージを送信します
             </summary>
-            <param name="message">
-            </param>
+            <param name="message"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.SendChannelMessage(System.String)">
             <summary>
@@ -2382,86 +2043,79 @@
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.JoinChannel(Misuzilla.Applications.TwitterIrcGateway.IIrcMessageSendable,Misuzilla.Applications.TwitterIrcGateway.Group)">
             <summary>
+            
             </summary>
-            <param name="connection">
-            </param>
-            <param name="group">
-            </param>
+            <param name="connection"></param>
+            <param name="group"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.GetFriendNames">
             <summary>
+            
             </summary>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.ShowChannelUsers(Misuzilla.Applications.TwitterIrcGateway.IIrcMessageSendable)">
             <summary>
             チャンネルにユーザリストを送信します。
             </summary>
-            <param name="messageSendable">
-            </param>
+            <param name="messageSendable"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.SendPing">
             <summary>
+            
             </summary>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.CheckFriends">
             <summary>
+            
             </summary>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.ProcessTimelineStatus(Misuzilla.Applications.TwitterIrcGateway.Status,System.Boolean@)">
             <summary>
             タイムラインのステータスを処理して、クライアントに送信します
             </summary>
-            <param name="status">
-            </param>
-            <param name="friendsCheckRequired">
-            </param>
+            <param name="status"></param>
+            <param name="friendsCheckRequired"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.RoutingStatusMessage(Misuzilla.Applications.TwitterIrcGateway.Status,System.String,System.String)">
             <summary>
             メッセージを送信する先を決定します
             </summary>
-            <param name="status">
-            </param>
-            <param name="text">
-            </param>
-            <param name="ircMessageType">
-            </param>
-            <returns>
-            </returns>
+            <param name="status"></param>
+            <param name="text"></param>
+            <param name="ircMessageType"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.RunCheck(Misuzilla.Applications.TwitterIrcGateway.Procedure)">
             <summary>
             チェックを実行します。例外が発生した場合には自動的にメッセージを送信します。
             </summary>
             <param name="proc">実行するチェック処理</param>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.RunCheck(Misuzilla.Applications.TwitterIrcGateway.Procedure,System.Action{System.Exception})">
             <summary>
             チェックを実行します。Twitterに由来する例外が発生した場合には指定したデリゲートを呼び出します。
             </summary>
             <param name="proc">実行するチェック処理</param>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.OnClosing">
             <summary>
+            
             </summary>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.CheckDisposed">
             <summary>
+            
             </summary>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Session.FireEvent``1(System.EventHandler{``0},``0)">
             <summary>
+            
             </summary>
-            <typeparam name="TEventArgs">
-            </typeparam>
-            <param name="handlers">
-            </param>
-            <param name="e">
-            </param>
+            <typeparam name="TEventArgs"></typeparam>
+            <param name="handlers"></param>
+            <param name="e"></param>
             <returns>キャンセルされた場合にはfalseが返ります。</returns>
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.DirectMessages">
@@ -2514,35 +2168,6 @@
             Twitterへの接続と操作を提供します。
             </summary>
         </member>
-        <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.#ctor(System.String,System.String)">
-            <summary>
-            TwitterService クラスのインスタンスをユーザ名とパスワードで初期化します。
-            </summary>
-            <param name="userName">ユーザー名</param>
-            <param name="password">パスワード</param>
-        </member>
-        <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.#ctor(System.String,System.String,Misuzilla.Applications.TwitterIrcGateway.TwitterIdentity)">
-            <summary>
-            TwitterService クラスのインスタンスをOAuthを利用する設定で初期化します。
-            </summary>
-            <param name="twitterIdentity">
-            </param>
-        </member>
-        <member name="F:Misuzilla.Applications.TwitterIrcGateway.TwitterService.ServiceServerPrefix">
-            <summary>
-            Twitter APIのエンドポイントURLのプレフィックスを取得・設定します。
-            </summary>
-        </member>
-        <member name="F:Misuzilla.Applications.TwitterIrcGateway.TwitterService.Referer">
-            <summary>
-            リクエストのRefererを取得・設定します。
-            </summary>
-        </member>
-        <member name="F:Misuzilla.Applications.TwitterIrcGateway.TwitterService.ClientName">
-            <summary>
-            リクエストのクライアント名を取得・設定します。この値はsourceパラメータとして利用されます。
-            </summary>
-        </member>
         <member name="E:Misuzilla.Applications.TwitterIrcGateway.TwitterService.CheckError">
             <summary>
             更新チェック時にエラーが発生した場合に発生します。
@@ -2562,6 +2187,34 @@
             <summary>
             ダイレクトメッセージの更新があった場合に発生します。
             </summary>
+        </member>
+        <member name="F:Misuzilla.Applications.TwitterIrcGateway.TwitterService.ServiceServerPrefix">
+            <summary>
+            Twitter APIのエンドポイントURLのプレフィックスを取得・設定します。
+            </summary>
+        </member>
+        <member name="F:Misuzilla.Applications.TwitterIrcGateway.TwitterService.Referer">
+            <summary>
+            リクエストのRefererを取得・設定します。
+            </summary>
+        </member>
+        <member name="F:Misuzilla.Applications.TwitterIrcGateway.TwitterService.ClientName">
+            <summary>
+            リクエストのクライアント名を取得・設定します。この値はsourceパラメータとして利用されます。
+            </summary>
+        </member>
+        <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.#ctor(System.String,System.String)">
+            <summary>
+            TwitterService クラスのインスタンスをユーザ名とパスワードで初期化します。
+            </summary>
+            <param name="userName">ユーザー名</param>
+            <param name="password">パスワード</param>
+        </member>
+        <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.#ctor(System.String,System.String,Misuzilla.Applications.TwitterIrcGateway.TwitterIdentity)">
+            <summary>
+            TwitterService クラスのインスタンスをOAuthを利用する設定で初期化します。
+            </summary>
+            <param name="twitterIdentity"></param>
         </member>
         <member name="P:Misuzilla.Applications.TwitterIrcGateway.TwitterService.Proxy">
             <summary>
@@ -2632,84 +2285,66 @@
             <summary>
             認証情報を問い合わせます。
             </summary>
-            <returns cref="User">ユーザー情報</returns>
-            <exception cref="T:System.Net.WebException">
-            </exception>
-            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException">
-            </exception>
+            <returns cref="T:Misuzilla.Applications.TwitterIrcGateway.User">ユーザー情報</returns>
+            <exception cref="T:System.Net.WebException"></exception>
+            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException"></exception>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.UpdateStatus(System.String)">
             <summary>
             ステータスを更新します。
             </summary>
-            <param name="message">
-            </param>
-            <returns>
-            </returns>
+            <param name="message"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.UpdateStatus(System.String,System.Int64)">
             <summary>
             ステータスを更新します。
             </summary>
-            <param name="message">
-            </param>
-            <param name="inReplyToStatusId">
-            </param>
+            <param name="message"></param>
+            <param name="inReplyToStatusId"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.SendDirectMessage(System.String,System.String)">
             <summary>
             指定されたユーザにダイレクトメッセージを送信します。
             </summary>
-            <param name="screenName">
-            </param>
-            <param name="message">
-            </param>
+            <param name="screenName"></param>
+            <param name="message"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.GetFriends">
             <summary>
             friendsを取得します。
             </summary>
-            <exception cref="T:System.Net.WebException">
-            </exception>
-            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException">
-            </exception>
+            <exception cref="T:System.Net.WebException"></exception>
+            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException"></exception>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.GetFriends(System.Int32)">
             <summary>
             friendsを取得します。
             </summary>
-            <exception cref="T:System.Net.WebException">
-            </exception>
-            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException">
-            </exception>
+            <exception cref="T:System.Net.WebException"></exception>
+            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException"></exception>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.GetUser(System.String)">
             <summary>
             userを取得します。
             </summary>
-            <exception cref="T:System.Net.WebException">
-            </exception>
-            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException">
-            </exception>
+            <exception cref="T:System.Net.WebException"></exception>
+            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException"></exception>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.GetUserById(System.Int64)">
             <summary>
             指定したIDでユーザ情報を取得します。
             </summary>
-            <exception cref="T:System.Net.WebException">
-            </exception>
-            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException">
-            </exception>
+            <exception cref="T:System.Net.WebException"></exception>
+            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException"></exception>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.GetTimeline(System.DateTime)">
             <summary>
             timeline を取得します。
             </summary>
             <param name="since">最終更新日時</param>
-            <exception cref="T:System.Net.WebException">
-            </exception>
-            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException">
-            </exception>
+            <exception cref="T:System.Net.WebException"></exception>
+            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException"></exception>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.GetTimeline(System.DateTime,System.Int32)">
             <summary>
@@ -2717,8 +2352,7 @@
             </summary>
             <param name="since">最終更新日時</param>
             <param name="count">取得数</param>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.GetTimeline(System.Int64)">
             <summary>
@@ -2739,67 +2373,52 @@
             <summary>
             指定したIDでステータスを取得します。
             </summary>
-            <exception cref="T:System.Net.WebException">
-            </exception>
-            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException">
-            </exception>
+            <exception cref="T:System.Net.WebException"></exception>
+            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException"></exception>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.GetReplies">
             <summary>
             replies を取得します。
             </summary>
-            <exception cref="T:System.Net.WebException">
-            </exception>
-            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException">
-            </exception>
+            <exception cref="T:System.Net.WebException"></exception>
+            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException"></exception>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.GetMentions">
             <summary>
             mentions を取得します。
             </summary>
-            <exception cref="T:System.Net.WebException">
-            </exception>
-            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException">
-            </exception>
+            <exception cref="T:System.Net.WebException"></exception>
+            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException"></exception>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.GetMentions(System.Int64)">
             <summary>
             mentions を取得します。
             </summary>
-            <exception cref="T:System.Net.WebException">
-            </exception>
-            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException">
-            </exception>
+            <exception cref="T:System.Net.WebException"></exception>
+            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException"></exception>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.GetDirectMessages(System.DateTime)">
             <summary>
             direct messages を取得します。
             </summary>
             <param name="since">最終更新日時</param>
-            <exception cref="T:System.Net.WebException">
-            </exception>
-            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException">
-            </exception>
+            <exception cref="T:System.Net.WebException"></exception>
+            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException"></exception>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.GetDirectMessages(System.Int64)">
             <summary>
             direct messages を取得します。
             </summary>
             <param name="sinceId">最後に取得したID</param>
-            <exception cref="T:System.Net.WebException">
-            </exception>
-            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException">
-            </exception>
+            <exception cref="T:System.Net.WebException"></exception>
+            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException"></exception>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.GetTimelineByScreenName(System.String,System.DateTime,System.Int32)">
             <param name="screenName">スクリーンネーム</param>
             <param name="since">最終更新日時</param>
-            <param name="count">
-            </param>
-            <exception cref="T:System.Net.WebException">
-            </exception>
-            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException">
-            </exception>
+            <param name="count"></param>
+            <exception cref="T:System.Net.WebException"></exception>
+            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException"></exception>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.GetFavoritesByScreenName(System.String,System.Int32)">
             <summary>
@@ -2807,82 +2426,64 @@
             </summary>
             <param name="screenName">スクリーンネーム</param>
             <param name="page">ページ</param>
-            <exception cref="T:System.Net.WebException">
-            </exception>
-            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException">
-            </exception>
+            <exception cref="T:System.Net.WebException"></exception>
+            <exception cref="T:Misuzilla.Applications.TwitterIrcGateway.TwitterServiceException"></exception>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.CreateFavorite(System.Int64)">
             <summary>
             メッセージをfavoritesに追加します。
             </summary>
-            <param name="id">
-            </param>
-            <returns>
-            </returns>
+            <param name="id"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.DestroyFavorite(System.Int64)">
             <summary>
             メッセージをfavoritesから削除します。
             </summary>
-            <param name="id">
-            </param>
-            <returns>
-            </returns>
+            <param name="id"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.DestroyStatus(System.Int64)">
             <summary>
             メッセージを削除します。
             </summary>
-            <param name="id">
-            </param>
-            <returns>
-            </returns>
+            <param name="id"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.RetweetStatus(System.Int64)">
             <summary>
             メッセージをretweetします。
             </summary>
-            <param name="id">
-            </param>
-            <returns>
-            </returns>
+            <param name="id"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.CreateFriendship(System.String)">
             <summary>
             ユーザをfollowします。
             </summary>
-            <param name="screenName">
-            </param>
-            <returns>
-            </returns>
+            <param name="screenName"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.DestroyFriendship(System.String)">
             <summary>
             ユーザをremoveします。
             </summary>
-            <param name="screenName">
-            </param>
-            <returns>
-            </returns>
+            <param name="screenName"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.CreateBlock(System.String)">
             <summary>
             ユーザをblockします。
             </summary>
-            <param name="screenName">
-            </param>
-            <returns>
-            </returns>
+            <param name="screenName"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.DestroyBlock(System.String)">
             <summary>
             ユーザへのblockを解除します。
             </summary>
-            <param name="screenName">
-            </param>
-            <returns>
-            </returns>
+            <param name="screenName"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.Start">
             <summary>
@@ -2896,118 +2497,99 @@
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.OnTimerCallback(System.Object)">
             <summary>
+            
             </summary>
-            <param name="stateObject">
-            </param>
+            <param name="stateObject"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.OnTimerCallbackDirectMessage(System.Object)">
             <summary>
+            
             </summary>
-            <param name="stateObject">
-            </param>
+            <param name="stateObject"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.OnTimerCallbackReplies(System.Object)">
             <summary>
+            
             </summary>
-            <param name="stateObject">
-            </param>
+            <param name="stateObject"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.ProcessDropProtection(System.Collections.Generic.LinkedList{System.Int64},System.Int64)">
             <summary>
             既に受信したstatusかどうかをチェックします。既に送信済みの場合falseを返します。
             </summary>
-            <param name="statusBuffer">
-            </param>
-            <param name="status">
-            </param>
-            <returns>
-            </returns>
+            <param name="statusBuffer"></param>
+            <param name="status"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.UpdateLastAccessStatusId(Misuzilla.Applications.TwitterIrcGateway.Status,System.Int64@)">
             <summary>
             最終更新IDを更新します。
             </summary>
-            <param name="sinceId">
-            </param>
+            <param name="sinceId"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.ProcessStatus(Misuzilla.Applications.TwitterIrcGateway.Status,System.Action{Misuzilla.Applications.TwitterIrcGateway.Status})">
             <summary>
             ステータスがすでに流されたかどうかをチェックして、流されていない場合に指定されたアクションを実行します。
             </summary>
-            <param name="status">
-            </param>
-            <param name="action">
-            </param>
+            <param name="status"></param>
+            <param name="action"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.ProcessStatuses(Misuzilla.Applications.TwitterIrcGateway.Statuses,System.Action{Misuzilla.Applications.TwitterIrcGateway.Statuses})">
             <summary>
             ステータスがすでに流されたかどうかをチェックして、流されていない場合に指定されたアクションを実行します。
             </summary>
-            <param name="statuses">
-            </param>
-            <param name="action">
-            </param>
+            <param name="statuses"></param>
+            <param name="action"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.ProcessRepliesStatus(Misuzilla.Applications.TwitterIrcGateway.Statuses,System.Action{Misuzilla.Applications.TwitterIrcGateway.Statuses})">
             <summary>
             Repliesステータスがすでに流されたかどうかをチェックして、流されていない場合に指定されたアクションを実行します。
             </summary>
-            <param name="statuses">
-            </param>
-            <param name="action">
-            </param>
+            <param name="statuses"></param>
+            <param name="action"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.EncodeMessage(System.String)">
             <summary>
+            
             </summary>
-            <param name="s">
-            </param>
-            <returns>
-            </returns>
+            <param name="s"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.GetUserId(System.String)">
             <summary>
             必要に応じてIDに変換する
             </summary>
-            <param name="screenName">
-            </param>
-            <returns>
-            </returns>
+            <param name="screenName"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.RunCheck(Misuzilla.Applications.TwitterIrcGateway.TwitterService.Procedure)">
             <summary>
             チェックを実行します。例外が発生した場合には自動的にメッセージを送信します。
             </summary>
             <param name="proc">実行するチェック処理</param>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.RunCallback(System.Threading.Timer,Misuzilla.Applications.TwitterIrcGateway.TwitterService.Procedure)">
             <summary>
             タイマーコールバックの処理を実行します。
             </summary>
-            <param name="timer">
-            </param>
-            <param name="callbackProcedure">
-            </param>
+            <param name="timer"></param>
+            <param name="callbackProcedure"></param>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.GETv1_1(System.String)">
             <summary>
             指定されたURLからデータを取得し文字列として返します。
             </summary>
             <param name="url">データを取得するURL</param>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.TwitterService.GETv1_1(System.String,System.String)">
             <summary>
             指定されたURLからデータを取得し文字列として返します。
             </summary>
             <param name="url">データを取得するURL</param>
-            <param name="resourceEndpoint">
-            </param>
-            <returns>
-            </returns>
+            <param name="resourceEndpoint"></param>
+            <returns></returns>
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.ErrorEventArgs">
             <summary>
@@ -3028,17 +2610,6 @@
             <summary>
             Twitterにアクセスを試みた際にスローされる例外。
             </summary>
-        </member>
-        <member name="M:TypableMap.TypableMap`1.#ctor">
-            <summary>
-            TypableMap のインスタンスを初期化します。
-            </summary>
-        </member>
-        <member name="M:TypableMap.TypableMap`1.#ctor(System.Int32)">
-            <summary>
-            TypableMap のインスタンスをサイズを指定して初期化します。
-            </summary>
-            <param name="size">保持するサイズの元となる値。ローマ字の組み合わせ数に指定した値を累乗します。</param>
         </member>
         <member name="T:Misuzilla.Applications.TwitterIrcGateway.UserInfo">
             <summary>
@@ -3084,10 +2655,8 @@
             <summary>
             日付の文字列をDateTime型に変換します。
             </summary>
-            <param name="dateTimeString">
-            </param>
-            <returns>
-            </returns>
+            <param name="dateTimeString"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Utility.ResolveTinyUrlInMessage(System.String)">
             <summary>
@@ -3095,8 +2664,7 @@
             タイムアウトするまでの時間は1秒です。
             </summary>
             <param name="message">メッセージ</param>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Utility.ResolveShortUrlInMessage(System.String)">
             <summary>
@@ -3104,8 +2672,7 @@
             タイムアウトするまでの時間は1秒です。
             </summary>
             <param name="message">メッセージ</param>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Utility.ResolveTinyUrlInMessage(System.String,System.Int32)">
             <summary>
@@ -3113,8 +2680,7 @@
             </summary>
             <param name="message">メッセージ</param>
             <param name="timeOut">タイムアウトするまでの時間</param>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Utility.ResolveShortUrlInMessage(System.String,System.Int32)">
             <summary>
@@ -3122,8 +2688,7 @@
             </summary>
             <param name="message">メッセージ</param>
             <param name="timeOut">タイムアウトするまでの時間</param>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Utility.ResolveRedirectUrl(System.String,System.Int32)">
             <summary>
@@ -3131,8 +2696,7 @@
             </summary>
             <param name="url">TinyURLのURL</param>
             <param name="timeOut">タイムアウトするまでの時間</param>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Utility.UrlToTinyUrlInMessage(System.String)">
             <summary>
@@ -3140,8 +2704,7 @@
             タイムアウトするまでの時間は1秒です。
             </summary>
             <param name="message">メッセージ</param>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Utility.UrlToTinyUrlInMessage(System.String,System.Int32)">
             <summary>
@@ -3149,8 +2712,7 @@
             </summary>
             <param name="message">メッセージ</param>
             <param name="timeOut">タイムアウトするまでの時間</param>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Utility.UrlToTinyUrl(System.String,System.Int32)">
             <summary>
@@ -3158,8 +2720,7 @@
             </summary>
             <param name="url">URL</param>
             <param name="timeOut">タイムアウトするまでの時間</param>
-            <returns>
-            </returns>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Utility.UrlEncode(System.String)">
             <summary>
@@ -3172,19 +2733,138 @@
             <summary>
             指定した文字列のSHA256 メッセージダイジェストを取得します。
             </summary>
-            <param name="s">
-            </param>
-            <returns>
-            </returns>
+            <param name="s"></param>
+            <returns></returns>
         </member>
         <member name="M:Misuzilla.Applications.TwitterIrcGateway.Utility.UnescapeCharReference(System.String)">
             <summary>
             HTML の数値文字参照・実態参照を元に戻します。
             </summary>
-            <param name="s">
-            </param>
-            <returns>
-            </returns>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
+        <member name="P:OAuth.OAuthBase.CallbackUrl">
+            <summary>
+            Callback url (oauth_callback)
+            </summary>
+        </member>
+        <member name="P:OAuth.OAuthBase.Verifier">
+            <summary>
+            (oauth_verifier)
+            </summary>
+        </member>
+        <member name="T:OAuth.OAuthBase.SignatureTypes">
+            <summary>
+            Provides a predefined set of algorithms that are supported officially by the protocol
+            </summary>
+        </member>
+        <member name="T:OAuth.OAuthBase.QueryParameter">
+            <summary>
+            Provides an internal structure to sort the query parameter
+            </summary>
+        </member>
+        <member name="T:OAuth.OAuthBase.QueryParameterComparer">
+            <summary>
+            Comparer class used to perform the sorting of the query parameters
+            </summary>
+        </member>
+        <member name="M:OAuth.OAuthBase.ComputeHash(System.Security.Cryptography.HashAlgorithm,System.String)">
+            <summary>
+            Helper function to compute a hash value
+            </summary>
+            <param name="hashAlgorithm">The hashing algoirhtm used. If that algorithm needs some initialization, like HMAC and its derivatives, they should be initialized prior to passing it to this function</param>
+            <param name="data">The data to hash</param>
+            <returns>a Base64 string of the hash value</returns>
+        </member>
+        <member name="M:OAuth.OAuthBase.GetQueryParameters(System.String)">
+            <summary>
+            Internal function to cut out all non oauth query string parameters (all parameters not begining with "oauth_")
+            </summary>
+            <param name="parameters">The query string part of the Url</param>
+            <returns>A list of QueryParameter each containing the parameter name and value</returns>
+        </member>
+        <member name="M:OAuth.OAuthBase.UrlEncode(System.String)">
+            <summary>
+            This is a different Url Encode implementation since the default .NET one outputs the percent encoding in lower case.
+            While this is not a problem with the percent encoding spec, it is used in upper case throughout OAuth
+            </summary>
+            <param name="value">The value to Url encode</param>
+            <returns>Returns a Url encoded string</returns>
+        </member>
+        <member name="M:OAuth.OAuthBase.NormalizeRequestParameters(System.Collections.Generic.IList{OAuth.OAuthBase.QueryParameter})">
+            <summary>
+            Normalizes the request parameters according to the spec
+            </summary>
+            <param name="parameters">The list of parameters already sorted</param>
+            <returns>a string representing the normalized parameters</returns>
+        </member>
+        <member name="M:OAuth.OAuthBase.GenerateSignatureBase(System.Uri,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String@,System.String@)">
+            <summary>
+            Generate the signature base that is used to produce the signature
+            </summary>
+            <param name="url">The full url that needs to be signed including its non OAuth url parameters</param>
+            <param name="consumerKey">The consumer key</param>        
+            <param name="token">The token, if available. If not available pass null or an empty string</param>
+            <param name="tokenSecret">The token secret, if available. If not available pass null or an empty string</param>
+            <param name="httpMethod">The http method used. Must be a valid HTTP method verb (POST,GET,PUT, etc)</param>
+            <param name="signatureType">The signature type. To use the default values use <see cref="T:OAuth.OAuthBase.SignatureTypes">OAuthBase.SignatureTypes</see>.</param>
+            <returns>The signature base</returns>
+        </member>
+        <member name="M:OAuth.OAuthBase.GenerateSignatureUsingHash(System.String,System.Security.Cryptography.HashAlgorithm)">
+            <summary>
+            Generate the signature value based on the given signature base and hash algorithm
+            </summary>
+            <param name="signatureBase">The signature based as produced by the GenerateSignatureBase method or by any other means</param>
+            <param name="hash">The hash algorithm used to perform the hashing. If the hashing algorithm requires initialization or a key it should be set prior to calling this method</param>
+            <returns>A base64 string of the hash value</returns>
+        </member>
+        <member name="M:OAuth.OAuthBase.GenerateSignature(System.Uri,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String@,System.String@)">
+            <summary>
+            Generates a signature using the HMAC-SHA1 algorithm
+            </summary>		
+            <param name="url">The full url that needs to be signed including its non OAuth url parameters</param>
+            <param name="consumerKey">The consumer key</param>
+            <param name="consumerSecret">The consumer seceret</param>
+            <param name="token">The token, if available. If not available pass null or an empty string</param>
+            <param name="tokenSecret">The token secret, if available. If not available pass null or an empty string</param>
+            <param name="httpMethod">The http method used. Must be a valid HTTP method verb (POST,GET,PUT, etc)</param>
+            <returns>A base64 string of the hash value</returns>
+        </member>
+        <member name="M:OAuth.OAuthBase.GenerateSignature(System.Uri,System.String,System.String,System.String,System.String,System.String,System.String,System.String,OAuth.OAuthBase.SignatureTypes,System.String@,System.String@)">
+            <summary>
+            Generates a signature using the specified signatureType 
+            </summary>		
+            <param name="url">The full url that needs to be signed including its non OAuth url parameters</param>
+            <param name="consumerKey">The consumer key</param>
+            <param name="consumerSecret">The consumer seceret</param>
+            <param name="token">The token, if available. If not available pass null or an empty string</param>
+            <param name="tokenSecret">The token secret, if available. If not available pass null or an empty string</param>
+            <param name="httpMethod">The http method used. Must be a valid HTTP method verb (POST,GET,PUT, etc)</param>
+            <param name="signatureType">The type of signature to use</param>
+            <returns>A base64 string of the hash value</returns>
+        </member>
+        <member name="M:OAuth.OAuthBase.GenerateTimeStamp">
+            <summary>
+            Generate the timestamp for the signature        
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OAuth.OAuthBase.GenerateNonce">
+            <summary>
+            Generate a nonce
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TypableMap.TypableMap`1.#ctor">
+            <summary>
+            TypableMap のインスタンスを初期化します。
+            </summary>
+        </member>
+        <member name="M:TypableMap.TypableMap`1.#ctor(System.Int32)">
+            <summary>
+            TypableMap のインスタンスをサイズを指定して初期化します。
+            </summary>
+            <param name="size">保持するサイズの元となる値。ローマ字の組み合わせ数に指定した値を累乗します。</param>
         </member>
     </members>
 </doc>
