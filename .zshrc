@@ -214,7 +214,7 @@ alias tdl5='/data/share/movie/sh/tdlstop.sh 38892 &; aria2c --listen-port=38892 
 alias rto='rtorrent *.torrent'
 alias sos='source /home/swirhen/.zshrc'
 alias vimrc='vim /home/swirhen/.zshrc'
-alias rms='rm *.torrent;ls'
+alias rms='rm *.torrent;ls -lrth'
 alias www='w3m -B'
 alias ltr='ls -ltr'
 alias lrt='ls -lrt'

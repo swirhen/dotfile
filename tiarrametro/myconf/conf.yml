@@ -28,6 +28,7 @@ update_time: 3
 pickup_word: [ 'swirhen', 'すいれん', '翠蓮' ]
 # アイコンサーバーの設定(このあとに{id}が来るようなURIを想定)
 icon_server_uri: 'http://swirhen.tv/icon_blank.gif?'
+#icon_server_uri: 'https://tweetimag.es/i/'
 
 
 # 新着通知バーによる巡回 以下2行のどちらかの書式でも可
