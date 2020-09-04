@@ -1,0 +1,6 @@
+mjcgw01.mec-c.com
+mjcgw98.mec-c.com
+mjcgw99.mec-c.com
+itpv-vcnt11.tokyovm.itplugin.local
+ng-vcnt01.naganovm.itplugin.local
+gw.saikyu.co.jp
