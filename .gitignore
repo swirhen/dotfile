@@ -2,3 +2,5 @@ bin_serif
 crontab.hmx-31seto-rev
 w3m/history
 w3m/cookie
+.idea
+*.iml
