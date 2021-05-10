@@ -18,8 +18,14 @@
       <UserMatchPattern />
     </FilterItem>
     <FilterItem xsi:type="Drop" Enabled="true">
-      <MatchPattern>よろしくやってる身だぞ|京都アニメーション|京アニ|kyoani|毎日ガチャチケットをGETしよう|プペル|#私を構成する</MatchPattern>
+      <MatchPattern>よろしくやってる身だぞ|京都アニメーション|京アニ|kyoani|毎日ガチャチケットをGETしよう|プペル|#私を構成する|伊是名夏子</MatchPattern>
       <UserMatchPattern />
+    </FilterItem>
+    <FilterItem xsi:type="Redirect" Enabled="true">
+      <MatchPattern>#GambaRisu|#ioarts|#HoshinovArt|#anyatelier|#Reinessance|#graveyART|#絵ニックス|#callillust|#ameliaRT|#いなート|#gawrt|#inART|#artsofashes|#teamates|#callioP|スケベなアロ絵|肌色まつり|まつりは絵っち|エロおにぎり|オークアート|沈没後悔日記</MatchPattern>
+      <UserMatchPattern />
+      <ChannelName>#holoart</ChannelName>
+      <Duplicate>true</Duplicate>
     </FilterItem>
   </Items>
 </Filters>

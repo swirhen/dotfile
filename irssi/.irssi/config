@@ -202,7 +202,7 @@ settings = {
 };
 keyboard = (
   { key = "^V"; id = "active_window"; data = ""; },
-  { key = "^B"; id = "previous_window"; data = ""; }
+  { key = "^B"; id = "previous_window"; data = ""; },
 );
 hilights = (
   { text = "swirhen"; nick = "yes"; word = "yes"; },

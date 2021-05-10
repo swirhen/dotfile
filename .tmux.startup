@@ -3,9 +3,10 @@ new-window -n movie -c "/data/share/movie"
 new-window -n movie -c "/data/share/movie"
 new-window -n w3m -c "/data/share/movie"
 send-keys 'w3m -B' C-m
+new-window -n irssi
 select-pane -T 'irssi'
 send-keys 'irssi' C-m '/c l' C-m
 new-window -c "/data/share/temp"
-new-window -c "/data/share/temp/d2007-09"
-new-window -c "/data/share/temp/c2007-12"
+new-window -c "/data/share/temp/d2104-06"
+new-window -c "/data/share/temp/c2101-06"
 new-window -c "/data/share/temp/voiceactor_nico_ch"

@@ -78,6 +78,13 @@ ic	invite #シンデレラ一門
 kc	kick #シンデレラ一門
 im	invite #ミリオン一座
 km	kick #ミリオン一座
+ih='invite	''
+kh='kick	#hololive'
+ih=invite	#hololive
+ih="invite	#hololive"
+ih	invite #hololive
+=	''
+kh	kick #hololive
 </string>
     <string>Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.SystemContext
 x	exit

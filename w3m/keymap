@@ -7,7 +7,8 @@ keymap ) NEXT_TAB
 keymap x NEXT_TAB
 keymap ( PREV_TAB
 keymap z PREV_TAB
-keymap h BACK
+keymap h PREV
+keymap l NEXT
 keymap P HELP
 keymap B VIEW_BOOKMARK
 keymap m NEXT_LINK
