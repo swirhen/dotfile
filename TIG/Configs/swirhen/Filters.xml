@@ -22,7 +22,7 @@
       <UserMatchPattern />
     </FilterItem>
     <FilterItem xsi:type="Redirect" Enabled="true">
-      <MatchPattern>#GambaRisu|#ioarts|#HoshinovArt|#anyatelier|#Reinessance|#graveyART|#絵ニックス|#callillust|#ameliaRT|#いなート|#gawrt|#inART|#artsofashes|#teamates|#callioP|スケベなアロ絵|肌色まつり|まつりは絵っち|エロおにぎり|オークアート|沈没後悔日記</MatchPattern>
+      <MatchPattern>#GambaRisu|#ioarts|#HoshinovArt|#anyatelier|#Reinessance|#graveyART|#絵ニックス|#callillust|#ameliaRT|#いなート|#gawrt|#inART|#artsofashes|#teamates|#callioP|スケベなアロ絵|肌色まつり|まつりは絵っち|エロおにぎり|オークアート|沈没後悔日記|#glAMErous</MatchPattern>
       <UserMatchPattern />
       <ChannelName>#holoart</ChannelName>
       <Duplicate>true</Duplicate>

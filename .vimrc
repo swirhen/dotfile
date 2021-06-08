@@ -55,8 +55,6 @@ nnoremap <C-d>   :bd<CR>
 
 nmap U :set fileencoding=utf-8<cr>
 nmap ,8 :e ++enc=utf8<cr>
-nmap ,h :HatenaUser<space>swirhen<enter>:HatenaEdit<space>2009
-nmap ,f :HatenaUser<space>anime-podcast:swirhen<enter>:HatenaEdit<space>20990101<enter>
 nmap ,r :%s/ >/ )/<cr>:%s/ </ (/<cr>:%s/> /) /<cr>:%s/< /( /<cr>:%s/@.*\..*)/@)/<cr>
 " <C-n>でOmni補完
 imap <C-n> <C-x><C-o>
@@ -113,41 +111,6 @@ set wrapscan
 "--------------------------------------
 " プラグイン
 "--------------------------------------
-:let g:miniBufExplMapWindowNavVim = 1
-:let g:miniBufExplMapWindowNavArrows = 1
-:let g:miniBufExplMapCTabSwitchBuffs = 1
-set runtimepath+=~/.vim/hatena
-:let g:hatena_user='swirhen'
-filetype on
-filetype indent on
-filetype plugin on
-
-" ctrlp.vim {{{2
-nnoremap <C-i>   :CtrlP<CR>
-let g:ctrlp_map = '[ctrlp]t'
-let g:ctrlp_cmd = 'CtrlP'
-let g:ctrlp_max_height = 20
-let g:ctrlp_match_window_bottom = 1
-let g:ctrlp_match_window_reversed = 0
-let g:ctrlp_highlight_match = [1, 'Type']
-let g:ctrlp_prompt_mappings = {
-    \ 'PrtBS()':              ['<c-h>', '<bs>'],
-    \ 'PrtSelectMove("j")':   ['<c-j>', '<c-n>'],
-    \ 'PrtSelectMove("k")':   ['<c-k>', '<c-p>'],
-    \ 'PrtHistory(-1)':       ['<down>'],
-    \ 'PrtHistory(1)':        ['<up>'],
-    \ 'PrtCurLeft()':         ['<left>'],
-    \ 'PrtCurRight()':        ['<right>'],
-    \ 'PrtExit()':            ['<esc>', '<c-c>', '<c-g>', '<c-@>'],
-    \ }
-
-nnoremap [ctrlp] <Nop>
-nmap <Space> [ctrlp]
-
-nnoremap <silent> [ctrlp]t :<C-u>CtrlP<CR>
-nnoremap <silent> [ctrlp]f :<C-u>CtrlPCurFile<CR>
-nnoremap <silent> [ctrlp]b :<C-u>CtrlPBuffer<CR>
-
 set fencs=usc-bom,usc-21e,usc-2,iso-2022-jp-3,utf-8
 set fencs+=cp932
 set paste
@@ -157,5 +120,4 @@ set expandtab
 set tabstop=4
 set shiftwidth=4
 
-" tabnine
 set rtp+=~/tabnine-vim
