@@ -7,6 +7,6 @@ new-window -n irssi
 select-pane -T 'irssi'
 send-keys 'irssi' C-m '/c l' C-m
 new-window -c "/data/share/temp"
-new-window -c "/data/share/temp/d2104-06"
-new-window -c "/data/share/temp/c2101-06"
+new-window -c "/data/share/temp/d2107-09"
+new-window -c "/data/share/temp/c2107-12"
 new-window -c "/data/share/temp/voiceactor_nico_ch"
