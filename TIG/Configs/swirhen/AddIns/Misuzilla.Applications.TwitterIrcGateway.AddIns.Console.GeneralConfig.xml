@@ -85,7 +85,8 @@ ih="invite	#hololive"
 ih	invite #hololive
 =	''
 kh	kick #hololive
-https://twitter.com/	'invite #twitter絵描きさん '
+https://twitter.com/	invite #twitter絵描きさん
+@	invite #twitter絵描きさん
 </string>
     <string>Misuzilla.Applications.TwitterIrcGateway.AddIns.Console.SystemContext
 x	exit
