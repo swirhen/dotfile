@@ -89492,3 +89492,6 @@
 0.0.0.0 zzhc.vnet.cn
 0.0.0.0 zzptzdhugavot.review
 0.0.0.0 zzz.clickbank.net
+0.0.0.0 myjitsu.jp
+0.0.0.0 blog.esuteru.com
+0.0.0.0 jin115.com
