@@ -2,11 +2,7 @@
 <Filters xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Items>
     <FilterItem xsi:type="Drop" Enabled="true">
-      <MatchPattern>フットサル|マジックスパイス|脱出ゲーム|チーム袋小路|kihanuji|みやある|tou.ch|shindanmaker|ロケタッチ|4sq.com|シンゴジラ|シン・ゴジラ|オリンピック|五輪|Olympic|olympic|メダル|私の語彙力は|ミラクルニキ|マーベル大陸|スマホRPGは今これをやってるよ|参戦ID|ポケモン|ぽけもん|Pokemon|pokemon|ポケストップ|モンスターボール|ポケスポット</MatchPattern>
-      <UserMatchPattern />
-    </FilterItem>
-    <FilterItem xsi:type="Drop" Enabled="true">
-      <MatchPattern>Ingress|ingress|イングレス|Pokèmon|pokèmon|ポケGO|ポケＧＯ|君の名は|今日のスタンドを発現ッ|jin115.com|blog.esuteru.com|アカとブルー|クレープ屋で働く私|貴サークル|配置されました|TRAVEL Now|トラベルナウ|#自分を作り上げた|配置されています</MatchPattern>
+      <MatchPattern>shindanmaker|オリンピック|五輪|Olympic|olympic|ミラクルニキ|マーベル大陸|スマホRPGは今これをやってるよ|参戦ID|今日のスタンドを発現ッ|jin115.com|blog.esuteru.com|アカとブルー|クレープ屋で働く私|貴サークル|配置されました|TRAVEL Now|トラベルナウ|#自分を作り上げた|配置されています</MatchPattern>
       <UserMatchPattern />
     </FilterItem>
     <FilterItem xsi:type="Drop" Enabled="true">
@@ -18,11 +14,17 @@
       <UserMatchPattern />
     </FilterItem>
     <FilterItem xsi:type="Drop" Enabled="true">
-      <MatchPattern>よろしくやってる身だぞ|京都アニメーション|京アニ|kyoani|毎日ガチャチケットをGETしよう|プペル|#私を構成する|伊是名夏子</MatchPattern>
+      <MatchPattern>毎日ガチャチケットをGETしよう|プペル|#私を構成する|伊是名夏子</MatchPattern>
       <UserMatchPattern />
     </FilterItem>
     <FilterItem xsi:type="Redirect" Enabled="true">
-      <MatchPattern>#GambaRisu|#ioarts|#HoshinovArt|#anyatelier|#Reinessance|#graveyART|#絵ニックス|#callillust|#ameliaRT|#いなート|#gawrt|#inART|#artsofashes|#teamates|#callioP|スケベなアロ絵|肌色まつり|まつりは絵っち|エロおにぎり|オークアート|沈没後悔日記|#glAMErous|#IRySart</MatchPattern>
+      <MatchPattern>#GambaRisu|#ioarts|#HoshinovArt|#anyatelier|#Reinessance|#graveyART|#絵ニックス|#callillust|#ameliaRT|#いなート|#gawrt|#inART|#artsofashes|#teamates|#callioP|#スケベなアロ絵|#肌色まつり|#まつりは絵っち|#エロおにぎり|#オークアート|#沈没後悔日記|#glAMErous|#IRySart|#illustrayBAE|#ベーアート|#faunline|#kronillust|#galaxillust</MatchPattern>
+      <UserMatchPattern />
+      <ChannelName>#holoart</ChannelName>
+      <Duplicate>true</Duplicate>
+    </FilterItem>
+    <FilterItem xsi:type="Redirect" Enabled="true">
+      <MatchPattern>#クロニーラ|#holoCouncil|#omegallery|#drawMEI|#ムメ絵|#FineFaunart|#絵ーちゃん|#Laplus_Artdesu|#Luillust|#こよりすけっち|#さかまた飼育日記|#いろはにも絵を|#Zetacrylic|#inKaela|#AeruSeni|#のどかあーと|#BaelzBrush</MatchPattern>
       <UserMatchPattern />
       <ChannelName>#holoart</ChannelName>
       <Duplicate>true</Duplicate>
