@@ -1,0 +1,41 @@
+8
+
+dir
+14987
+http://svn.coderepos.org/share/lang/perl/tiarra/trunk/main/Tiarra/Encoding/Encode
+http://svn.coderepos.org/share
+
+
+
+2007-12-10T12:45:39.112515Z
+3004
+topia
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+d0d07461-0603-4401-acd4-de1884942a52
+
+CP932JIS.pm
+file
+
+
+
+
+2008-07-01T06:37:34.000000Z
+acd42c9ca142d6388e0508af84bee70d
+2007-12-10T12:45:39.112515Z
+3004
+topia
+has-props
+
