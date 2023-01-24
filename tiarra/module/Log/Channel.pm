@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# $Id: Channel.pm 12214 2008-05-22 11:34:11Z topia $
+# $Id: Channel.pm 36686 2010-02-10 18:47:59Z topia $
 # -----------------------------------------------------------------------------
 package Log::Channel;
 use strict;
@@ -194,7 +194,7 @@ sub _channel_match {
 	      sprintf('=%02x', unpack("C", $1));
 	    }ge;
 	    my $chan_dir = Tools::HashTools::replace_recursive(
-		$ch->[0], [{channel => $chan_filename}]);
+		$ch->[0], [{channel => $chan_filename, lc_channel => lc $chan_filename}]);
 	    my $fpath_format = "$chan_dir/$fname_format";
 
 	    $this->{matching_cache}->{$channel} = $fpath_format;
@@ -409,8 +409,12 @@ sync: sync
 # それ以外(privも含む)のログはothers/%Y.%m.%d.txtに保存される。
 # #(channel) はチャンネル名に展開される。
 # (古いバージョンだと展開されずにそのままディレクトリ名になってしまいます。)
+# IRCのチャンネル名は大文字小文字が区別されず、サーバからは各送信者が指定した通りの
+# チャンネル名が送られてきます。そのため、大文字小文字が区別されるファイルシステムでは
+# 同じチャンネルが別々のディレクトリに作られることになります。
+# この問題を回避するため、チャンネル名を小文字に統一した #(lc_channel) が利用できます。
 channel: priv priv
-channel: #(channel) *
+channel: #(lc_channel) *
 -channel: others *
 
 # ファイル名のエンコーディング.

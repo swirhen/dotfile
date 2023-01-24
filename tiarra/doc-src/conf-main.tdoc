@@ -1,5 +1,5 @@
 -*- outline -*-
-$Id: conf-main.tdoc 12848 2008-05-30 13:28:01Z hio $
+$Id: conf-main.tdoc 36723 2010-02-11 18:26:27Z topia $
 
 perlのソースに使うpodパーサを流用しているので、package文と=pod〜=cutで書く必要があります。
 ヘッダのinfo-is-ommitedとno-switchはどちらも値を真に定義しなければなりません。
@@ -12,7 +12,7 @@ info-is-omitted: 1
 no-switch: 1
 
 # tiarra.conf自身の文字コード
-# コード名はjis,sjis,euc,utf8,utf16,utf32等。(この値はUnicode::Japaneseにそのまま渡されます)
+# コード名はjis,sjis,euc,utf8,utf16,utf32等。(この値はEncodeまたはUnicode::Japaneseにそのまま渡されます)
 # autoが指定された、または省略された場合は自動判別します。
 conf-encoding: utf8
 
@@ -50,22 +50,22 @@ tiarra-port: 6667
 # crypt は ./tiarra --make-password で行えます。
 tiarra-password: xl7cflIcH9AwE
 
-# 外部プログラムからtiarraをコントロールする為のUNIXドメインソケットの名前。
+# 外部プログラムからTiarraをコントロールする為のUNIXドメインソケットの名前。
 # 例えば"foo"を指定した場合、ソケット/tmp/tiarra-control/fooが作られる。
 # 省略された場合はこの機能を無効とする。
 # また、非UNIX環境ではそもそもUNIXドメインソケットが利用可能でないため、
 # そのような場合にもこの機能は無効となる。
 -control-socket-name: test
 
-# IRCサーバーから送られる文字のコードと、IRCサーバーへ送る文字のコード
-# どちらも省略された場合はjis。
-server-in-encoding: jis
-server-out-encoding: jis
+# IRCサーバーから送られる文字のコードと、IRCサーバーへ送る文字のコード。
+# それぞれ省略された場合はjis。
+server-in-encoding: utf8
+server-out-encoding: utf8
 
-# クライアントから受け取る文字のコードと、クライアントへ伝える文字のコード
-# どちらも省略された場合はjis。
-client-in-encoding: jis
-client-out-encoding: jis
+# クライアントから受け取る文字のコードと、クライアントへ伝える文字のコード。
+# それぞれ省略された場合はjis。
+client-in-encoding: utf8
+client-out-encoding: utf8
 
 # Tiarraは標準出力に様々なメッセージを出力するが、その文字コードを指定する。省略時にはutf8となる。
 # ただしtiarra.confのパースが完了するまでは文字コードの変換は行なわれない(つまりこの設定が有効にならない)ことに注意して下さい。
@@ -92,7 +92,7 @@ notice-error-messages: 1
 #  mask: ++{example3}@ircnet,-+{example4}@2ch  +*!*@*.example.com # +で始まるチャンネル。
 #  mask: *                                     -*!*@*
 #-----------------
-# となります。 この二つはまったく同じマスクを表しています。
+# となります。この二つはまったく同じマスクを表しています。
 
 # この値をplumにすると、plum形式、省略するかtiarraを指定すると、Tiarra形式になります。
 chanmask-mode: tiarra
@@ -103,8 +103,8 @@ chanmask-mode: tiarra
 -ipv4-bind-addr: 0.0.0.0
 -ipv6-bind-addr: ::0
 
-# tiarra が、 001 や 002 や、 recent log を送信するときなどに使う prefix
-# を指定します。 hostname や fqdn っぽいものを指定すると良いかもしれません。
+# Tiarra が、 001 や 002 や、 recent log を送信するときなどに使う prefix
+# を指定します。 hostname や FQDN っぽいものを指定すると良いかもしれません。
 # デフォルトは tiarra です。普通変える必要はありません。
 -sysmsg-prefix: tiarra
 
@@ -133,6 +133,20 @@ sysmsg-prefix-use-masks {
 #    クライアントに投げます。
 # multi-server-mode 時のデフォルトは 0 、 single-server-mode 時のデフォルトは 1 です。
 -nick-fix-mode: 0
+
+# Tiarra がチャンネルに join する際の挙動を設定します。
+# デフォルト設定で Excess Flood になってしまう場合に設定してください。
+#
+# irc.juggler.jp (2ch@IRC) にて 25 チャンネル以上 join している場合に
+# Excess Flood になってしまった事例があるそうです。
+
+# JOIN コマンドを送信する間隔 (秒)
+# デフォルトは1秒です。
+join-interval: 1
+
+# 一つの JOIN コマンドで指定するチャンネルの数
+# デフォルトは5チャンネルです。
+join-channels-per-command: 5
 
 messages {
   # Tiarra が使用する、いくつかのメッセージを指定する。
@@ -170,6 +184,8 @@ multi-server-mode: 1
 # 複数のネットワークに接続したい場合は多重定義して下さい。
 name: ircnet
 name: 2ch
+#name: freenode
+#name: ustream
 
 # 通常Tiarraではチャンネル名を「#Tiarra@ircnet」のように表現します。
 # これはネットワークircnet内の#Tiarraというチャンネルを表わします。
@@ -195,7 +211,7 @@ channel-network-separator: @
 # 3. "message-for-each"の場合は、切断されるとクライアントに宛ててTiarraが
 #    到達不能になった全てのチャンネルにNOTICEでその旨を報告する。
 #    再接続に成功すると再びNOTICEで報告する。JOINやPARTはしない。
-# デフォルトはpart-and-joinです。
+# 省略時のデフォルトはpart-and-joinです。
 action-when-disconnected: message-for-each
 
 # NICKを変更する度に、変更したサーバーでの新しいNICKをNOTICEで常に通知するかどうか。
@@ -225,12 +241,13 @@ no-switch: 1
 
 # サーバーのホストとポートを指定。複数行可。(host/port が指定されていない場合は)省略不可。
 # 同じサーバの複数のポート指定は順番に試すので、大量に書かない方がよい。
-server: irc.nara.wide.ad.jp 6662 6663
-server: irc.fujisawa.wide.ad.jp 6661 6664
+server: irc.ircnet.ne.jp 6667
+server: irc.media.kyoto-u.ac.jp 6662 6663
+server: irc.huie.hokudai.ac.jp 6667
 
 # サーバーのホストとポート。(server が指定されていない場合は)省略不可。
 # server を指定した場合は server が優先されます。
--host: irc.nara.wide.ad.jp
+-host: irc.media.kyoto-u.ac.jp
 -port: 6663
 
 # general/userで設定したユーザ名を使わずに、各ネットワークで独自のユーザ名を使用する事も可能。
@@ -243,11 +260,11 @@ server: irc.fujisawa.wide.ad.jp 6661 6664
 # このサーバーの要求するパスワード。省略可能。
 -password: hoge
 
-# general/setver-in/out-encodingで設定したエンコーディングを使わずに、
-# 各ネットワークで独自のエンコーディングを使用する事も可能。
+# general/setver-in/out-encodingで設定した文字のコードを使わずに、
+# 各ネットワークで独自の文字コードを使用する事も可能。
 # 省略されたら当然、generalで設定したものが使われる。
--in-encoding: jis
--out-encoding: jis
+in-encoding: jis
+out-encoding: jis
 
 # general/(ipv4|ipv6)bind-addrで設定したローカルアドレスを使わずに、
 # 各ネットワークで独自のbind_addrを使用する事も可能。
@@ -263,6 +280,46 @@ info: ネットワーク定義例 (2ch)
 info-is-omitted: 1
 no-switch: 1
 
-host: irc.2ch.net
-port: 6667
+
+server: irc.2ch.net 6667
+server: irc2.2ch.net 6667
+server: irc.juggler.jp 6667
+
+in-encoding: jis
+out-encoding: jis
+=cut
+
+* freenode
+package freenode;
+=pod
+info: ネットワーク定義例 (freenode)
+info-is-omitted: 1
+no-switch: 1
+
+
+server: chat.freenode.net 6667
+
+# freenodeではパスワードとして「アカウント パスワード」のように、
+# アカウントに空白とパスワードを続けたものを指定することで、
+# NICKコマンドの前の接続の段階でidentifyすることができるため、
+# nickの重複や異なるnick等、nickとは無関係に自動identifyが可能。
+-password: account secret
+=cut
+
+* ustream
+package ustream;
+=pod
+info: ネットワーク定義例 (Ustream)
+info-is-omitted: 1
+no-switch: 1
+
+
+server: chat1.ustream.tv 6667
+
+# Ustreamのloginをnickとuserに指定する。
+-nick: ustreamer
+-user: ustreamer
+
+# Ustreamのパスワードを指定する。
+-password: secret
 =cut

@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# $Id: Im.pm 14529 2008-06-24 11:57:19Z topia $
+# $Id: Im.pm 36552 2010-01-27 14:53:29Z drry $
 # -----------------------------------------------------------------------------
 package Auto::Im;
 use strict;
@@ -78,9 +78,14 @@ sub message_arrived {
 		 )->start(
 		     Callback => sub {
 			 my $stat = shift;
-			 $runloop->notify_warn(__PACKAGE__." post failed: $stat")
-			     unless ref($stat);
-			 ## FIXME: check response (should check 'error')
+			 if (!ref($stat)) {
+			     $runloop->notify_warn(__PACKAGE__." post failed: $stat");
+			 } elsif ($stat->{Content} !~ /"result":\s*"(?:ok|posted)"/) {
+			     # http://im.kayac.com/#docs
+			     # (but actually responce is '"result": "ok"')
+			     (my $content = $stat->{Content}) =~ s/\s+/ /;
+			     $runloop->notify_warn(__PACKAGE__." post failed: $content");
+			 }
 		     },
 		    );
 	  }

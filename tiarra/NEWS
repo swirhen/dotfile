@@ -1,3 +1,51 @@
+2010-02-12  Topia  <topia@clovery.jp>
+
+	* Log::Channel (thanks klm)
+	  - ログディレクトリの大文字小文字問題に対応するため
+	    lc_channel を追加した。
+	* IrcIO::Server, Channel::Join::Connect (thanks syo68k)
+	  - irc.juggler.jp において多数のチャンネルに join する際に
+	    Excess Flood が生じる問題に対応するため、 interval と
+	    channels を設定可能にした。
+	* Channel::Rejoin
+	  - chanserv で管理されていると検出した場合は無視するようにした。
+	* Network::Freenode
+	  - freenode 用の ChanServ 検出モジュール。
+
+2010-02-11  Topia  <topia@clovery.jp>
+
+	* Channel::Rejoin
+	  - freenode の新しい ircd である ircd-seven との相性問題を解決
+	* all.conf, sample.conf: (thanks drry)
+	  - デフォルトのサーバ通信文字コードを utf8 にし、
+	    ircnet には jis を明示するようにした。
+	  - ircnet のサーバ設定が古くなってしまったのを改善。
+	  - freenode と ustream の設定サンプルを追加
+	  - デフォルトのクライアント通信文字コードを utf8 にした。
+	    クライアントが jis しか通さない場合は $encoding=jis$ をリアル
+	    ネーム欄に指定することで対応できます。
+
+2009-10-19  Topia  <topia@clovery.jp>
+
+	* Auto::Im
+	  - 結果チェックを改善
+	* tiarra, Tiarra::Resolver, Tiarra::Terminatemanager
+	  - スレッドが有効で --quiet を利用した時(fork した時)に
+	    動作しないバグを修正
+	* Auto::Notify
+	  - 追加。 im.kayac.com と Prowl の両方をサポート
+	* Tiarra::Socket::Connect
+	  - DNS round-robin サポート
+	* Channel::Rejoin
+	  - +b/+e/+I が取れない場合にもきちんと rejoin できるようにした
+	* Auto::Calc
+	  - 全角空白対応
+	* Auto::FetchTitle::Plugin::*
+	  - 細かくは ChangeLog.svn を参照ください。
+	* System::WebClient, Log::Logger
+	  - NOTICE 対応
+	* 2004-08-22 から2009-02-06 の間の NEWS は書いていません
+
 2004-08-22  Topia  <topia@clovery.jp>
 
 	* Client::Rehash

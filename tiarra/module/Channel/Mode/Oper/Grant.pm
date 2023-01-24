@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# $Id: Grant.pm 11365 2008-05-10 14:58:28Z topia $
+# $Id: Grant.pm 15318 2008-07-06 15:34:51Z hio $
 # -----------------------------------------------------------------------------
 package Channel::Mode::Oper::Grant;
 use strict;
@@ -8,6 +8,7 @@ use base qw(Module);
 use Mask;
 use Multicast;
 use Timer;
+use base qw(Tiarra::Mixin::NewIRCMessage);
 
 sub new {
     my $class = shift;

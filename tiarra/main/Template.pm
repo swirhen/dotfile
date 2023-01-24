@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# $Id: Template.pm 11365 2008-05-10 14:58:28Z topia $
+# $Id: Template.pm 34672 2009-07-29 03:18:07Z drry $
 # -----------------------------------------------------------------------------
 package Template;
 use strict;
@@ -123,9 +123,9 @@ sub str {
     my $result = $this->{current};
 
     # 未置換の<&foo>があればそれを消してcarp。
-    while ($result =~ s/<\&(.+?)>//) {
-	carp "Unexpanded tag: <\&$1>";
-    }
+    #while ($result =~ s/<\&(.+?)>//) {
+    #    carp "Unexpanded tag: <\&$1>";
+    #}
 
     # <!mark:foo>を消す。
     $result =~ s/<!mark:.+?>//g;

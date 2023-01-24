@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# $Id: Resolver.pm 12926 2008-05-31 14:42:57Z hio $
+# $Id: Resolver.pm 35566 2009-10-09 14:53:58Z topia $
 # -----------------------------------------------------------------------------
 # Simple Resolver with multi-thread or blocking.
 # -----------------------------------------------------------------------------
@@ -90,11 +90,8 @@ if ($use_threads) {
     __PACKAGE__->shared;
 }
 
-sub _new {
-    my $class = shift;
-
-    my $this = {};
-    bless $this, $class;
+sub init {
+    my $this = shift;
 
     if ($use_threads) {
 	$this->{ask_queue} = Thread::Queue->new;
@@ -121,6 +118,14 @@ sub _new {
     $this;
 }
 
+sub _new {
+    my $class = shift;
+
+    my $this = {};
+    bless $this, $class;
+    $this->init;
+}
+
 sub _check_thread {
     my $this = shift;
 
@@ -143,7 +148,12 @@ sub _create_thread {
 
 sub destruct {
     my $this = shift;
+    my $before_fork = shift;
 
+    if (!$before_fork && defined $this->{destructor}) {
+	$this->{destructor}->uninstall;
+	$this->{destructor} = undef;
+    }
     $this->{ask_queue}->enqueue(undef);
     $this->{thread}->join;
     $this->mainloop;

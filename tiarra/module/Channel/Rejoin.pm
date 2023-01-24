@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# $Id: Rejoin.pm 11365 2008-05-10 14:58:28Z topia $
+# $Id: Rejoin.pm 36718 2010-02-11 17:21:29Z topia $
 # -----------------------------------------------------------------------------
 # このモジュールは動作時に掲示板のdo-not-touch-mode-of-channelsを使います。
 # -----------------------------------------------------------------------------
@@ -27,6 +27,7 @@ sub new {
     # got_Ilist => +I(略
     # got_oper => 既にPART->JOINしているかどうか。
     # cmd_buf => ARRAY<Tiarra::IRC::Message>
+    # num_got_errors => このチャンネルのエラーをみた回数
     $this;
 }
 
@@ -37,7 +38,7 @@ sub message_arrived {
 	my $cmd = $msg->command;
 	if ($cmd eq 'PART') {
 	    foreach my $ch_fullname (split /,/,$msg->param(0)) {
-		$this->check_channel(
+		$this->check_and_rejoin_channel(
 		    scalar Multicast::detatch($ch_fullname),
 		    $sender);
 	    }
@@ -45,20 +46,27 @@ sub message_arrived {
 	elsif ($cmd eq 'KICK') {
 	    # RFC2812によると、複数のチャンネルを持つKICKメッセージが
 	    # クライアントに届く事は無い。
-	    $this->check_channel(
+	    $this->check_and_rejoin_channel(
 		scalar Multicast::detatch($msg->param(0)),
 		$sender);
 	}
 	elsif ($cmd eq 'QUIT' || $cmd eq 'KILL') {
 	    # 註釈affected-channelsに影響のあったチャンネルのリストが入っているはず。
 	    foreach (@{$msg->remark('affected-channels')}) {
-		$this->check_channel($_,$sender);
+		$this->check_and_rejoin_channel($_,$sender);
 	    }
 	}
 
 	$this->session_work($msg,$sender);
     }
     $msg;
+}
+
+sub check_and_rejoin_channel {
+    my ($this,$ch_name,$server) = @_;
+    if ($this->check_channel($ch_name,$server)) {
+	$this->rejoin($ch_name,$server);
+    }
 }
 
 sub check_channel {
@@ -86,12 +94,20 @@ sub check_channel {
 	# 自分が@を持っている。
 	return;
     }
-    $this->rejoin($ch_name,$server);
+    if ($ch->remark('chanserv-controlled')) {
+	# ChanServ 管理チャンネルであれば、無駄な努力はしない。
+	return;
+    }
+    return 1;
 }
 
 sub rejoin {
     my ($this,$ch_name,$server) = @_;
     my $ch_fullname = Multicast::attach($ch_name,$server->network_name);
+    if (defined $this->{sessions}->{$ch_fullname}) {
+	# 動作中のセッションがあるのでキャンセルする。
+	return;
+    }
     RunLoop->shared->notify_msg(
 	"Channel::Rejoin is going to rejoin to ${ch_fullname}.");
 
@@ -126,6 +142,7 @@ sub rejoin {
 	ch => $ch,
 	server => $server,
 	cmd_buf => [],
+	num_got_errors => 0,
     };
     
     # do-not-touch-mode-of-channelsを取得
@@ -166,6 +183,9 @@ sub rejoin {
 		    Command => 'MODE',
 		    Params => [$ch_name,$_]));
 	}
+	$session->{got_elist} =
+	    $session->{got_blist} =
+	    $session->{got_Ilist} = 0;
     }
     else {
 	$session->{got_elist} =
@@ -184,6 +204,16 @@ sub rejoin {
 sub part_and_join {
     my ($this,$session) = @_;
     $session->{got_oper} = 1;
+    if (!$this->check_channel($session->{ch_shortname}, $session->{server})) {
+	# 情報を取得している間に状況が変化した
+	RunLoop->shared->notify_msg(
+	    "Channel::Rejoin is cancelled to rejoin to $session->{ch_fullname}.");
+	# part/join をやめたので発行すべきコマンドはない。
+	$session->{cmd_buf} = [];
+	# フラグ類のクリーンアップを行う
+	$this->revive($session);
+	return;
+    }
     foreach (qw/PART JOIN/) {
 	$session->{server}->send_message(
 	    $this->construct_irc_message(
@@ -195,7 +225,9 @@ sub part_and_join {
 sub session_work {
     my ($this,$msg,$server) = @_;
     my $session;
-    # ウォッチの対象になるのはJOIN,324,368,349,347。
+    # ウォッチの対象になるのはJOIN,324,368,349,347,482。
+    # リストはコマンドを発行していれば IrcIO::Server が
+    # 保持しておいてくれる。
 
     my $got_reply = sub {
 	my $type = shift;
@@ -231,7 +263,7 @@ sub session_work {
 	    }
 	}
     };
-    
+
     if ($msg->command eq RPL_CHANNELMODEIS) {
 	# MODEリプライ
 	$session = $this->{sessions}->{$msg->param(1)};
@@ -271,11 +303,18 @@ sub session_work {
 	    $this->revive($session);
 	}
     }
+    elsif ($msg->command eq ERR_CHANOPRIVSNEEDED) {
+	$session = $this->{sessions}->{$msg->param(1)};
+	if (defined $session) {
+	    $session->{num_got_errors}++;
+	}
+    }
 
     # $sessionが空でなければ、必要な情報が全て揃った可能性がある。
     if (defined $session && !$session->{got_oper} &&
-	$session->{got_mode} && $session->{got_blist} &&
-	$session->{got_elist} && $session->{got_Ilist}) {
+	$session->{got_mode} && ($session->{got_blist} +
+	$session->{got_elist} + $session->{got_Ilist} +
+	$session->{num_got_errors}) >= 3) {
 	$this->part_and_join($session);
     }
 }
@@ -283,6 +322,8 @@ sub session_work {
 sub revive {
     my ($this,$session) = @_;
     Timer->new(
+	Name => 'Channel::Rejoin cmd queue',
+	Module => $this,
 	Interval => 1,
 	Repeat => 1,
 	Code => sub {
@@ -298,11 +339,18 @@ sub revive {
 	    }
 	    if (@$cmd_buf == 0) {
 		# cmd_bufが空だったら終了。
+		# ただし、10秒以内に再び単独になっても無視する
 		# untouchablesから消去
 		my $untouchables = BulletinBoard->shared->do_not_touch_mode_of_channels;
 		delete $untouchables->{$session->{ch_fullname}};
-		# session消去
-		delete $this->{sessions}->{$session->{ch_fullname}};
+		Timer->new(
+		    Name => 'Channel::Rejoin delay cleanup',
+		    Module => $this,
+		    After => 10,
+		    Code => sub {
+			# session消去
+			delete $this->{sessions}->{$session->{ch_fullname}};
+		    })->install;
 		# タイマーをアンインストール
 		$timer->uninstall;
 	    }

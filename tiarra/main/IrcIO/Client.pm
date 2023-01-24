@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# $Id: Client.pm 11365 2008-05-10 14:58:28Z topia $
+# $Id: Client.pm 28573 2009-01-17 18:01:46Z topia $
 # -----------------------------------------------------------------------------
 # IrcIO::Clientはクライアントからの接続を受け、
 # IRCメッセージをやり取りするクラスです。
@@ -563,9 +563,7 @@ sub inform_joinning_channels {
 	}
 
 	# クライアントに出力。
-	# その結果切断されたら関数を抜ける。
 	$this->flush;
-	last CONNECTING unless $this->connected;
     };
 
     my %channels = map {
@@ -577,7 +575,6 @@ sub inform_joinning_channels {
 	} values %{$network->channels};
     } values %{$this->_runloop->networks};
 
- CONNECTING:
     while (1) {
 	# Mask を使って、マッチしたものを出力
 	foreach ($this->_conf_networks->
@@ -587,6 +584,7 @@ sub inform_joinning_channels {
 		my $ch_name = $_;
 		if (Mask::match($mask, $ch_name)) {
 		    $send_channelinfo->(@{$channels{$ch_name}});
+		    last unless $this->connected;
 		    delete $channels{$ch_name};
 		}
 	    }
@@ -595,6 +593,7 @@ sub inform_joinning_channels {
 	# のこりを出力
 	foreach (values %channels) {
 	    $send_channelinfo->(@$_);
+	    last unless $this->connected;
 	}
 
 	last;

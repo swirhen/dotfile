@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# $Id: Guess.pm 4404 2008-01-10 23:37:30Z drry $
+# $Id: Guess.pm 36552 2010-01-27 14:53:29Z drry $
 # -----------------------------------------------------------------------------
 # copyright (C) 2004 Topia <topia@clovery.jp>. all rights reserved.
 package Client::Guess;
@@ -10,7 +10,7 @@ use SelfLoader;
 use Tiarra::SharedMixin;
 
 # shorthand
-our $re_ver = qr/[\d.][\d.a-zA-Z-+]+/;
+our $re_ver = qr/[\d.][\d.a-zA-Z+-]+/;
 our $re_tok = qr/\S+/;
 
 sub _new {

@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# $Id: Configuration.pm 11475 2008-05-12 16:39:36Z topia $
+# $Id: Configuration.pm 36720 2010-02-11 18:13:54Z topia $
 # -----------------------------------------------------------------------------
 # このクラスはフック`reloaded'を用意します。
 # フック`reloaded'は、設定ファイルがリロードされた時に呼ばれます。
@@ -187,6 +187,8 @@ my $defaults = {
 	'client-out-encoding' => 'jis',
 	'stdout-encoding' => 'utf8',
 	'sysmsg-prefix' => 'tiarra',
+	'join-interval' => 1,
+	'join-channels-per-command' => 5,
 	'sysmsg-prefix-use-masks' => {
 	    'system' => '*',
 	    'priv' => '',
@@ -219,21 +221,21 @@ sub _complete_table_with_defaults {
     } @$blocks;
     $this->_complete_block_with_defaults($root_block, $defaults);
 
+    # networksのdefaultだけは別処理。
+    my $networks = $root_block->networks;
+    if (!defined $networks->default) {
+	$networks->set('default',$networks->name);
+    }
+
     my $general = $root_block->general;
     if (!defined $general->nick_fix_mode) {
 	$general->set('nick-fix-mode', do {
-	    if ($general->multi_server_mode) {
+	    if ($networks->multi_server_mode) {
 		0;
 	    } else {
 		1;
 	    }
 	});
-    }
-
-    # networksのdefaultだけは別処理。
-    my $networks = $root_block->networks;
-    if (!defined $networks->default) {
-	$networks->set('default',$networks->name);
     }
 
     @$blocks = values(%{$root_block->table});

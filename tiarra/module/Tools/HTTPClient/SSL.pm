@@ -11,7 +11,7 @@
 #
 # Copyright 2008 YAMASHINA Hio
 # -----------------------------------------------------------------------------
-# $Id: SSL.pm 10954 2008-05-02 13:24:15Z hio $
+# $Id: SSL.pm 15585 2008-07-09 17:01:45Z topia $
 # -----------------------------------------------------------------------------
 package Tools::HTTPClient::SSL;
 use strict;
@@ -216,7 +216,7 @@ sub _recv
     {
       my $e = $ssl->errstr;
       #print "read: $e\n";
-      if( $e =~ /SSL wants a read first!/ )
+      if( $e =~ /SSL wants a read first/ )
       {
         last;
       }

@@ -61,7 +61,7 @@
 注意点<br />
 - この機能はまだ実装途中です。いろいろな不具合があるかもしれません。むしろきっとあります。<br />
 - サーバがわとの通信に割り込みますのでログにもとられません。<br />
-- この機能を使っている tiarra より上流に multi-server-mode な tiarra を置かないでください。<br />
+- この機能を使っている Tiarra より上流に multi-server-mode な Tiarra を置かないでください。<br />
 </p>
 <p class="comment">
 チャンネルの定義。<br />
@@ -95,6 +95,12 @@
 </p>
 <div class="element"><span class="key">channel</span>:<span class="value">#aaaaa@ircnet,#bbbbb@ircnet:*.jp, #ccccc@ircnet</span></div>
 <div class="element"><span class="key">channel</span>:<span class="value">#ddddd@ircnet</span></div>
+<p class="comment">
+join 送出の間隔(秒)<br />
+この設定は obsolete です。 general/join-interval を利用してください。<br />
+設定されていた場合は general/join-interval に優先されます。<br />
+</p>
+<div class="element"><span class="key">interval</span>:<span class="value">1</span></div>
 
         </div>
       </div>

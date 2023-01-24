@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# $Id: Connect.pm 11365 2008-05-10 14:58:28Z topia $
+# $Id: Connect.pm 36725 2010-02-11 18:33:02Z topia $
 # -----------------------------------------------------------------------------
 # copyright (C) 2002 Topia <topia@clovery.jp>. all rights reserved.
 package Channel::Join::Connect;
@@ -16,6 +16,8 @@ sub new {
     # channellist : HASH
     #   shortname => チャンネルショートネーム
     #   key => channel key
+    $this->{interval} = 1; # interval (sec)
+    $this->{channels} = 5; # channels
     $this->_init;
 }
 
@@ -41,6 +43,19 @@ sub _init {
 	}
     }
 
+    ## FIXME _conf_general
+    $this->{interval} = $this->_runloop->_conf_general->join_interval;
+    $this->{interval} = 1 unless defined $this->{interval};
+    $this->{channels} = $this->_runloop->_conf_general->join_channels_per_command;
+    $this->{channels} = 5 unless defined $this->{channels};
+
+    if ($this->config->interval) {
+	$this->{interval} = 0+$this->config->interval;
+	if ($this->{interval} == 0) {
+	    die "Channel::Join::Connect: do not set interval to 0!"
+	}
+    }
+
     $this;
 }
 
@@ -51,13 +66,13 @@ sub connected_to_server {
 
     if (defined($session)) {
 	Timer->new(
-	    Interval => 1,
+	    Interval => $this->{interval},
 	    Repeat => 1,
 	    Code => sub {
 		my $timer = shift;
 		if (@$session > 0) {
 		    # 一度に五つずつ送り出す。
-		    my $msg_per_trigger = 5;
+		    my $msg_per_trigger = $this->{channels};
 		    my (@param_chan, @param_key);
 		    for (my $i = 0; $i < @$session && $i < $msg_per_trigger; $i++) {
 			if (!defined($session->[$i]->{key}) || $session->[$i]->{key} eq '') {
@@ -98,4 +113,9 @@ section: important
 #   「#aaaaa@ircnet」、「#bbbbb@ircnet:*.jp」、「#ccccc@ircnet」、「#ddddd@ircnet」の4つのチャンネルに入る。
 -channel: #aaaaa@ircnet,#bbbbb@ircnet:*.jp, #ccccc@ircnet
 -channel: #ddddd@ircnet
+
+# join 送出の間隔(秒)
+# この設定は obsolete です。 general/join-interval を利用してください。
+# 設定されていた場合は general/join-interval に優先されます。
+-interval: 1
 =cut

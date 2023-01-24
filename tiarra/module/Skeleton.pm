@@ -1,33 +1,21 @@
 # -----------------------------------------------------------------------------
-# $Id: Module.pm 31258 2009-03-15 12:58:10Z topia $
+# $Id: Skeleton.pm 31258 2009-03-15 12:58:10Z topia $
 # -----------------------------------------------------------------------------
-# Tiarraモジュール(プラグイン)を表わす抽象クラスです。
-# 全てのTiarraモジュールはこのクラスを継承し、
-# 必要なメソッドをオーバーライドしなければなりません。
+# モジュールのスケルトン。
 # -----------------------------------------------------------------------------
-package Module;
+package Skeleton;
 use strict;
 use warnings;
-use Carp;
-use Tiarra::ShorthandConfMixin;
-use Tiarra::Utils;
-use base qw(Tiarra::Mixin::NewIRCMessage);
-use base qw(Tiarra::Mixin::AttachPackage);
-# our @USES = ();
-Tiarra::Utils->define_attr_getter(0, [qw(_runloop runloop)]);
+use base qw(Module);
 
 sub new {
-    my ($class, $runloop) = @_;
-    if (!defined $runloop) {
-	carp 'please update module constructor; see Skeleton.pm';
-	$runloop = RunLoop->shared;
-    }
+    my $class = shift;
     # モジュールが必要になった時に呼ばれる。
     # これはモジュールのコンストラクタである。
     # 引数は無し。
-    bless {
-	runloop => $runloop,
-    },$class;
+    my $this = $class->SUPER::new(@_);
+
+    return $this;
 }
 
 sub destruct {
@@ -44,7 +32,7 @@ sub config_reload {
     # モジュールの設定が変更された時に呼ばれる。
     # 新しい config は $this->config で取得できます。
 
-    # デフォルト動作。
+    # 定義されていない場合は destruct と new をそれぞれ呼ぶ。
     eval {
 	$this->destruct;
     }; if ($@) {
@@ -56,11 +44,11 @@ sub config_reload {
 }
 
 sub message_arrived {
-    my ($this,$message,$sender) = @_;
+    my ($this,$msg,$sender) = @_;
     # サーバーまたはクライアントからメッセージが来た時に呼ばれる。
     # 戻り値はTiarra::IRC::Messageまたはその配列またはundef。
     #
-    # $message :
+    # $msg :
     #    内容: Tiarra::IRC::Messageオブジェクト
     #    サーバーから、またはクライアントから送られてきたメッセージ。
     #    モジュールはこのオブジェクトをそのまま返しても良いし、
@@ -70,16 +58,33 @@ sub message_arrived {
     #    このメッセージを発したIrcIO。サーバーまたはクライアントである。
     #    メッセージがサーバーから来たのかクライアントから来たのかは
     #    $sender->isa('IrcIO::Server')などとすれば判定出来る。
-    #    この引数は現在処理しているメッセージ群の根拠サーバで、実際に
-    #    #message を作成したインスタンスは $message->generator に入る
-    #    (モジュールが生成した場合等入ってない場合もあるし、また
-    #     Multicast がメッセージを分けた場合でも generator は変化しない。)
     #
     # サーバー→クライアントの流れでも、Prefixを持たないメッセージを
     # 流しても構わない。逆に言えば、そのようなメッセージが来ても
     # 問題が起こらないようにモジュールを設計しなければならない。
-    return $message;
+    return $msg;
 }
+## Auto::Utils::generate_reply_closures を使う場合。
+# sub message_arrived {
+#     my ($this,$msg,$sender) = @_;
+#     my @result = ($msg);
+# 
+#     if ($msg->command eq 'PRIVMSG') {
+# 	my ($get_raw_ch_name, $reply, $reply_as_priv, $reply_anywhere, $get_full_ch_name)
+# 	    = Auto::Utils::generate_reply_closures($msg,$sender,\@result);
+# 
+# 	$reply_anywhere->('Hello, #(name|default_name)',
+# 			'default_name' => '(your name)');
+# 	if ($get_raw_ch_name->() eq '#Tiarra_testing') {
+# 	    # なんらかの処理
+# 	}
+# 	if ($get_full_ch_name->() eq '#Tiarra_testing@LocalServer') {
+# 	    # なんらかの処理
+# 	}
+#     }
+#     return @result;
+# }
+# 
 
 sub client_attached {
     my ($this,$client) = @_;
@@ -126,8 +131,8 @@ sub disconnected_from_server {
 
 sub message_io_hook {
     my ($this,$message,$io,$type) = @_;
-    # サーバーから受け取ったメッセージ、サーバーに送ったメッセージ、
-    # クライアントから受け取ったメッセージ、クライアントに送ったメッセージは
+    # サーバーから受け取ったメッセージ、サーバーに送るメッセージ、
+    # クライアントから受け取ったメッセージ、クライアントに送るメッセージは
     # このメソッドで各モジュールに通知される。メッセージの変更も可能で、
     # 戻り値のルールはmessage_arrivedと同じ。
     #
@@ -135,40 +140,13 @@ sub message_io_hook {
     #
     # $message :
     #    内容: Tiarra::IRC::Messageオブジェクト
-    #         送受信されたメッセージ
+    #         送受信しているメッセージ
     # $io :
     #    内容: IrcIO::Server又はIrcIO::Clientオブジェクト
-    #         送受信が行なわれたIrcIO
+    #         送受信を行っているIrcIO
     # $type :
     #    内容: 文字列
     #         'in'なら受信、'out'なら送信
-    return $message;
-}
-
-sub message_encoding_hook {
-    my ($this,$message,$io,$type,$encoding) = @_;
-    # サーバーから受け取ったメッセージ、サーバーに送ったメッセージ、
-    # クライアントから受け取ったメッセージ、クライアントに送ったメッセージは
-    # このメソッドで各モジュールに通知される。メッセージの変更も可能で、
-    # 戻り値のルールはmessage_arrivedと同じ。このメソッドでメッセージの
-    # エンコーディングを制御することを意図している。 message_io_hook よりも I/O
-    # よりで呼び出される。送信時なら ->remark/encoding を、受信時は
-    # ->encoding_params を呼び出すことにより制御してください。
-    #
-    # 通常のモジュールはこのメソッドを実装する必要は無い。
-    #
-    # $message :
-    #    内容: Tiarra::IRC::Messageオブジェクト
-    #         送受信されたメッセージ
-    # $io :
-    #    内容: IrcIO::Server又はIrcIO::Clientオブジェクト
-    #         送受信が行なわれたIrcIO
-    # $type :
-    #    内容: 文字列
-    #         'in'なら受信、'out'なら送信。知らないタイプがきたら無視しなければならない。
-    # $encoding :
-    #    内容: 文字列
-    #         送信を予定しているエンコーディング。
     return $message;
 }
 
@@ -183,26 +161,22 @@ sub control_requested {
     die "This module doesn't support controlling.\n";
 }
 
-sub config {
-    my $this = shift;
-    # このモジュールの設定を取得する。
-    # オーバーライドする必要は無い。
-    # 戻り値はConfiguration::Block。
-    $this->_conf->find_module_conf(ref($this),'block');
-}
-
-sub _add_object {
-    my ($this, @disposables) = @_;
-
-    $this->_runloop->mod_manager->add_module_object($this, @disposables);
-    $this;
-}
-
-sub _remove_object {
-    my ($this, @disposables) = @_;
-
-    $this->_runloop->mod_manager->remove_module_object($this, @disposables);
-    $this;
-}
-
 1;
+
+=begin tiarra-doc
+
+info:    Skeleton for tiarra-module.
+default: off
+#section: important
+
+# モジュールの説明をこのあたりに書く.
+# 詳細はこのソースみれば分かると思われ.
+# 書式は tiarra.conf にそのままコピーできる形式.
+
+# もにゅもにゅ
+mask: *!*@*
+mask: ...
+
+=end tiarra-doc
+
+=cut

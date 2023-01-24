@@ -34,7 +34,7 @@ use Tiarra::TerminateManager;
 #1;
 #__DATA__
 
-sub TIARRA_CONTROL_ROOT () { '/var/www/tm/tc'; }
+sub TIARRA_CONTROL_ROOT () { '/tmp/tiarra-control'; }
 
 sub new {
     my ($class,$sockname) = @_;
@@ -93,7 +93,7 @@ sub open {
 	die "Couldn't make socket $filename: $!";
     }
     # パーミッションを700に。
-    chmod 0777, $filename;
+    chmod 0700, $filename;
     $this->{server_sock} =
 	ExternalSocket->new(
 	    Socket => $sock,

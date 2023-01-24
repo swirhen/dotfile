@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# $Id: Logger.pm 11365 2008-05-10 14:58:28Z topia $
+# $Id: Logger.pm 31673 2009-03-29 12:24:29Z hio $
 # -----------------------------------------------------------------------------
 package Log::Logger;
 use strict;
@@ -261,6 +261,9 @@ sub _build_message
     ch_short  => $ch_short,
     netname   => $netname,
     msg       => $msg->param(1),
+    command   => $msg->command(),
+    time      => $msg->time(),
+    #msg_orig  => $msg,
     formatted => $line,
   };
 }

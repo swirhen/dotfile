@@ -5,7 +5,7 @@
 #
 # Copyright 2008 YAMASHINA Hio
 # -----------------------------------------------------------------------------
-# $Id: ExtractHeading.pm 12996 2008-06-01 12:16:13Z hio $
+# $Id: ExtractHeading.pm 32570 2009-04-18 04:57:59Z hio $
 # -----------------------------------------------------------------------------
 package Auto::FetchTitle::Plugin::ExtractHeading;
 use strict;
@@ -107,7 +107,7 @@ sub _parse_extra_config
        $type ||= 're';
        if( $type eq 're' )
        {
-         $value =~ s{^/(.*)/(\w*)\z/}{(?$2:$1)};
+         $value =~ s{^/(.*)/(\w*)\z}{(?$2:$1)};
          my $re = eval{
            local($SIG{__DIE__}) = 'DEFAULT';
            qr/$value/s;
@@ -160,23 +160,25 @@ sub _config
       # 2. zakzak.
       url        => 'http://www.zakzak.co.jp/*',
       recv_limit => 10*1024,
-      extract    => qr{<font class="kijimidashi".*?>(.*?)</font>}s,
+      #extract    => qr{<font class="kijimidashi".*?>(.*?)</font>}s,
+      extract    => qr{<div class="titleArea">(.*?)</div>}s,
     },
     {
       # 3a. nikkei.
-      url        => 'http://www.nikkei.co.jp/*',
-      recv_limit => 16*1024,
-      extract => [
-        qr{<META NAME="TITLE" CONTENT="(.*?)">}s,
-        qr{<h3 class="topNews-ttl3">(.*?)</h3>}s,
-      ],
-      remove => qr/^NIKKEI NET：/,
-    },
-    {
-      # 3b. nikkei.
       url        => 'http://release.nikkei.co.jp/*',
       recv_limit => 18*1024,
       extract => qr{<h1 id="heading" class="heading">(.*)</h1>}s,
+    },
+    {
+      # 3b. nikkei.
+      url        => 'http://*.nikkei.co.jp/*',
+      recv_limit => 16*1024,
+      extract => [
+        qr{<META NAME="TITLE" CONTENT="(.*?)">}is,
+        qr{<h3 class="topNews-ttl3">(.*?)</h3>}is,
+        qr{<h3><!-- FJZONE START NAME="MIDASHI" -->(.*?)<!-- FJZONE END NAME="MIDASHI" --></h3>}is,
+      ],
+      remove => qr/^NIKKEI NET：/,
     },
     {
       # 4a. nhkニュース.
@@ -290,10 +292,197 @@ sub _config
       extract    => qr{<h1>(.*?)</h1>}s,
     },
     {
-      # 18. biglobe.
-      url        => 'http://news.biglobe.ne.jp/politics/*',
+      # 18a. biglobe.news.
+      url        => 'http://news.biglobe.ne.jp/*',
       recv_limit => 30*1024,
       extract    => qr{<h4 class="ch15">(.*?)(?:&nbsp;.*)?</h4>}s,
+    },
+    {
+      # 18b. biglobe.
+      url        => 'http://soudan1.biglobe.ne.jp/*',
+      recv_limit => 8*1024,
+      extract    => qr{<div class="ok_selection_content">(.*?)</div>}s,
+    },
+    {
+      # 19. i-revo.
+      url        => 'http://www.i-revo.jp/corporate/news/*',
+      extract    => qr{<h2>.*?<h2>(.*?)</h2>}s,
+    },
+    {
+      # 20. dq-status
+      url        => 'http://u-enterprise.com/dqstatus/*',
+      extract    => qr{<h1 id=maga_title>(.*?)</h1>}s,
+    },
+    {
+      # 21. emily.
+      url        => 'http://shop-emily.com/shopdetail/*/order/',
+      recv_limit => 20*1024,
+      extract    => qr{<font class=woong>&gt;</font> <font color=red class=woong>(.*?)</a>}s,
+    },
+    {
+      # 22. wikipedia.
+      url        => 'http://ja.wikipedia.org/wiki/*',
+      extract    => sub{
+        my $req = shift;
+        if( my $anchor = $req->{anchor} )
+        {
+          $anchor =~ s/\.([0-9A-F]{2})/pack("H*",$1)/ge;
+          $anchor;
+        }else
+        {
+          return;
+        }
+      },
+    },
+    {
+      # 23. cure-maid.
+      url        => 'http://www.curemaid.jp/index.php*',
+      recv_limit => 30*1024,
+      extract    => qr{<h2 class="entry-header">(.*?)</h2>}s,
+      timeout    => 5,
+    },
+    {
+      # 24. kyoto-np.
+      url        => 'http://www.kyoto-np.co.jp/article.php?*',
+      recv_limit => 20*1024,
+      extract    => qr{<td bgcolor="#FFFFFF" class="j25"><strong>(.*?)</strong></td>}s,
+      #timeout    => 5,
+    },
+    {
+      # 25. fukuishimbun.
+      url        => 'http://www.fukuishimbun.co.jp/modules/news2/article.php?storyid=*',
+      recv_limit => 20*1024,
+      extract    => qr{<h3 class="XL">(.*)</h3>}s,
+    },
+    {
+      # 26. royce.
+      url        => 'http://www.e-royce.com/items/other/*',
+      recv_limit => 50*1024,
+    },
+    {
+      # 27. nintendo.
+      url        => 'http://www.nintendo.co.jp/corporate/release/*',
+      extract    => qr{<DIV CLASS="title">(.*?)</DIV>}s,
+    },
+    {
+      # 28a. subeshi.
+      url        => 'http://seizo.inte.co.jp/beshi/r/?k=*',
+      extract    => sub{
+        my ($p1,$p2,$p3,$p4,$p5) = m{\Q<embed src="../img/graph.swf?\Epoint0=(\d+)&point1=(\d+)&point2=(\d+)&point3=(\d+)&point4=(\d+)"} or return;
+        my ($name) = m{<div id="type_nameLabel">(.*?)　さんのヒト型は</div>};
+        if( $name && m{/typeText/(\d+).gif} )
+        {
+          my $type = $1;
+          my $typenames = [qw(
+            ひょっとこ
+            捨て猫
+            暴君
+            ひまわり
+            ノリノリ
+            ガラス彫刻
+            評論家
+            ハードボイルド
+            勇者
+            リーダー
+            全知全能
+            みのむし
+          )];
+          if( my $typename = $typenames->[$type] )
+          {
+            my $params = "生き様=$p1,素直さ=$p2,積極性=$p3,心理=$p4,タフさ=$p5";
+            return "$name さんのヒト型は「$typename」型です ($params)";
+          }else
+          {
+            return;
+          }
+        }else
+        {
+          return;
+        }
+      },
+    },
+    {
+      # 28b. subeshi (aishou).
+      url        => 'http://seizo.inte.co.jp/beshi/aishoResult/*',
+      extract    => sub{
+        my ($type1) = m{/img/aishoType/(\d+)-1.gif};
+        my ($type2) = m{/img/aishoType/(\d+)-2.gif};
+        my ($name1) = m{<div id="user1Name">(.*?)</div>};
+        my ($name2) = m{<div id="user2Name">(.*?)</div>};
+        my $keylabels = {
+          love   => '恋愛',
+          work   => '仕事',
+          friend => '友情',
+        };
+        my $data = {};
+        foreach my $key (qw(love work friend))
+        {
+          my ($pt)   = m{<div id="\Q$key\EPoint">(\d+点)</div>};
+          my ($area) = m{<div id="\Q$key\E_area">(.*?)<div id="\w+_area">}s;
+          defined($pt) or $pt = '?';
+          my @marks = $area =~ m{<div class="mark[0-4]">(.*?)</div>}g;
+          my $label = $keylabels->{$key};
+          my $marks = join('', @marks);
+          $data->{$key} = {
+            label => $label,
+            pt    => $pt,
+            marks => $marks,
+            data  => "$label=$pt/$marks",
+          };
+        }
+        if( !grep{!defined($_)} ($type1, $type2, $name1, $name2) )
+        {
+          my $typenames = [qw(
+            ひょっとこ
+            捨て猫
+            暴君
+            ひまわり
+            ノリノリ
+            ガラス彫刻
+            評論家
+            ハードボイルド
+            勇者
+            リーダー
+            全知全能
+            みのむし
+          )];
+          my $typename1 = $typenames->[$type1] || '?';
+          my $typename2 = $typenames->[$type2] || '?';
+          my $pair = "$name1\[$typename1]/$name2\[$typename2]";
+          my $params = join(", ", map{$data->{$_}{data}} qw(love work friend));
+          return "$pair ($params)";
+        }else
+        {
+          return;
+        }
+      },
+    },
+    {
+      # 29. godiva.
+      url        => 'http://www.godiva-l.com/recipes/drink/recipes*.html',
+      extract    => qr{<img src="../../images/recipes/drink/re_name\d+.gif" alt="(.*?)" width=".*?" height=".*?">}s,
+    },
+    {
+      # 30a. 血液型ゲノム.
+      url        => 'http://blood-genome.com/d/92008/*',
+      extract    => qr{<h2>(.*?)</table>}s,
+    },
+    {
+      # 30b. 血液型ゲノム(相性).
+      url        => 'http://blood-genome.com/c/92008/*',
+      extract    => sub{
+        my ($point)  = m{<h2>(.*?)</h2>}s;
+        my ($compat) = m{<div class=infw>(.*?)</div>}s;
+        $compat =~ s/^(.*?。).*。(.*?。)/$1...$2/;
+        "$point, $compat";
+      },
+    },
+    {
+      # 31. candyfruit.
+      url        => 'http://www.wisecart.ne.jp/candyfruit/*',
+      extract    => qr{<font class=goods_zoom><b>(.*?)</b></font>}s,
+      recv_limit => 50*1024,
+      timeout    => 10,
     },
   ];
   $config;

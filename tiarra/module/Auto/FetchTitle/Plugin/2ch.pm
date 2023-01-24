@@ -1,27 +1,16 @@
 ## ----------------------------------------------------------------------------
-#  Auto::FetchTitle::Plugin::TouhouReplay.
+#  Auto::FetchTitle::Plugin::2ch.
 # -----------------------------------------------------------------------------
 # Mastering programmed by YAMASHINA Hio
 #
 # Copyright 2008 YAMASHINA Hio
 # -----------------------------------------------------------------------------
-# $Id: TouhouReplay.pm 20013 2008-09-27 02:24:28Z hio $
+# $Id: 2ch.pm 15314 2008-07-06 15:32:46Z hio $
 # -----------------------------------------------------------------------------
-package Auto::FetchTitle::Plugin::TouhouReplay;
+package Auto::FetchTitle::Plugin::2ch;
 use strict;
 use warnings;
 use base 'Auto::FetchTitle::Plugin';
-
-# 弾幕形STG, 東方シリーズのリプレイファイルの表示.
-# my $replay = Touhou::ReplayFile->parse($response->{Content});
-# my $reply = $replay->shortdesc();
-# ##==> "東方風神録 HIO. 215,663,790 [Easy/魔理沙(貫通)/Clear]";
-
-our $HAS_TOUHOU_REPLAYFILE = do{
-  eval{ local($SIG{__DIE__}) = 'DEFAULT'; require Touhou::ReplayFile };
-  @$ or Module::Use->import(qw(Touhou::ReplayFile));
-  !$@;
-};
 
 our $DEBUG;
 *DEBUG = \$Auto::FetchTitle::DEBUG;
@@ -47,7 +36,7 @@ sub register
   my $context = shift;
 
   $context->register_hook($this, {
-    name => 'touhou-replay',
+    name => '2ch',
     'filter.prereq'   => \&filter_prereq,
     'filter.response' => \&filter_response,
   });
@@ -56,7 +45,7 @@ sub register
 # -----------------------------------------------------------------------------
 # $this->filter_prereq($ctx, $arg);
 # (impl:fetchtitle-filter)
-# touhou-replay/prereq.
+# 2ch/prereq.
 #
 sub filter_prereq
 {
@@ -66,13 +55,10 @@ sub filter_prereq
 
   my $req =$arg->{req};
 
-  if( !$HAS_TOUHOU_REPLAYFILE )
+  if( $req->{url} =~ m{^http://(\w+)\.2ch\.net/test/read\.(?:html|cgi)/(\w+)/(\d+)/} )
   {
-    $DEBUG and $ctx->_debug($req, "debug: - - no Touhou::ReplayFile (private module)");
-    return;
+    $req->{redirect} = "http://$1.2ch.net/$2/dat/$3.dat";
   }
-
-  $ctx->_apply_recv_limit($req, 500*1024);
 
   $this;
 }
@@ -80,7 +66,7 @@ sub filter_prereq
 # -----------------------------------------------------------------------------
 # $this->filter_response($ctx, $arg).
 # (impl:fetchtitle-filter)
-# touhou-replay/response.
+# 2ch/response.
 #
 sub filter_response
 {
@@ -89,8 +75,6 @@ sub filter_response
   my $arg   = shift;
 
   my $req = $arg->{req};
-
-  $HAS_TOUHOU_REPLAYFILE or return;
 
   my $response = $req->{response};
   if( !ref($response) )
@@ -104,23 +88,18 @@ sub filter_response
     return;
   }
 
-  my @opts;
-
-  my $len = $req->{result}{content_length};
-  if( defined($len) )
+  if( $req->{url} !~ m{^http://\w+\.2ch\.net/\w+/dat/\d+\.dat\z} )
   {
-    $len =~ s/(?<=\d)(?=(\d\d\d)+(?!\d))/,/g;
-    $len = "$len bytes";
-    push(@opts, $len);
+    $DEBUG and $ctx->_debug($req, "debug: - - skip/not 2ch.dat");
+    return;
   }
 
-  my $replay = Touhou::ReplayFile->parse($response->{Content});
-  my $reply = $replay->shortdesc();
-  if( @opts )
-  {
-    $reply .= " (".join("; ",@opts).")";
-  }
-  $req->{result}{result} = $reply;
+  my ($line) = $req->{result}{decoded_content} =~ /(.*)/ ? $1 : '';
+  my ($name, $email, $date_id, $text, $title) = split(/<>/, $line);
+  my ($date, $id) = $date_id && $date_id =~ /(.*) (.*)/ ? ($1, $2) : ($date_id, '');
+  $title or return;
+
+  $req->{result}{result} = $title;
 }
 
 # -----------------------------------------------------------------------------

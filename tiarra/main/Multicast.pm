@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# $Id: Multicast.pm 13084 2008-06-02 13:56:48Z hio $
+# $Id: Multicast.pm 33534 2009-05-23 16:28:57Z topia $
 # -----------------------------------------------------------------------------
 # サーバーからクライアントにメッセージが流れるとき、このクラスはフィルタとして
 # ネットワーク名を付加します。
@@ -305,12 +305,18 @@ sub _attach_RPL_WHOISCHANNELS {
 
 sub _detach_RPL_WHOISCHANNELS {
     my ($message,$sender) = @_;
+    my $to;
+    my $detach = sub {
+	my ($ret,$net) = detach(shift);
+	$to = $net;
+	return $ret;
+    };
     $message->params->[2] =
 	join(' ',
 	     map {
-		 s/^([\@+]*)(.+)$/$1.detach($2)/e; $_;
+		 s/^([\@+]*)(.+)$/$1.$detach->($2)/e; $_;
 	     } split / /,$message->params->[2]);
-    $message;
+    forward_to_server($message,$to);
 }
 
 my $g2l_cache = {};
@@ -348,10 +354,11 @@ sub _gen_detach_translator {
     if (!exists $detach_cache->{$index}) {
 	$detach_cache->{$index} = sub {
 	    my ($message, $sender) = @_;
+	    my ($new,$to) = detach($message->param($index));
 	    $message->param(
 		$index,
-		detach($message->param($index)));
-	    forward_to_server($message, $sender);
+		$new);
+	    forward_to_server($message, $to);
 	};
     }
     $detach_cache->{$index};
@@ -392,7 +399,10 @@ my $server_sent = {
 		 qw(LIST CHANNELMODEIS NOTOPIC TOPIC TOPICWHOTIME),
 		 qw(CREATIONTIME))),
 	   ((map {"ERR_$_"}
-		 (qw(TOOMANYCHANNELS NOTONCHANNEL NOSUCHCHANNEL UNAVAILRESOURCE)))))},
+		 (qw(TOOMANYCHANNELS NOTONCHANNEL NOSUCHCHANNEL UNAVAILRESOURCE),
+		  qw(CHANOPRIVSNEEDED BANLISTFULL NOCHANMODES BADCHANMASK),
+		  qw(BADCHANNELKEY BANNEDFROMCHAN INVITEONLYCHAN CHANNELISFULL),
+		  qw(CANNOTSENDTOCHAN)))))},
     do {
 	no strict 'refs';
 	map {
@@ -468,7 +478,10 @@ my $client_sent = {
 		 qw(LIST CHANNELMODEIS NOTOPIC TOPIC TOPICWHOTIME),
 		 qw(CREATIONTIME INVITING UNIQOPIS WHOREPLY))),
 	   (map {"ERR_$_"}
-		 (qw(TOOMANYCHANNELS NOTONCHANNEL NOSUCHCHANNEL UNAVAILRESOURCE))))},
+		 (qw(TOOMANYCHANNELS NOTONCHANNEL NOSUCHCHANNEL UNAVAILRESOURCE),
+		  qw(CHANOPRIVSNEEDED BANLISTFULL NOCHANMODES BADCHANMASK),
+		  qw(BADCHANNELKEY BANNEDFROMCHAN INVITEONLYCHAN CHANNELISFULL),
+		  qw(CANNOTSENDTOCHAN))))},
     do {
 	no strict 'refs';
 	map {

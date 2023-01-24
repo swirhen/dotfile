@@ -5,7 +5,7 @@
 #
 # Copyright 2008 YAMASHINA Hio
 # -----------------------------------------------------------------------------
-# $Id: WebClient.pm 14049 2008-06-15 12:45:29Z hio $
+# $Id: WebClient.pm 32465 2009-04-15 15:51:00Z hio $
 # -----------------------------------------------------------------------------
 package System::WebClient;
 use strict;
@@ -23,17 +23,15 @@ use Unicode::Japanese;
 use IO::Socket::INET;
 use Scalar::Util qw(weaken);
 
-our $VERSION = '0.04';
+our $VERSION = '0.07';
 
 our $DEBUG = 0;
 
 our $DEFAULT_MAX_LINES = 100;
-our $DEFAULT_NAME      = '???';
 our $DEFAULT_SHOW_LINES = 20;
-
-# 開発メモ.
-# 認証毎で既読情報を保持(とりあえず共通で保持まで実装).
-# sharedモードの時はセッション内でのみ保持.
+our $DEFAULT_SITE_NAME  = "Tiarra::WebClient";
+our $DEFAULT_SESSION_EXPIRE = 7 * 24 * 60*60;
+our $NO_TOPIC = '(no-topic)';
 
 =begin COMMENT
 
@@ -50,6 +48,9 @@ System::WebClient - ブラウザ上でログを見たり発言したりできる
  /log/<network>/<channel>/info
    #==> [POST/_post_chan_info] TOPIC/JOIN/PART/DELETE.
    #==> [GET/_gen_chan_info]   チャンネル情報表示.
+ /config
+   #==> [POST/_post_config] NAME
+   #==> [GET/_gen_config]   shared時の名前設定
  /style/style.css
    #==> 空のCSSファイル.
  <それ以外>
@@ -58,6 +59,7 @@ System::WebClient - ブラウザ上でログを見たり発言したりできる
 session 情報:
   $req->{session}{seen} -- 未読管理.
     $req->{session}{seen}{$netname}{$ch_short} = $recent内のオブジェクト.
+  $req->{session}{name} -- shared用の名前.
 
 (*) 存在するけれど閲覧許可のないページであっても, 
     403 (Forbidden) ではなく 404 (Not Found) を返す.
@@ -101,7 +103,7 @@ sub new
   $this->{bbs_val}   = undef;
   $this->{cache}     = undef;
   $this->{max_lines} = undef;
-  $this->{sess}      = undef;
+  $this->{session_master} = undef;
   $this->_load_cache();
 
   my $config = $this->config;
@@ -175,7 +177,7 @@ sub _load_cache
 
   $this->{bbs_val} = $BBS_VAL;
   $this->{cache}   = $BBS_VAL->{cache};
-  $this->{session} = $BBS_VAL->{session};
+  $this->{session_master} = $BBS_VAL->{session};
 
   $runloop->notify_msg(__PACKAGE__."#_load_cache, bbs[$BBS_KEY].inited_at ".localtime($BBS_VAL->{inited_at}));
   $runloop->notify_msg(__PACKAGE__."#_load_cache, bbs[$BBS_KEY].unloaded_at ".($BBS_VAL->{unloaded_at}?localtime($BBS_VAL->{unloaded_at}):'-'));
@@ -347,6 +349,7 @@ sub _log_writer
   my $info   = $this->{last_line};
 
   #RunLoop->shared_loop->notify_msg(">> $channel $line");
+  my $line_html;
   if( !$info )
   {
     # PRIVMSG/NOTICE 以外.
@@ -358,8 +361,11 @@ sub _log_writer
       netname  => $netname,
       ch_short => $ch_short,
       msg       => $line,
+      command   => $this->{last_msg}->command(),
+      time      => $this->{last_msg}->time(),
       formatted => $line,
     };
+    $line_html = $this->_escapeHTML($line);
   }else
   {
     # チャンネル名なしに整形し直し.
@@ -370,11 +376,23 @@ sub _log_writer
       $info->{marker}[1],
       $info->{msg},
     );
+    my $msg_html = $this->_escapeHTML($info->{msg});
+    if( $info->{command} ? $info->{command} eq 'NOTICE' : $info->{marker}[0] eq '(' )
+    {
+      $msg_html = qq{<font color="gray">$msg_html</font>};
+    }
+    $line_html = sprintf(
+      '%s%s%s %s',
+      $this->_escapeHTML($info->{marker}[0]),
+      $this->_escapeHTML($info->{speaker}),
+      $this->_escapeHTML($info->{marker}[1]),
+      $msg_html,
+    );
   };
   my $netname  = $info->{netname};
   my $ch_short = $info->{ch_short};
 
-  my @tm = localtime(time());
+  my @tm = localtime($info->{time} || time());
   $tm[5] += 1900;
   $tm[4] += 1;
   my $time = sprintf('%02d:%02d:%02d', @tm[2,1,0]);
@@ -382,6 +400,7 @@ sub _log_writer
   $info->{time} = $time;
   $info->{ymd} = sprintf('%04d-%02d-%02d', @tm[5,4,3]);
   $info->{formatted} = "$time $line";
+  $info->{formatted_html} = "$time $line_html";
 
   #RunLoop->shared_loop->notify_msg(__PACKAGE__."#_log_writer, $netname, $ch_short, [$channel] $line");
 
@@ -469,11 +488,13 @@ sub _on_request
     client    => $cli,
     peer      => $peer,
     conflist  => $conflist,
-    authtoken => undef,
+    authid    => undef, # login token (basic, etc.)
+    authtoken => undef, # session token (sid).
     ua_type   => undef,
     cgi_hash  => undef, # generated on demand.
     req_param => undef, # config params, generated on demand.
     session   => undef,
+    path      => undef, # path under $config->{path}.
   };
   if( my $ua = $req->{Header}{'User-Agent'} )
   {
@@ -507,19 +528,30 @@ sub _on_request
 
   $DEBUG and $this->_debug("$peer: check auth ...");
   my $accepted_list = $this->auth($conflist, $req);
+  #$DEBUG and $this->_debug("$peer: auth=".Dumper($accepted_list));use Data::Dumper;
+  my $authid_list;
   my $authtoken_list;
   if( @$accepted_list )
   {
     $DEBUG and $this->_debug("$peer: has auth");
+    # update @$conflist.
     @$conflist = map{ $_->{conf} } @$accepted_list;
+
+    # extract authtoken list.
+    $authid_list    = [];
     $authtoken_list = [];
     foreach my $auth (@$accepted_list)
     {
-      if( grep { $_ eq $auth->{token} } @$authtoken_list )
+      if( !grep { $_ eq $auth->{token} } @$authtoken_list )
       {
-        next;
+        # unique.
+        push(@$authtoken_list, $auth);
       }
-      push(@$authtoken_list, $auth->{token});
+      if( !grep { $_ eq $auth->{id} } @$authid_list )
+      {
+        # unique.
+        push(@$authid_list, $auth);
+      }
     }
   }else
   {
@@ -527,10 +559,8 @@ sub _on_request
     @$conflist = grep{ !$_->{auth} } @$conflist;
     $DEBUG and $this->_debug("$peer: has guest entry ".(@$conflist?"yes":"no"));
   }
+
   my $need_auth = @$conflist == 0;
-
-  $req->{authtoken} = $authtoken_list->[0] || 'noauth';
-
   if( $req->{Path} =~ /\?auth(?:=|[&;]|$)/ )
   {
     $need_auth = 1;
@@ -550,22 +580,199 @@ sub _on_request
     return;
   }
 
-  my $sid = '*';
-  $req->{session} = $this->_get_session($sid);
+  $req->{authid}    = ($authid_list    && @$authid_list)    ? $authid_list   ->[0]->{id}     : undef;
+  $req->{authtoken} = ($authtoken_list && @$authtoken_list) ? $authtoken_list->[0]->{atoken} : undef;
+  if( !$req->{authtoken} )
+  {
+    $DEBUG and $this->_debug("$peer: no authtoken, check cookie");
+    CHECK_COOKIE:{
+      my $cookies = $req->{Header}{Cookie} || '';
+      my @cookies = split(/\s*[;,]\s*/, $cookies);
+      my $ck = shift @cookies || '';
+      my ($key, $val) = split(/=/, $ck);
+      $key && $val or last CHECK_COOKIE;
+      $val =~ s/%([0-9a-f]{2})/pack("H*",$1)/ge;
+      $DEBUG and $this->_debug("$peer: cookie: [$key]=[$val]");
+      if( $val !~ /^sid:(\d+):(\d+):(\d+)(?::|\z)/ )
+      {
+        last CHECK_COOKIE;
+      }
+      my ($seed, $seq, $check) = ($1, $2, $3);
+      my $sid = "sid:$seed:$seq:$check";
+      $req->{authtoken} = $sid;
+      $DEBUG and $this->_debug("$peer: $sid");
+    }
+  }
 
-  $this->_debug("$peer: accept: $req->{authtoken}");
-  $this->_dispatch($req);
+  my $path = $req->{Path};
+  if( $path !~ s{\Q$this->{path}}{/} )
+  {
+    $this->_debug("$peer: outside request, [$path] is not contened in [$this->{path}]");
+    $this->_response($req, 404);
+    return;
+  }
+  $path =~ s/\?.*//;
+  $req->{path} = $path;
+
+  my $mode = $this->_get_req_param($req, 'mode');
+  if( $mode eq 'owner' )
+  {
+    $req->{authtoken} ||= "owner:*";
+  }
+  $this->_update_session($req);
+
+  my $need_name;
+  if( $mode eq 'owner' )
+  {
+    $need_name = undef;
+  }elsif( $req->{session}{name} )
+  {
+    $need_name = undef;
+  }elsif( $path eq '/style/style.css' )
+  {
+    $need_name = undef;
+  }else
+  {
+    $need_name = 1;
+  }
+  
+  if( $need_name )
+  {
+    $this->_debug("$peer: login required (no name). [vpath=$req->{path}]");
+    eval{
+      $this->_login($req);
+    };
+  }else
+  {
+    my $aid  = $req->{authid}        || '-';
+    my $sid  = $req->{authtoken}     || '-';
+    my $name = $req->{session}{name} || '-';
+    $this->_debug("$peer: accept: auth=$aid, name=$name, sid=$sid");
+    eval {
+      $this->_dispatch($req);
+    };
+  }
+  if( my $err = $@ )
+  {
+    eval{
+      $this->_debug("$peer: error on _dispatch/_login: $err");
+      my $cli = $req->{client};
+      $cli->response(500);
+      #$DEBUG and $this->_debug( Tools::HTTPParser->to_string($res) );
+
+      # no Keep-Alive.
+      $cli->disconnect_after_writing();
+    };
+    if( $@ )
+    {
+      $this->_debug("error on response: $@");
+    }
+  }
+  $DEBUG and $this->_debug("$peer: done");
 }
 
-sub _get_session
+# -----------------------------------------------------------------------------
+# my $sess = $this->_new_session().
+# Set-Cookie も設定される.
+#
+sub _new_session
 {
   my $this = shift;
-  my $sid  = shift;
+  my $req  = shift;
 
-  my $sess = ($this->{session}{$sid} ||= {});
+  our $seed ||= int(rand(0xFFFF_FFFF));
+  our $seq  ||= 0;
+  $seq ++;
+  my $rnd = int(rand(0xFFFF_FFFF));
+  my $sid = "sid:$seed:$seq:$rnd";
+  $DEBUG and $this->_debug("$req->{peer}: _new_session: $sid");
+
+  $req->{authtoken} = $sid;
+  my $sess = $this->_update_session($req);
+  $req->{cookies}{SID} = $sess->{_sid};
+  $sess;
+}
+
+# -----------------------------------------------------------------------------
+# my $sess = $this->_delete_session($req).
+# 削除用の Set-Cookie も設定される.
+#
+sub _delete_session
+{
+  my $this = shift;
+  my $req  = shift;
+  my $sess = $req->{session} || {};
+  my $sid  = $sess->{_sid} || '';
+  my $deleted = delete $this->{session_master}{$sid};
+  if( $deleted )
+  {
+    $deleted->{_deleted} = 1;
+  }
+  if( $sid )
+  {
+    $req->{cookies}{SID} = undef;
+  }
+  $deleted;
+}
+
+# -----------------------------------------------------------------------------
+# $this->_update_session($req);
+# 指定のsessionを取得.
+# なかったら生成される.
+#
+sub _update_session
+{
+  my $this = shift;
+  my $req  = shift;
+
+  my $sid = $req->{authtoken};
+  if( !$sid )
+  {
+    # check weak session.
+    my $cgi = $this->_get_cgi_hash($req);
+    my $w_sid = $cgi->{SID};
+    my $sess = $w_sid && $this->{session_master}{$w_sid};
+    if( $sess && $sess->{_weak} )
+    {
+      # accept weak session.
+      $sid = $w_sid;
+      $req->{authtoken} = $w_sid;
+    }else
+    {
+      $DEBUG and $this->_debug("$req->{peer}: _update_session: no sid");
+      $req->{session} = {};
+      return;
+    }
+  }
+
+  my $sess = ($this->{session_master}{$sid} ||= {});
   my $now  = time;
-  $sess->{_created_at} ||= $now;
+  if( $sess->{_updated_at} )
+  {
+    if( $sess->{_updated_at} + $DEFAULT_SESSION_EXPIRE < $now )
+    {
+      # clean up.
+      $sess = {};
+      $this->{session_master}{$sid} = $sess;
+    }
+  }
+
+  if( !$sess->{_sid} )
+  {
+    $sess->{_sid}        = $sid;
+    $sess->{_created_at} = $now;
+    $sess->{_expire}     = $DEFAULT_SESSION_EXPIRE;
+    $sess->{_weak}       = undef;
+  }
   $sess->{_updated_at} =   $now;
+
+  # $sess->{seen} = \%seen;
+  # $sess->{name} = $name;
+  $DEBUG and $this->_debug("$req->{peer}: _get_session: $sess->{_sid}");
+  #$DEBUG and $this->_debug("$req->{peer}: _get_session: ".Dumper($sess));use Data::Dumper;
+
+  $req->{session} = $sess;
+
   $sess;
 }
 
@@ -576,38 +783,46 @@ sub auth
   my $req      = shift;
   my @accepts;
 
+  # 認証関数.
+  # $val = $sub->($this, \@param, $req).
+  # \%hashref #==> accept.
+  # undef     #==> ignore.
+  # ''        #==> deny.
   our $AUTH ||= {
     ':basic'    => \&_auth_basic,
     ':softbank' => \&_auth_softbank,
     ':au'       => \&_auth_au,
   };
+
   foreach my $conf (@$conflist)
   {
     $DEBUG and $this->_debug("$req->{peer}: check auth for $conf->{name}");
     my $authlist = $conf->{auth} or next;
     foreach my $auth (@$authlist)
     {
-      if( !$auth )
+      my @param = split(' ', $auth || '');
+      if( !@param )
       {
         $DEBUG and ::printmsg("$req->{peer}: - skip: empty value");
+        next;
       }
-      my @param = split(' ', $auth) or next;
       $param[0] =~ /^:/ or unshift(@param, ':basic');
-      my $sub = $AUTH->{$param[0]};
-      if( !$sub )
+      my $auth_sub = $AUTH->{$param[0]};
+      if( !$auth_sub )
       {
         $DEBUG and ::printmsg("$req->{peer}: - skip: unsupported: $param[0]");
         next;
       }
-      my $token = $this->$sub(\@param, $req);
-      if( $token )
+      my $val = $this->$auth_sub(\@param, $req);
+      if( $val )
       {
         $DEBUG and $this->_debug("$req->{peer}: - $conf->{name} accepted ($param[0])");
         push(@accepts, {
-          token => $token,
-          conf  => $conf,
+          atoken => $val->{atoken}, # auth token, string or undef.
+          id     => $val->{id},     # auth id,    string. not undef.
+          conf   => $conf,
         });
-      }elsif( defined($token) )
+      }elsif( defined($val) )
       {
         $DEBUG and $this->_debug("$req->{peer}: auth denied by $conf->{name}");
         return undef;
@@ -653,8 +868,13 @@ sub _auth_basic
     $DEBUG and ::printmsg("$req->{peer}: $param->[0] pass $param->[2] does not match with '$pass' (pass)");
     return;
   }
+
+  # accept.
   $DEBUG and ::printmsg("$req->{peer}: accept user $param->[0] pass $param->[2] with '$user' '$pass'");
-  "basic:$user";
+  +{
+    id => "basic:$user",
+    atoken => undef,
+  };
 }
 
 sub _auth_softbank
@@ -665,6 +885,8 @@ sub _auth_softbank
 
   #TODO: carrier ip-addresses range.
 
+  # UIDはhttp領域若しくはsecure.softbank.ne.jp経由.
+  # SNは端末の設定.
   my $uid = $req->{Header}{'X-JPHONE-UID'};
   my $sn = do{
     my ($ua1) = split(' ', $req->{Header}{'User-Agent'} || '');
@@ -678,11 +900,21 @@ sub _auth_softbank
   };
   if( _verify_value($param->[1], $uid) )
   {
-    return "softbank:$uid";
+    # accept.
+    my $id = "softbank:$uid";
+    return +{
+      id     => $id,
+      atoken => $id,
+    };
   }
   if( _verify_value($param->[1], $sn) )
   {
-    return "softbank:$sn";
+    # accept.
+    my $id = "softbank:$sn";
+    return +{
+      id     => $id,
+      atoken => $id,
+    };
   }
   defined($uid) or $uid = '';
   defined($sn)  or $sn  = '';
@@ -698,28 +930,216 @@ sub _auth_au
 
   #TODO: carrier ip-addresses range.
   # http://www.au.kddi.com/ezfactory/tec/spec/ezsava_ip.html
-  my $subno = $req->{Header}{'X-UP-SUBNO'};
+  my $subno = $req->{Header}{'X-UP-SUBNO'} || $req->{Header}{'X-Up-Subno'};
   if( !_verify_value($param->[1], $subno) )
   {
     defined($subno) or $subno = '';
     $DEBUG and ::printmsg("$req->{peer}: $param->[0] pass $param->[1] does not match with '$subno' (subno)");
     return;
   }
-  return "au:$subno";
+  my $id = "au:$subno";
+  return +{
+    id     => $id,
+    atoken => $id,
+  };
 }
 
-sub _dispatch
+# -----------------------------------------------------------------------------
+# $this->_login($req).
+# special case for _dispatch().
+#
+sub _login
 {
   my $this = shift;
   my $req  = shift;
+  my $path = $req->{path};
 
-  my $path = $req->{Path};
-  if( $path !~ s{\Q$this->{path}}{/} )
+  $DEBUG and $this->_debug("$req->{peer}: login: process login dispatcher");
+
+  if( $path eq '/' )
+  {
+    $this->_location($req, "/login");
+  }elsif( $path eq '/login' )
+  {
+    my $done = $req->{Method} eq 'POST' && $this->_post_login($req);
+    if( !$done )
+    {
+      my $html = $this->_gen_login($req);
+      $this->_new_session($req);
+      $this->_response($req, [html=>$html]);
+    }
+  }elsif( $path eq '/logout' )
+  {
+    # but not loged in.
+    $this->_location($req, "/login");
+  }elsif( $path eq '/style/style.css' )
+  {
+    $this->_response($req, [css=>'']);
+  }else
   {
     $this->_response($req, 404);
     return;
   }
-  $path =~ s/\?.*//;
+}
+
+sub _post_login
+{
+  my $this = shift;
+  my $req  = shift;
+
+  my $cgi = $this->_get_cgi_hash($req);
+  if( my $name = $cgi->{n} )
+  {
+    if( $req->{Header}{Cookie} )
+    {
+      $DEBUG and $this->_debug("$req->{peer}: _post_login: name=$name");
+      $this->_new_session($req); # regen.
+      $req->{session}{name} = $name;
+      my $path = $cgi->{path} || "/";
+      $this->_location($req, $path);
+      return 1;
+    }
+    if( $cgi->{weak} )
+    {
+      $DEBUG and $this->_debug("$req->{peer}: _post_login: name=$name (weak session)");
+      $this->_new_session($req); # regen.
+      $req->{session}{name}  = $name;
+      $req->{session}{_weak} = 1;
+      my $path = $cgi->{path} || "/";
+      $this->_location($req, $path);
+      return 1;
+    }
+    $DEBUG and $this->_debug("$req->{peer}: _post_login: name=$name (no cookie)");
+    return $this->_form_session($req);
+  }
+
+  $DEBUG and $this->_debug("$req->{peer}: _post_login: skip");
+  undef;
+}
+sub _gen_login
+{
+  my $this = shift;
+  my $req  = shift;
+
+  my $tmpl = $this->_gen_login_html();
+  $this->_expand($req, $tmpl, {
+    NAME        => $this->_escapeHTML($req->{session}{name} || '' ),
+    PATH        => '',
+  });
+}
+sub _gen_login_html
+{
+  <<HTML;
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja-JP">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type"  content="text/css" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" type="text/css" href="<&CSS>" />
+  <title>login</title>
+</head>
+<body>
+<div class="main">
+<div class="uatype-<&UA_TYPE>">
+
+<h1>Login</h1>
+
+<form action="login" method="POST">
+名前: <input type="text" name="n" value="<&NAME>" /><br />
+<input type="submit" value="Login" /><br />
+<input type="hidden" name="path" value="<&PATH>" />
+</form>
+
+</div>
+</div>
+</body>
+</html>
+HTML
+}
+
+sub _form_session
+{
+  my $this = shift;
+  my $req  = shift;
+
+  my $cgi = $this->_get_cgi_hash($req);
+  my $name = $cgi->{n};
+  defined($name) or die "no cgi.name";
+
+  my $tmpl = $this->_gen_form_session_html();
+  my $html = $this->_expand($req, $tmpl, {
+    NAME        => $this->_escapeHTML($name),
+    PATH        => '',
+  });
+  $this->_response($req, [html=>$html]);
+  1;
+}
+sub _gen_form_session_html
+{
+  <<HTML;
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja-JP">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type"  content="text/css" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" type="text/css" href="<&CSS>" />
+  <title>login (weak session)</title>
+</head>
+<body>
+<div class="main">
+<div class="uatype-<&UA_TYPE>">
+
+<h1>Login</h1>
+
+<form action="login" method="POST">
+名前: <input type="text" name="n" value="<&NAME>" /><br />
+<input type="submit" value="Login" /><br />
+<input type="hidden" name="path" value="<&PATH>" />
+(<label for="weak"><input type="checkbox" name="weak" id="weak" />(※)弱いセッションを使う</label>)
+</form>
+
+<p>
+(※) 携帯等Cookieの機能が使えない場合, 
+代替手段としてクエリにセッションIDを埋め込みます.<br />
+ログインしてもこのページが繰り返し表示されてしまう場合にのみ
+チェックを入れてください.
+</p>
+
+</div>
+</div>
+</body>
+</html>
+HTML
+}
+
+# -----------------------------------------------------------------------------
+# $this->_dispatch($req).
+#
+sub _dispatch
+{
+  my $this = shift;
+  my $req  = shift;
+  my $path = $req->{path};
+
+  my $mode = $this->_get_req_param($req, 'mode');
+  if( $mode ne 'owner' )
+  {
+    my $cgi = $this->_get_cgi_hash($req);
+    my $cgi_dump = join('&', map{
+      my $key = $_;
+      my $val = $cgi->{$key};
+      for($key, $val)
+      {
+        $_ =~ s/([%=\x00-\x1f])/'%'.pack("H*", $1)/ge;
+      }
+      "$key=$val";
+    } sort keys %$cgi);
+    $this->_debug("$req->{peer}: _dispatch: mode=$mode, path=[$path], cgi=[$cgi_dump], method=$req->{Method}");
+  }
 
   if( $path eq '/' )
   {
@@ -785,6 +1205,21 @@ sub _dispatch
   }elsif( $path eq '/style/style.css' )
   {
     $this->_response($req, [css=>'']);
+  }elsif( $path eq '/login' )
+  {
+    $this->_login($req);
+  }elsif( $path eq '/logout' )
+  {
+    $this->_delete_session($req);
+    $this->_location($req, "/");
+  }elsif( $path eq '/config' )
+  {
+    my $done = $req->{Method} eq 'POST' && $this->_post_config($req);
+    if( !$done )
+    {
+      my $html = $this->_gen_config($req);
+      $this->_response($req, [html=>$html]);
+    }
   }else
   {
     $this->_response($req, 404);
@@ -887,11 +1322,17 @@ sub _detect_channel
   return undef;
 }
 
+# $this->_response($req, [html => $html]).
+# $this->_response($req, [error => $text]).
+# $this->_response($req, [css  => $css_text]).
+# $this->_response($req, \%res).
+# $this->_response($req, $retcode).
 sub _response
 {
   my $this = shift;
   my $req  = shift;
-  my $res  = shift;
+  my $res  = shift; # number or hash-ref or array-ref.
+
   if( ref($res) eq 'ARRAY' )
   {
     my $spec = $res;
@@ -905,6 +1346,17 @@ sub _response
           'Content-Length' => length($html),
         },
         Content => $html,
+      };
+    }elsif( $spec->[0] eq 'error' )
+    {
+      my $text = "error: ".$spec->[1];
+      $res = {
+        Code => 200,
+        Header => {
+          'Content-Type'   => 'text/plain; charset=utf-8',
+          'Content-Length' => length($text),
+        },
+        Content => $text,
       };
     }elsif( $spec->[0] eq 'css' )
     {
@@ -922,24 +1374,75 @@ sub _response
       die "unkown response spec: $spec->[0]";
     }
   }
+  if( $req->{cookies} )
+  {
+    my @cookies;
+    foreach my $key (sort keys %{$req->{cookies}})
+    {
+      my $val = $req->{cookies}{$key};
+      $key =~ /^[a-zA-Z]\w+\z/ or die "invalid cookie name: $key";
+      if( defined($val) )
+      {
+        $val =~ s/([^-.\w])/'%'.unpack("H*",$1)/ge;
+        length($val) >= 100 and die "value of cookies.$key is too long";
+      }else
+      {
+        # delete.
+        $val = "x; expires=Sun, 10-Jun-2001 12:00:00 GMT";
+      }
+      my $cookie = "$key=$val; path=$this->{path}";
+      push(@cookies, $cookie);
+    }
+    if( @cookies )
+    {
+      ref($res) or $res = {
+        Code => $res,
+      };
+      $res->{Header}{'Set-Cookie'} = $cookies[0];
+      @cookies >= 2 and die "currently multiple cookies are not supported";
+    }
+  }
+
+  if( $req->{session}{_weak} && ref($res) )
+  {
+    # HTTPコードだけの場合はLocation等もナイので書き換えの必要はなし.
+    $this->_rewrite_html($req, $res);
+  }
 
   my $cli = $req->{client};
   $cli->response($res);
+  #$DEBUG and $this->_debug( Tools::HTTPParser->to_string($res) );
 
   # no Keep-Alive.
-  $req->{client}->disconnect_after_writing();
+  $cli->disconnect_after_writing();
 
   return;
 }
 
+# -----------------------------------------------------------------------------
+# $this->_location($path).
+# サイト内リダイレクト.
+# weak-sessionであればSIDの付与は自動で行われる.
+#
 sub _location
 {
   my $this = shift;
   my $req  = shift;
   my $path = shift;
 
+  $DEBUG and $this->_debug("$req->{peer}: location: $path");
   $path = $this->{path} . $path;
   $path =~ s{//+}{/}g;
+  if( $req->{session}{_weak} )
+  {
+    if( $path =~ /\?/ )
+    {
+      $path .= "&SID=$req->{session}{_sid}";
+    }else
+    {
+      $path .= "?SID=$req->{session}{_sid}";
+    }
+  }
   my $res = {
     Code => 302,
     Header => {
@@ -947,6 +1450,68 @@ sub _location
     },
   };
   $this->_response($req, $res);
+}
+
+# -----------------------------------------------------------------------------
+# $this->_rewrite_html($req, $res).
+# weak-session時のHTML書き換え.
+#
+sub _rewrite_html
+{
+  my $this = shift;
+  my $req  = shift;
+  my $res  = shift;
+
+  $req->{session}{_weak} or return;
+
+  my $sid_enc = $this->_escapeHTML($req->{session}{_sid});
+
+  if( defined($res->{Content}) )
+  {
+  $res->{Content} =~ s{(<.*?>)}{
+    my $tag = $1;
+    if( $tag =~ /^<form\b/ )
+    {
+      $tag .= qq{<input type="hidden" name="SID" value="$sid_enc" />};
+    }else
+    {
+      $tag =~ s{\b(href|src)\s*=\s*(".*?"|[^\s>]*)}{
+        my ($key, $val) = ($1, $2);
+        my $quoted   = $val =~ s/^"(.*)"\z/$1/s;
+        my $fragment = $val =~ s/(#.*)//s ? $1 : '';
+        my ($path, $query) = split(/\?/, $val, 2);
+        my @params;
+        if( defined($query) )
+        {
+          @params = split(/[&;]/, $query);
+          foreach my $pair (@params)
+          {
+            my ($k, $v) = split(/=/, $pair, 2);
+            $k =~ tr/+/ /;
+            $k =~ s/%([0-9a-f]{2})/pack("H*",$1)/ge;
+            if( $k eq 'SID' )
+            {
+              $pair = undef;
+            }
+          }
+          @params = grep{ defined($_) } @params;
+        }
+        push(@params, "SID=$sid_enc");
+        my $new_val = $path . '?' . join('&', @params);
+        if( $quoted )
+        {
+          $new_val = qq{"$new_val"};
+        }
+        "$key=$new_val";
+      }ges;
+    }
+    $tag;
+  }ges;
+
+  $res->{Header}{'Content-Length'} = length($res->{Content});
+  }
+
+  $res;
 }
 
 # -----------------------------------------------------------------------------
@@ -1095,11 +1660,17 @@ sub _gen_list
   if( my $show = $this->_get_cgi_hash($req)->{show} )
   {
     $show_all = $show eq 'all';
+  }else
+  {
+    # default: owner=updated, shared=all
+    my $mode = $this->_get_req_param($req, 'mode');
+    $show_all = $mode eq 'owner' ? undef : 1;
   }
 
   # 表示できるネットワーク＆チャンネルを抽出.
   #
   my %channels;
+  my $nr_channles_all = 0;
   foreach my $netname (keys %{$this->{cache}})
   {
     foreach my $ch_short (keys %{$this->{cache}{$netname}})
@@ -1107,18 +1678,19 @@ sub _gen_list
       my $ok = $this->_can_show($req, $ch_short, $netname);
       if( $ok )
       {
+        ++ $nr_channles_all;
         my $cache  = $this->{cache}{$netname}{$ch_short};
         my $pack = {
           disp_netname  => $netname,
           disp_ch_short => $ch_short,
           anchor        => undef,
-          unseen        => undef,
-          unseen_plus   => undef,
+          unseen        => undef, # nr lines.
+          unseen_plus   => undef, # bool.
         };
 
         my $recent = $cache->{recent} || [];
         my $seen = $req->{session}{seen}{$netname}{$ch_short} || 0;
-        my $nr_unseen = 0;
+        my $nr_unseen = 0; # lines.
         foreach my $r (reverse @$recent)
         {
           $r == $seen and last;
@@ -1144,6 +1716,8 @@ sub _gen_list
     }
   }
   # 別のTiarraさんのネットワークを解凍(設定があったとき).
+  # %channels に取り出したもの(表示チェック済み)から抽出.
+  # 抽出した分は%channelsからは除去(重複回避のために).
   my %new_channels;
   foreach my $extract_line ( $this->config->extract_network('all') )
   {
@@ -1195,23 +1769,7 @@ sub _gen_list
       {
         my $channame = $pack->{disp_ch_short};
         ++$seqno;
-        my $link_ch = $channame;
-        if( $link_ch =~ s/^#// )
-        {
-          # normal channels.
-        }elsif( $link_ch =~ s/^![0-9A-Z]{5}/!/ )
-        {
-          # channel    =  ( "#" / "+" / ( "!" channelid ) / "&" ) chanstring [ ":" chanstring ]
-          # channelid  = 5( %x41-5A / digit )   ; 5( A-Z / 0-9 )
-          # (RFC2812)
-        }else
-        {
-          $link_ch = "=$link_ch";
-        }
-        my $link = "log\0$netname\0$link_ch\0";
-        $link =~ s{/}{%252F}g;
-        $link =~ tr{\0}{/};
-        $link = $this->_escapeHTML($link);
+        my $link = $this->_path_channel($req, $netname, $channame);
 
         my $unseen;
         if( !$pack->{unseen} )
@@ -1243,16 +1801,28 @@ sub _gen_list
     }
   }else
   {
-    $content = $is_pc ? "<li>no channels</li>\n" : "no channels\n";
+    my $msg = $nr_channles_all == 0 ? '表示できるチャンネルがありません' : '全て既読です';
+    $content .= $is_pc ? "<li>$msg</li>\n" : "$msg\n";
   }
   $content .= $is_pc ? "</ul>\n" : "<div\n>";
 
+  my $shared_box = '';
+  my $mode = $this->_get_req_param($req, 'mode');
+  if( $mode ne 'owner' )
+  {
+    $shared_box .= "<br />\n";
+    $shared_box .= "[\n";
+    $shared_box .= qq{<a href="config">設定</a>\n};
+    $shared_box .= "|\n";
+    $shared_box .= qq{<a href="logout">ログアウト</a>\n};
+    $shared_box .= "]\n";
+  }
   my $tmpl = $this->_gen_list_html();
-  $this->_expand($tmpl, {
+  $this->_expand($req, $tmpl, {
     CONTENT => $content,
-    UA_TYPE => $req->{ua_type},
-    SHOW_TOGGLE_LABEL => $show_all ? 'MiniList' : 'ShowAll',
+    SHOW_TOGGLE_LABEL => $show_all ? '未読表示' : '全て表示',
     SHOW_TOGGLE_VALUE => $show_all ? 'updated' : 'all',
+    SHARED_BOX => $shared_box,
   });
 }
 sub _gen_list_html
@@ -1276,9 +1846,9 @@ sub _gen_list_html
 
 <&CONTENT>
 
-<form action="./" method="post">
-ENTER: <input type="text" name="enter" value="" />
-<input type="submit" value="入室" /><br />
+<form action="./" method="POST">
+チャンネル: <input type="text" name="enter" value="" />
+<input type="submit" value="作成" /><br />
 </form>
 
 <p>
@@ -1286,6 +1856,7 @@ ENTER: <input type="text" name="enter" value="" />
 <a href="./" accesskey="0">再表示</a>[0] |
 <a href="./?show=<&SHOW_TOGGLE_VALUE>" accesskey="#"><&SHOW_TOGGLE_LABEL></a>[#]
 ]
+<&SHARED_BOX>
 </p>
 
 </div>
@@ -1293,6 +1864,35 @@ ENTER: <input type="text" name="enter" value="" />
 </body>
 </html>
 HTML
+}
+
+sub _path_channel
+{
+  my $this = shift;
+  my $req  = shift;
+  my $netname  = shift;
+  my $ch_short = shift;
+
+  my $link_ch = $ch_short;
+  if( $link_ch =~ s/^#// )
+  {
+    # normal channels.
+  }elsif( $link_ch =~ s/^![0-9A-Z]{5}/!/ )
+  {
+    # channel    =  ( "#" / "+" / ( "!" channelid ) / "&" ) chanstring [ ":" chanstring ]
+    # channelid  = 5( %x41-5A / digit )   ; 5( A-Z / 0-9 )
+    # (RFC2812)
+  }else
+  {
+    $link_ch = "=$link_ch";
+  }
+
+  my $link = "log\0$netname\0$link_ch\0";
+  $link =~ s{%}{%25}g;
+  $link =~ s{/}{%252F}g;
+  $link =~ s{([^\0\x20-\x7e])}{'%'.unpack('H*', $1)}ges;
+  $link =~ tr{\0}{/};
+  $link;
 }
 
 sub _post_list
@@ -1306,20 +1906,19 @@ sub _post_list
     my ($ch_short, $netname) = Multicast::detach($ch_long);
     if( !$this->_can_show($req, $ch_short, $netname) )
     {
+      $this->_debug("$req->{peer} enter[$netname/$ch_short] not in allowed channels");
       return;
     }
     my $network  = $this->_runloop->network($netname);
     if( $network )
     {
       $this->{cache}{$netname}{$ch_short} ||= $this->_new_cache_entry($netname, $ch_short);
-      $DEBUG and $this->_debug("enter: $netname/$ch_short");
-      my $link_ch = $ch_short;
-      $link_ch =~ s/^#// or $link_ch = "=$link_ch";
-      my $link = "log\0$netname\0$link_ch\0";
-      $link =~ s{/}{%2F}g;
-      $link =~ tr{\0}{/};
+      $this->_debug("$req->{peer}: enter[$netname/$ch_short]");
+      my $link = '/' . $this->_path_channel($req, $netname, $ch_short);
       $this->_location($req, $link);
-      return 1;
+    }else
+    {
+      $this->_debug("$req->{peer} enter[$netname/$ch_short] no network");
     }
   }
   return undef;
@@ -1328,15 +1927,25 @@ sub _post_list
 sub _expand
 {
   my $this = shift;
+  my $req  = shift;
   my $tmpl = shift;
   my $vars = shift;
 
-  my $top_path_esc = $this->_escapeHTML($this->{path});
-  my $css_esc      = $this->_escapeHTML($this->config->css || "$this->{path}style/style.css");
+  my $top_path_esc  = $this->_escapeHTML($this->{path});
+  my $css_esc       = $this->_escapeHTML($this->config->css || "$this->{path}style/style.css");
+  my $site_name_esc = $this->_escapeHTML($this->config->site_name || $DEFAULT_SITE_NAME);
+  $req->{ua_type} =~ /^\w+\z/ or die "invalid ua_type: [$req->{ua_type}]";
   my $common_vars = {
-    TOP_PATH => $top_path_esc,
-    CSS      => $css_esc,
+    TOP_PATH  => $top_path_esc,
+    CSS       => $css_esc,
+    UA_TYPE   => $req->{ua_type},
+    SITE_NAME => $site_name_esc,
+    VERSION   => '-',
   };
+  if( $req->{session}{name} )
+  {
+    $common_vars->{VERSION} = $VERSION;
+  }
 
   $tmpl =~ s{<&(.*?)>}{
     my $key = $1;
@@ -1373,7 +1982,7 @@ sub _gen_log
   {
     if( my $chan = $net->channel($ch_short) )
     {
-      my $topic = $chan->topic || '(no-topic)';
+      my $topic = $chan->topic || $NO_TOPIC;
       my $topic_esc = $this->_escapeHTML($topic);
       $content .= "<p>\n";
       $content .= "<span class=\"chan-topic\">TOPIC: $topic_esc</span><br />\n";
@@ -1513,7 +2122,7 @@ sub _gen_log
         my $rtoken = $ymd;
         $content .= qq{[<b><a id="$anchor" href="?r=$rtoken">$ymd</a></b>]\n};
       }
-      my $line_html = $this->_escapeHTML($info->{formatted});
+      my $line_html = $info->{formatted_html} || $this->_escapeHTML($info->{formatted});
       if( $req->{ua_type} ne 'pc' )
       {
         $line_html =~ s/^(\d\d:\d\d):\d\d /$1 /;
@@ -1521,7 +2130,13 @@ sub _gen_log
       my $anchor = "L.$ymd.$info->{lineno}";
       my $rtoken = $anchor;
       $rtoken =~ s/.*-//;
-      $content .= qq{<a id="$anchor" href="?r=$rtoken">$info->{lineno}</a>/$line_html\n};
+
+      my $a_tag = qq{<a id="$anchor" href="?r=$rtoken">};
+      if( $line_html !~ s{^(\d\d:\d\d(?::\d\d)?)}{$a_tag$1</a>} )
+      {
+        $line_html = "$a_tag$info->{lineno}</a>/" . $line_html;
+      }
+      $content .= $line_html . "\n";
     }
     $content .= "</pre>\n";
   }else
@@ -1534,23 +2149,40 @@ sub _gen_log
   my $ch_long = Multicast::attach($ch_short, $netname);
   $ch_long =~ s/^![0-9A-Z]{5}/!/;
   my $ch_long_esc = $this->_escapeHTML($ch_long);
-  my $name_esc = $this->_escapeHTML($cgi->{n} || '');
+  my $join_mark = $this->_joined($req, $netname, $ch_short) ? '' : ' (退室)';
+
+  my $name_esc = $this->_escapeHTML($req->{session}{name} || '');
 
   my $mode = $this->_get_req_param($req, 'mode');
-  my $name_input_raw = '';
+  my $name_marker_raw = '';
   if( $mode ne 'owner' )
   {
-    $name_input_raw = qq{name:<input type="text" name="n" size="10" value="$name_esc" /><br />};
+    $name_marker_raw = qq{$name_esc&gt; };
+  }
+
+  # channel name.
+  my $h1_ch_long_raw;
+  if( $req->{ua_type} eq 'pc' )
+  {
+    $h1_ch_long_raw = "<h1>$ch_long_esc$join_mark</h1>";
+  }else
+  {
+    $h1_ch_long_raw = "<b>$ch_long_esc$join_mark</b>";
   }
 
   my $tmpl = $this->_gen_log_html();
-  $this->_expand($tmpl, {
+  my $joined_mark = $this->_joined($req, $netname, $ch_short) ? 'if_joined' : 'if_not_joined';
+  $tmpl =~ s{<!begin:(if_joined|if_not_joined)>\s*(.*?)<!end:\1>\s*}{
+    $1 eq $joined_mark ? $2 : '';
+  }ges;
+  $this->_expand($req, $tmpl, {
     CONTENT_RAW => $content,
-    UA_TYPE     => $req->{ua_type},
     NAVI_RAW    => $navi_raw,
     CH_LONG => $ch_long_esc,
+    JOIN_MARK      => $join_mark,
+    H1_CH_LONG_RAW => $h1_ch_long_raw,
     NAME    => $name_esc,
-    NAME_INPUT_RAW => $name_input_raw,
+    NAME_MARKER_RAW => $name_marker_raw,
     RTOKEN  => $next_rtoken,
     NEXT_RTOKEN => $next_rtoken,
     PREV_RTOKEN => $prev_rtoken,
@@ -1568,24 +2200,35 @@ sub _gen_log_html
   <meta http-equiv="Content-Style-Type"  content="text/css" />
   <meta http-equiv="Content-Script-Type" content="text/javascript" />
   <link rel="stylesheet" type="text/css" href="<&CSS>" />
-  <title><&CH_LONG></title>
+  <title><&CH_LONG><&JOIN_MARK></title>
 </head>
 <body>
 <div class="main">
 <div class="uatype-<&UA_TYPE>">
 
-<h1><&CH_LONG></h1>
+<&H1_CH_LONG_RAW>
 
 <&CONTENT_RAW>
 
-<form action="./" method="post">
+<!begin:if_joined>
+<form action="./" method="POST">
 <p>
-talk:<input type="text" name="m" size="60" />
+talk:<&NAME_MARKER_RAW><input type="text" name="m" size="60" />
   <input type="submit" value="発言/更新" /><br />
-<&NAME_INPUT_RAW>
-<input type="hidden" name="x" size="10" value="<&LAST_SEEN_RTOKEN>" />
+  <input type="submit" name="nt" value="NOTICE" /><br />
+<input type="hidden" name="x" value="<&LAST_SEEN_RTOKEN>" />
 </p>
 </form>
+<!end:if_joined>
+<!begin:if_not_joined>
+<form action="./" method="POST">
+<p>
+<input type="hidden" name="join" value="<&CH_LONG>" />
+<input type="submit" value="入室" /><br />
+<input type="hidden" name="x" value="<&LAST_SEEN_RTOKEN>" />
+</p>
+</form>
+<!end:if_not_joined>
 
 <&NAVI_RAW>
 
@@ -1602,6 +2245,26 @@ talk:<input type="text" name="m" size="60" />
 </body>
 </html>
 HTML
+}
+
+# $bool = $this->_joined($req, $netname, $ch_short).
+sub _joined
+{
+  my $this     = shift;
+  my $req      = shift;
+  my $netname  = shift;
+  my $ch_short = shift;
+
+  my $network = RunLoop->shared_loop->network($netname);
+  if( $network )
+  {
+    my $channel = $network->channel($ch_short);
+    if( $channel )
+    {
+      return 1;
+    }
+  }
+  return undef;
 }
 
 sub _get_req_param
@@ -1666,6 +2329,7 @@ sub _get_cgi_hash
       foreach my $pair (split(/[&;]/, $query))
       {
         my ($key, $val) = split(/=/, $pair, 2);
+        $val =~ tr/+/ /;
         $val =~ s/%([0-9a-f]{2})/pack("H*",$1)/gie;
         $cgi->{$key} = $val;
       }
@@ -1677,6 +2341,7 @@ sub _get_cgi_hash
     foreach my $pair (split(/[&;]/, $req->{Content}))
     {
       my ($key, $val) = split(/=/, $pair, 2);
+      $val =~ tr/+/ /;
       $val =~ s/%([0-9a-f]{2})/pack("H*",$1)/gie;
       $cgi->{$key} = $val;
     }
@@ -1696,12 +2361,12 @@ sub _post_log
   my $mode = $this->_get_req_param($req, 'mode');
 
   my $cgi = $this->_get_cgi_hash($req);
-  my $name   = $cgi->{n} || '';
   if( my $m = $cgi->{m} )
   {
     if( $mode ne 'owner' )
     {
-      $m = ($name || $this->config->name_default || $DEFAULT_NAME) . "> " . $m;
+      my $name = $req->{session}{name} or die "no session.name";
+      $m = "$name> $m";
     }
     $m =~ s/[\r\n].*//s;
     my $network = RunLoop->shared_loop->network($netname);
@@ -1710,8 +2375,9 @@ sub _post_log
       my $channel = $network->channel($ch_short);
       if( $channel || !Multicast::channel_p($ch_short) )
       {
+        my $as_notice = $cgi->{nt} ? 1 : 0;
         my $msg_to_send = Auto::Utils->construct_irc_message(
-          Command => 'PRIVMSG',
+          Command => $as_notice ? 'NOTICE' : 'PRIVMSG',
           Params  => [ '', $m ],
         );
 
@@ -1733,11 +2399,74 @@ sub _post_log
       }else
       {
         RunLoop->shared_loop->notify_error("no such channel [$ch_short] on network [$netname]");
+        my $text = "not joined: [$ch_short\@netname]";
+        my $res = {
+          Code => 200,
+          Header => {
+            'Content-Type'   => 'text/plain; charset=utf-8',
+            'Content-Length' => length($text),
+          },
+          Content => $text,
+        };
+        $this->_response($req, $res);
+        return 1;
       }
     }else
     {
       RunLoop->shared_loop->notify_error("no network to talk: $netname");
     }
+  }
+  if( my $ch_long = $cgi->{join} )
+  {
+    my ($ch_short, $netname) = Multicast::detach($ch_long);
+    if( $this->_can_show($req, $ch_short, $netname) )
+    {
+      $this->_do_join($netname, $ch_short);
+      my $link = '/' . $this->_path_channel($req, $netname, $ch_short);
+      if( $cgi->{x} )
+      {
+        $link .= "?x=$cgi->{x}";
+      }
+      my $count = 0;
+      my $code = sub{
+        my $timer = shift;
+        if( $this->_joined($req, $netname, $ch_short) )
+        {
+          $DEBUG and $this->_debug("$req->{peer}: join check: ok");
+        }else
+        {
+          ++ $count;
+          if( $count < 10 )
+          {
+            $DEBUG and $this->_debug("$req->{peer}: join check: not yet");
+            return;
+          }
+          $DEBUG and $this->_debug("$req->{peer}: join check: timeout");
+        }
+        eval{
+          $this->_location($req, $link);
+        };
+        if( $@ )
+        {
+          print "$req->{peer}: join: error on location: $@";
+        }
+        if( $timer )
+        {
+          $timer->{interval} = undef; # uninstall.
+        }
+      };
+      my $timer = Timer->new(
+        Module   => __PACKAGE__,
+        Interval => 0.3,
+        Repeat   => 1,
+        Code     => $code,
+      )->install;
+    }else
+    {
+      $this->_debug("$req->{peer} _post_log[$netname/$ch_short] not in allowed channels");
+      $this->_response($req, [error => "not in allowed channel"]);
+    }
+    return 1;
   }
   return undef;
 }
@@ -1754,12 +2483,15 @@ sub _gen_chan_info
 
   my $content_raw = "";
 
-  my ($topic_esc, $names_esc);
+  my ($topic_disp_esc, $topic_esc, $names_esc);
   if( my $net = $this->_runloop->network($netname) )
   {
     if( my $chan = $net->channel($ch_short) )
     {
-      my $topic = $chan->topic || '(none)';
+      my $topic = $chan->topic;
+      defined($topic) or $topic = '';
+      my $topic_disp = $topic eq '' ? $NO_TOPIC : $topic;
+
       my $names = $chan->names || {};
       $names = [ values %$names ];
       @$names = map{
@@ -1769,18 +2501,25 @@ sub _gen_chan_info
         "$sigil$nick";
       } @$names;
       @$names = sort @$names;
+      $topic_disp_esc = $this->_escapeHTML($topic_disp);
       $topic_esc = $this->_escapeHTML($topic);
       $names_esc = $this->_escapeHTML(join(' ', @$names));
+    }else
+    {
+      $topic_disp_esc = $NO_TOPIC;
+      $topic_esc = '';
+      $names_esc = '';
     }
   }else
   {
+    $topic_disp_esc = $NO_TOPIC;
+    $topic_esc = '';
+    $names_esc = '';
   }
-  $topic_esc ||= '-';
-  $names_esc ||= '-';
 
   my $in_topic_esc;
   my $cgi = $this->_get_cgi_hash($req);
-  if( my $in_topic = $cgi->{topic} )
+  if( defined(my $in_topic = $cgi->{topic}) )
   {
     $in_topic_esc = $this->_escapeHTML($in_topic);
   }else
@@ -1793,11 +2532,14 @@ sub _gen_chan_info
   my $ch_long_esc = $this->_escapeHTML($ch_long);
 
   my $tmpl = $this->_tmpl_chan_info();
-  $this->_expand($tmpl, {
+  $tmpl =~ s{<!begin:no_shared_mode>\s*(.*?)<!end:no_shared_mode>\s*}{
+    my $mode = $this->_get_req_param($req, 'mode');
+    $mode eq 'owner' ? $1 : '';
+  }ges;
+  $this->_expand($req, $tmpl, {
     CONTENT_RAW => $content_raw,
-    UA_TYPE     => $req->{ua_type},
     CH_LONG   => $ch_long_esc,
-    TOPIC     => $topic_esc,
+    TOPIC     => $topic_disp_esc,
     IN_TOPIC  => $in_topic_esc,
     NAMES     => $names_esc,
     PART_MSG  => 'Leaving...',
@@ -1824,30 +2566,34 @@ sub _tmpl_chan_info
 
 <&CONTENT_RAW>
 
-<form action="./info" method="post">
+<form action="./info" method="POST">
 TOPIC: <span class="chan-topic"><&TOPIC></span><br />
 <input type="text" name="topic" value="<&IN_TOPIC>" />
 <input type="submit" value="変更" /><br />
 </form>
 
 <p>
-NAMES: <span class="chan-names"><&NAMES></span><br />
+参加者: <span class="chan-names"><&NAMES></span><br />
 </p>
 
-<form action="./info" method="post">
+<!begin:no_shared_mode>
+<form action="./info" method="POST">
 PART: <input type="text" name="part" value="<&PART_MSG>" />
 <input type="submit" value="退室" /><br />
 </form>
+<!end:no_shared_mode>
 
-<form action="./info" method="post">
+<form action="./info" method="POST">
 JOIN <input type="hidden" name="join" value="<&CH_LONG>" />
 <input type="submit" value="入室" /><br />
 </form>
 
-<form action="./info" method="post">
+<!begin:no_shared_mode>
+<form action="./info" method="POST">
 DELETE <input type="hidden" name="delete" value="<&CH_LONG>" />
 <input type="submit" value="削除" /><br />
 </form>
+<!end:no_shared_mode>
 
 <p>
 [
@@ -1884,14 +2630,26 @@ sub _post_chan_info
     my $network = RunLoop->shared_loop->network($netname);
     if( $network )
     {
-      my $for_server = $msg_to_send->clone;
-      $for_server->param(0, $ch_short);
-      $network->send_message($for_server);
+      my $chan = $network->channel($ch_short);
+      my $cur_topic = $chan ? $chan->topic : undef;
+      if( !defined($cur_topic) || $cgi->{topic} ne $cur_topic )
+      {
+        my $for_server = $msg_to_send->clone;
+        $for_server->param(0, $ch_short);
+        $network->send_message($for_server);
+      }else
+      {
+        $this->_debug("$req->{peer}: topic not changed cur=[$cur_topic] new=[$cgi->{topic}]");
+      }
     }
   }
 
   if( exists($cgi->{part}) )
   {
+    my $mode = $this->_get_req_param($req, 'mode');
+    if( $mode eq 'owner' )
+    {
+
     my $msg_to_send = Auto::Utils->construct_irc_message(
       Command => 'PART',
       Params  => [ '', $cgi->{part} ],
@@ -1906,28 +2664,24 @@ sub _post_chan_info
       $for_server->param(0, $ch_short);
       $network->send_message($for_server);
     }
+
+    }else
+    {
+      $this->_debug("$req->{peer}: part is not allowed when mode is not 'owner'");
+    }
   }
 
   if( exists($cgi->{join}) )
   {
-    my $msg_to_send = Auto::Utils->construct_irc_message(
-      Command => 'JOIN',
-      Params  => [ '' ],
-    );
-
-    # send to server.
-    #
-    my $network = RunLoop->shared_loop->network($netname);
-    if( $network )
-    {
-      my $for_server = $msg_to_send->clone;
-      $for_server->param(0, $ch_short);
-      $network->send_message($for_server);
-    }
+    $this->_do_join($netname, $ch_short);
   }
 
   if( exists($cgi->{'delete'}) )
   {
+    my $mode = $this->_get_req_param($req, 'mode');
+    if( $mode eq 'owner' )
+    {
+
     delete $this->{cache}{$netname}{$ch_short};
     if( !keys %{$this->{cache}{$netname}} )
     {
@@ -1935,10 +2689,115 @@ sub _post_chan_info
     }
     $this->_location($req, "/");
     return 1;
+
+    }else
+    {
+      $this->_debug("$req->{peer}: delete is not allowed when mode is not 'owner'");
+    }
   }
 
   return undef;
 }
+
+sub _do_join
+{
+  my $this = shift;
+  my $netname  = shift;
+  my $ch_short = shift;
+
+  my $msg_to_send = Auto::Utils->construct_irc_message(
+    Command => 'JOIN',
+    Params  => [ '' ],
+  );
+
+  # send to server.
+  #
+  my $network = RunLoop->shared_loop->network($netname);
+  if( $network )
+  {
+    my $for_server = $msg_to_send->clone;
+    $for_server->param(0, $ch_short);
+    $network->send_message($for_server);
+  }
+
+  return 1;
+}
+
+# -----------------------------------------------------------------------------
+# $html = $this->_gen_config($req).
+#
+sub _gen_config
+{
+  my $this = shift;
+  my $req  = shift;
+
+  my $name_esc = $this->_escapeHTML( $req->{session}{name} || '' );
+
+  my $tmpl = $this->_tmpl_config();
+  $this->_expand($req, $tmpl, {
+    NAME      => $name_esc,
+  });
+}
+sub _tmpl_config
+{
+  <<HTML;
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja-JP">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type"  content="text/css" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" type="text/css" href="<&CSS>" />
+  <title>設定</title>
+</head>
+<body>
+<div class="main">
+<div class="uatype-<&UA_TYPE>">
+
+<h1>設定</h1>
+
+<form action="./config" method="POST">
+名前: <input type="text" name="n" value="<&NAME>" /><br />
+<input type="submit" value="変更" /><br />
+</form>
+
+<p>
+System::WebClient version <&VERSION>.
+</p>
+
+<p>
+[
+<a href="./" accesskey="*">戻る</a>[*] |
+<a href="<&TOP_PATH>" accesskey="0">List</a>[0] |
+<a href="config" accesskey="#">再表示</a>[#]
+]
+</p>
+
+</div>
+</div>
+</body>
+</html>
+HTML
+}
+
+sub _post_config
+{
+  my $this = shift;
+  my $req  = shift;
+
+  my $cgi = $this->_get_cgi_hash($req);
+  if( $cgi->{n} )
+  {
+    my $old = $req->{session}{name} || '-';
+    $this->_debug("$req->{peer}: rename: $old => $cgi->{n}");
+
+    $req->{session}{name} = $cgi->{n};
+  }
+
+  return undef;
+}
+
 
 # -----------------------------------------------------------------------------
 # $txt = $this->_escapeHTML($html).
@@ -2045,9 +2904,9 @@ default: off
 
 # WebClient を起動させる場所の指定.
 bind-addr: 127.0.0.1
-bind-port: 8668
+bind-port: 8667
 path: /irc
-css:  /style/irc-style.css
+css:  /irc/style/style.css
 # 上の設定をapacheでReverseProxyさせる場合, httpd.conf には次のように設定.
 #  ProxyPass        /irc/ http://localhost:8667/irc/
 #  ProxyPassReverse /irc/ http://localhost:8667/irc/
@@ -2092,7 +2951,7 @@ allow-private {
 }
 allow-public {
   host: *
-  auth: user2 pass2
+  auth: :basic user2 pass2
   mask: #公開チャンネル@ircnet
 }
 
@@ -2110,9 +2969,10 @@ allow-public {
 # asc (旧->新) か desc (新->旧).
 - sort-order: asc
 
-# 発言BOXで名前指定しなかったときのデフォルトの名前.
-# mode: shared の時に使われる.
--name-default: (noname)
+# name-default 設定は VERSION 0.05 で廃止されました.
+# # 発言BOXで名前指定しなかったときのデフォルトの名前.
+# # mode: shared の時に使われる.
+# -name-default: (noname)
 
 # 外部にTiarraさんを使っているときに, そこのネットワークを切り出して表示する.
 # exteact-network: <netname> <remote-sep>

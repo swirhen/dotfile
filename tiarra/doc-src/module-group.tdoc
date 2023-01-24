@@ -1,5 +1,5 @@
 -*- outline -*-
-$Id: module-group.tdoc 11365 2008-05-10 14:58:28Z topia $
+$Id: module-group.tdoc 36719 2010-02-11 17:24:01Z topia $
 
 各モジュールの分類名(= グループ名)と、その説明。
 グループ名とは、モジュール名のm/^(.+?)::/で与えられる部分を指す。
@@ -40,6 +40,12 @@ description: Tiarraや、Tiarraモジュールのデバッグ用
 package Log;
 =pod
 description: ログの記録
+=cut
+
+* Network
+package Network;
+=pod
+description: 個別IRC ネットワーク対応のモジュール
 =cut
 
 * System

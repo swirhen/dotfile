@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# $Id: Encoding.pm 3004 2007-12-10 12:45:39Z topia $
+# $Id: Encoding.pm 29317 2009-01-30 16:02:07Z topia $
 # -----------------------------------------------------------------------------
 # Tiarra Encoding Manager
 # -----------------------------------------------------------------------------
@@ -59,7 +59,7 @@ sub _is_supported {
     return $tried_providers{$modname} if defined $tried_providers{$modname};
     my $retval = eval 'require ' . $modname;
     warn $@ if $@;
-    $tried_providers{$modname} = $retval;
+    $tried_providers{$modname} = $retval || 0;
     return $retval;
 }
 

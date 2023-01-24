@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# $Id: TerminateManager.pm 3004 2007-12-10 12:45:39Z topia $
+# $Id: TerminateManager.pm 35566 2009-10-09 14:53:58Z topia $
 # -----------------------------------------------------------------------------
 # Terminate Hook for write Portable Module
 # -----------------------------------------------------------------------------
@@ -32,7 +32,7 @@ use FunctionalVariable;
 use Hook;
 use base qw(Hook);
 our $HOOK_TARGET_NAME = 'Tiarra::TerminateManager';
-our @HOOK_NAME_CANDIDATES = qw(main);
+our @HOOK_NAME_CANDIDATES = qw(main forked);
 our $HOOK_NAME_DEFAULT = 'main';
 our $HOOK_TARGET_DEFAULT;
 FunctionalVariable::tie(

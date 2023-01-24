@@ -74,10 +74,6 @@ sub decode {
 sub encode {
     my ($this, $encoding) = @_;
 
-#		if ($encoding == '0') {
-#			$encoding = 'cp932'
-#		}
-
     if (defined $this->{str}) {
 	Encode::encode($this->_find_canon_encs($encoding), $this->{str});
     } else {
