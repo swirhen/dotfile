@@ -221,6 +221,7 @@ alias gps='git push'
 alias gc='git commit -m'
 alias gs='git status'
 alias sd='sudo docker'
+alias doc='docker'
 
 ## terminal configuration
 #
