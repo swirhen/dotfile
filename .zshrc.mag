@@ -30,7 +30,7 @@ case ${UID} in
         PROMPT="${PROMPT}"
     ;;
 esac
-RPROMPT="%T"
+RPROMPT="(${HOST}) %T"
 
 # auto change directory
 #
