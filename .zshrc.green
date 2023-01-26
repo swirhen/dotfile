@@ -220,6 +220,7 @@ alias gp='git pull'
 alias gps='git push'
 alias gc='git commit -m'
 alias gs='git status'
+alias doc='docker'
 
 ## terminal configuration
 #
