@@ -65,7 +65,8 @@ function chpwd() { ls }
 #
 # vim like keybind
 #
-bindkey -v
+# bindkey -v
+bindkey -e
 
 # historical backward/forward search with linehead string binded to ^P/^N
 #
@@ -222,6 +223,8 @@ alias gc='git commit -m'
 alias gs='git status'
 alias sd='sudo docker'
 alias doc='docker'
+alias mr='mise run'
+alias gco='copilot'
 
 ## terminal configuration
 #
@@ -326,7 +329,9 @@ function peco-cdr () {
     fi
 }
 zle -N peco-cdr
-bindkey '^E' peco-cdr
+bindkey '^v' peco-cdr
 export PATH="$HOME/.rbenv/bin:$PATH" 
 export PATH="$HOME/.local/bin:$PATH" 
 eval "$(rbenv init - zsh)"
+eval "$(/home/swirhen/.local/bin/mise activate zsh)"
+export PATH="$HOME/.local/bin:$PATH"

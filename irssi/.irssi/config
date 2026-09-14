@@ -201,8 +201,8 @@ settings = {
   "fe-common/core" = { term_charset = "UTF-8"; };
 };
 keyboard = (
-  { key = "^V"; id = "active_window"; data = ""; },
-  { key = "^B"; id = "previous_window"; data = ""; },
+  { key = "^V"; id = "previous_window"; data = ""; },
+  { key = "^B"; id = "next_window"; data = ""; },
 );
 hilights = (
   { text = "swirhen"; nick = "yes"; word = "yes"; },
