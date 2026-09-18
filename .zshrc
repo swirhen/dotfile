@@ -225,6 +225,7 @@ alias sd='sudo docker'
 alias doc='docker'
 alias mr='mise run'
 alias gco='copilot'
+alias tzl='/data/share/temp/touch_zip_latest.sh'
 
 ## terminal configuration
 #

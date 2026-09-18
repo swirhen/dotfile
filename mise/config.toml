@@ -1,0 +1,77 @@
+[tasks.rh]
+description = "音楽フォルダリネーム(hololive.* を削除)"
+run = "rename 's/\\[.*?\\]\\ hololive.*?\\ (.*?.*)\\ \\[.*\\]/$1/' *\\[*"
+
+[tasks.rh2]
+description = "音楽フォルダリネーム(hololive.* を削除しない)"
+run = "rename 's/\\[.*?\\]\\ (.*?.*)\\ \\[.*\\]/$1/' *\\[*"
+
+[tasks.zt]
+description = "ディレクトリ内zipのタイムスタンプ更新(zip内の最新ファイルで)"
+run = """
+#!/usr/bin/env zsh
+HOURS="${1:-24}"
+for z in *.zip(mh-${HOURS}.N); do
+  /data/share/temp/touch_zip_latest.sh "${z}"
+done
+"""
+
+[tasks.dz]
+description = "ディレクトリを全部zipにする"
+run = """
+#!/usr/bin/env zsh
+for d in */(N); do
+  d=`echo "${d}" | sed -e "s:/::"`
+  zip -9 -r "$d.zip" "$d"; rm -rf "$d"
+done
+"""
+
+[tasks.avrt]
+description = "AVディレクトリリネーム・テスト(一般AV)"
+run = """
+#!/usr/bin/env zsh
+for av in [A-Z]*[0-9]/(N); do
+  av=`echo "${av}" | sed -e "s:/::"`
+  title=`python /data/share/movie/sh/title_get.py a "${av}" | sed -e "s:/::g"`
+  if [ "${title}" = "NORESULTSFOUND" ]; then continue; fi
+  echo "rename 's/${av}/${title}/'" ${av}
+done
+"""
+
+[tasks.avr]
+confirm = "ディレクトリをたくさんリネームします。テストした？"
+description = "AVディレクトリリネーム・本番(一般AV)"
+run = """
+#!/usr/bin/env zsh
+for av in [A-Z]*[0-9]/(N); do
+  av=`echo "${av}" | sed -e "s:/::"`
+  title=`python /data/share/movie/sh/title_get.py a "${av}" | sed -e "s:/::g"`
+  if [ "${title}" = "NORESULTSFOUND" ]; then continue; fi
+  rename "s/${av}/${title}/" ${av}
+done
+"""
+
+[tasks.ftrt]
+description = "AVディレクトリリネーム・テスト(fantia)"
+run = """
+#!/usr/bin/env zsh
+for av in fantia*[0-9]/(N); do
+  av=`echo "${av}" | sed -e "s:/::"`
+  title=`python /data/share/movie/sh/title_get.py f "${av}" | sed -e "s:/::g"`
+  if [ "${title}" = "NORESULTSFOUND" ]; then continue; fi
+  echo "rename 's/${av}/${title}/'" ${av}
+done
+"""
+
+[tasks.ftr]
+confirm = "ディレクトリをたくさんリネームします。テストした？"
+description = "AVディレクトリリネーム・本番(fantia)"
+run = """
+#!/usr/bin/env zsh
+for av in fantia*[0-9]/(N); do
+  av=`echo "${av}" | sed -e "s:/::"`
+  title=`python /data/share/movie/sh/title_get.py f "${av}" | sed -e "s:/::g"`
+  if [ "${title}" = "NORESULTSFOUND" ]; then continue; fi
+  rename "s/${av}/${title}/" ${av}
+done
+"""
