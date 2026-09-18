@@ -86,6 +86,8 @@ setopt share_history        # share command history data
 
 setopt multios
 
+setopt interactive_comments
+
 ## Completion configuration
 #
 fpath=(~/.zsh/functions/Completion ${fpath})
