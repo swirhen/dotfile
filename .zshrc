@@ -337,4 +337,5 @@ export PATH="$HOME/.rbenv/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH" 
 eval "$(rbenv init - zsh)"
 eval "$(/home/swirhen/.local/bin/mise activate zsh)"
-export PATH="$HOME/.local/bin:$PATH"
+# Added by Antigravity CLI installer
+export PATH="/home/swirhen/.local/bin:$PATH"

@@ -1,8 +1,7 @@
 rename-window home
+new-window -n t-src -c "~/torrentsearch"
 new-window -n movie -c "/data/share/movie"
 new-window -n movie -c "/data/share/movie"
-new-window -n w3m -c "/data/share/movie"
-send-keys 'w3m -B' C-m
 new-window -n irssi
 select-pane -T 'irssi'
 send-keys 'irssi' C-m '/c l' C-m

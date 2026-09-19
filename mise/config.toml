@@ -1,13 +1,16 @@
 [tasks.rh]
 description = "音楽フォルダリネーム(hololive.* を削除)"
+dir = "{{cwd}}"
 run = "rename 's/\\[.*?\\]\\ hololive.*?\\ (.*?.*)\\ \\[.*\\]/$1/' *\\[*"
 
 [tasks.rh2]
 description = "音楽フォルダリネーム(hololive.* を削除しない)"
+dir = "{{cwd}}"
 run = "rename 's/\\[.*?\\]\\ (.*?.*)\\ \\[.*\\]/$1/' *\\[*"
 
 [tasks.zt]
 description = "ディレクトリ内zipのタイムスタンプ更新(zip内の最新ファイルで)"
+dir = "{{cwd}}"
 run = """
 #!/usr/bin/env zsh
 HOURS="${1:-24}"
@@ -18,6 +21,7 @@ done
 
 [tasks.dz]
 description = "ディレクトリを全部zipにする"
+dir = "{{cwd}}"
 run = """
 #!/usr/bin/env zsh
 for d in */(N); do
@@ -28,6 +32,7 @@ done
 
 [tasks.avrt]
 description = "AVディレクトリリネーム・テスト(一般AV)"
+dir = "{{cwd}}"
 run = """
 #!/usr/bin/env zsh
 for av in [A-Z]*[0-9]/(N); do
@@ -41,6 +46,7 @@ done
 [tasks.avr]
 confirm = "ディレクトリをたくさんリネームします。テストした？"
 description = "AVディレクトリリネーム・本番(一般AV)"
+dir = "{{cwd}}"
 run = """
 #!/usr/bin/env zsh
 for av in [A-Z]*[0-9]/(N); do
@@ -53,6 +59,7 @@ done
 
 [tasks.ftrt]
 description = "AVディレクトリリネーム・テスト(fantia)"
+dir = "{{cwd}}"
 run = """
 #!/usr/bin/env zsh
 for av in fantia*[0-9]/(N); do
@@ -66,6 +73,7 @@ done
 [tasks.ftr]
 confirm = "ディレクトリをたくさんリネームします。テストした？"
 description = "AVディレクトリリネーム・本番(fantia)"
+dir = "{{cwd}}"
 run = """
 #!/usr/bin/env zsh
 for av in fantia*[0-9]/(N); do
