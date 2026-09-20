@@ -2,6 +2,7 @@ rename-window home
 new-window -n t-src -c "/home/swirhen/torrentsearch"
 new-window -n movie -c "/data/share/movie"
 new-window -c "/data/share/temp/_cos"
+new-window -c "/data/share/temp/_av"
 new-window -c "/data/share/temp/_dojin"
 new-window -c "/data/share/temp/_manga"
 new-window -c "/data/share/temp"
