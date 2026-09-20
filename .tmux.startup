@@ -1,9 +1,6 @@
 rename-window home
 new-window -n t-src -c "/home/swirhen/torrentsearch"
 new-window -n movie -c "/data/share/movie"
-new-window -n irssi
-select-pane -T 'irssi'
-send-keys 'irssi' C-m '/c l' C-m
 new-window -c "/data/share/temp/_cos"
 new-window -c "/data/share/temp/_dojin"
 new-window -c "/data/share/temp/_manga"
