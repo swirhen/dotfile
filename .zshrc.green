@@ -18,7 +18,6 @@ case ${UID} in
     PROMPT2="%B%{${fg[green]}%}%_#%{${reset_color}%}%b "
     SPROMPT="%B%{${fg[green]}%}%r is correct? [n,y,a,e]:%{${reset_color}%}%b "
     [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
-        #PROMPT="%{${fg[green]}%}$(echo ${HOST%%.*} | tr '[a-z]' '[A-Z]') ${PROMPT}"
         PROMPT="${PROMPT}"
     ;;
 *)
@@ -26,11 +25,10 @@ case ${UID} in
     PROMPT2="%{${fg[green]}%}%_%%%{${reset_color}%} "
     SPROMPT="%{${fg[green]}%}%r is correct? [n,y,a,e]:%{${reset_color}%} "
     [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
-        #PROMPT="%{${fg[green]}%}$(echo ${HOST%%.*} | tr '[a-z]' '[A-Z]') ${PROMPT}"
         PROMPT="${PROMPT}"
     ;;
 esac
-RPROMPT="(${HOST}) %T"
+RPROMPT="%T"
 
 # auto change directory
 #
@@ -65,7 +63,8 @@ function chpwd() { ls }
 #
 # vim like keybind
 #
-bindkey -v
+# bindkey -v
+bindkey -e
 
 # historical backward/forward search with linehead string binded to ^P/^N
 #
@@ -167,6 +166,11 @@ alias df='df -h'
 alias su='sudo su'
 alias mov='cd /data/share/movie'
 alias shr='cd /data/share'
+alias tmp='cd /data/share/temp'
+alias cos='cd /data/share/temp/_cos'
+alias av='cd /data/share/temp/_av'
+alias doj='cd /data/share/temp/_dojin'
+alias mng='cd /data/share/temp/_manga'
 alias s0r='find . -type f -size 0 | perl -nle unlink'
 alias tm='if [ "`tmux ls`" != "" ]; then tmux a; else tmux new-session \; source-file ~/.tmux.startup; fi'
 alias tig='/home/swirhen/sh/tigkw.sh'
@@ -200,7 +204,6 @@ alias sget='wget --no-check-certificate'
 alias pb='pythonbrew'
 alias crontab="crontab -i"
 alias ydl='youtube-dl'
-alias tmp='cd /data/share/temp'
 alias cm='cd /data/share/temp/"THE IDOLM@STER CINDERELLA GIRLS/music"'
 alias cl='cd /data/share/temp/"THE IDOLM@STER CINDERELLA GIRLS/livedvd"'
 alias mm='cd /data/share/temp/"THE IDOLM@STER MILLION LIVE/music"'
@@ -222,7 +225,11 @@ alias gp='git pull'
 alias gps='git push'
 alias gc='git commit -m'
 alias gs='git status'
+alias sd='sudo docker'
 alias doc='docker'
+alias mr='mise run'
+alias gco='copilot'
+alias tzl='/data/share/temp/touch_zip_latest.sh'
 
 ## terminal configuration
 #
@@ -327,4 +334,10 @@ function peco-cdr () {
     fi
 }
 zle -N peco-cdr
-bindkey '^E' peco-cdr
+bindkey '^v' peco-cdr
+export PATH="$HOME/.rbenv/bin:$PATH" 
+export PATH="$HOME/.local/bin:$PATH" 
+eval "$(rbenv init - zsh)"
+eval "$(/home/swirhen/.local/bin/mise activate zsh)"
+# Added by Antigravity CLI installer
+export PATH="/home/swirhen/.local/bin:$PATH"
