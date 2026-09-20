@@ -1,11 +1,10 @@
 rename-window home
-new-window -n t-src -c "~/torrentsearch"
-new-window -n movie -c "/data/share/movie"
+new-window -n t-src -c "/home/swirhen/torrentsearch"
 new-window -n movie -c "/data/share/movie"
 new-window -n irssi
 select-pane -T 'irssi'
 send-keys 'irssi' C-m '/c l' C-m
+new-window -c "/data/share/temp/_cos"
+new-window -c "/data/share/temp/_dojin"
+new-window -c "/data/share/temp/_manga"
 new-window -c "/data/share/temp"
-new-window -c "/data/share/temp/d2607-09"
-new-window -c "/data/share/temp/c2607-12"
-new-window -c "/home/swirhen"
