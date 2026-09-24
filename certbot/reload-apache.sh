@@ -5,11 +5,9 @@
 # 配置先: /etc/letsencrypt/renewal-hooks/deploy/reload-apache.sh
 # 
 # 動作:
-#   1. openssl でリロード前の localhost:443 の証明書期限（notAfter）を取得
-#   2. 事前通知（リロード前期限を含む）
-#   3. systemctl reload apache2 を実行
-#   4. openssl でリロード後の localhost:443 の証明書期限（notAfter）を取得
-#   5. 結果通知（リロード後期限を含む）
+#   1. systemctl reload apache2 を実行
+#   2. openssl でリロード後の localhost:443 の証明書期限（notAfter）を取得
+#   3. 結果通知（リロード後期限を含む）
 # ==============================================================================
 set -u
 
@@ -53,13 +51,7 @@ send_notification() {
     fi
 }
 
-# 1. リロード前の証明書期限を取得
-PRE_EXPIRY=$(get_cert_expiry)
-
-# 2. リロード前の事前通知
-send_notification "開始" "証明書更新が行われました。apache2をリロードします。" "${PRE_EXPIRY}"
-
-# 3. Apache2 のリロード実行
+# 1. Apache2 のリロード実行
 if systemctl reload apache2; then
     STATUS="成功"
     MSG="apache2を正常にリロードしました。"
@@ -70,11 +62,11 @@ else
     EXIT_CODE=1
 fi
 
-# 4. リロード後の証明書期限を取得（リロード反映を確実に拾うため1秒ウェイト）
+# 2. リロード後の証明書期限を取得（リロード反映を確実に拾うため1秒ウェイト）
 sleep 1
 POST_EXPIRY=$(get_cert_expiry)
 
-# 5. リロード後の結果通知
+# 3. リロード後の結果通知
 send_notification "${STATUS}" "${MSG}" "${POST_EXPIRY}"
 
 exit ${EXIT_CODE}
