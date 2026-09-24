@@ -41,17 +41,21 @@ get_cert_expiry() {
 send_notification() {
     local status="$1"
     local message="$2"
-    local expiry="${3:-}"
+    local pre_exp="${3:-}"
+    local post_exp="${4:-}"
     if [[ -x "${NOTIFY_SCRIPT}" ]]; then
-        "${NOTIFY_SCRIPT}" "${status}" "${message}" "${expiry}" || echo "[WARN] Discord 通知に失敗しました。" >&2
+        "${NOTIFY_SCRIPT}" "${status}" "${message}" "${pre_exp}" "${post_exp}" || echo "[WARN] Discord 通知に失敗しました。" >&2
     elif [[ -f "${NOTIFY_SCRIPT}" ]]; then
-        bash "${NOTIFY_SCRIPT}" "${status}" "${message}" "${expiry}" || echo "[WARN] Discord 通知に失敗しました。" >&2
+        bash "${NOTIFY_SCRIPT}" "${status}" "${message}" "${pre_exp}" "${post_exp}" || echo "[WARN] Discord 通知に失敗しました。" >&2
     else
         echo "[WARN] 通知スクリプトが見つかりません: ${NOTIFY_SCRIPT}" >&2
     fi
 }
 
-# 1. Apache2 のリロード実行
+# 1. リロード前の証明書期限を取得
+PRE_EXPIRY=$(get_cert_expiry)
+
+# 2. Apache2 のリロード実行
 if systemctl reload apache2; then
     STATUS="成功"
     MSG="apache2を正常にリロードしました。"
@@ -62,11 +66,11 @@ else
     EXIT_CODE=1
 fi
 
-# 2. リロード後の証明書期限を取得（リロード反映を確実に拾うため1秒ウェイト）
+# 3. リロード後の証明書期限を取得（リロード反映を確実に拾うため1秒ウェイト）
 sleep 1
 POST_EXPIRY=$(get_cert_expiry)
 
-# 3. リロード後の結果通知
-send_notification "${STATUS}" "${MSG}" "${POST_EXPIRY}"
+# 4. リロード後の結果通知 (リロード前・後両方の期限を含める)
+send_notification "${STATUS}" "${MSG}" "${PRE_EXPIRY}" "${POST_EXPIRY}"
 
 exit ${EXIT_CODE}
