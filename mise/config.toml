@@ -37,7 +37,7 @@ run = """
 #!/usr/bin/env zsh
 for av in [A-Z]*[0-9]/(N); do
   av=`echo "${av}" | sed -e "s:/::"`
-  title=`python /data/share/movie/sh/title_get.py a "${av}" | sed -e "s:/::g"`
+  title=`python /home/swirhen/sh/title_get.py a "${av}" | sed -e "s:/::g"`
   if [ "${title}" = "NORESULTSFOUND" ]; then continue; fi
   echo "rename 's/${av}/${title}/'" ${av}
 done
@@ -51,7 +51,7 @@ run = """
 #!/usr/bin/env zsh
 for av in [A-Z]*[0-9]/(N); do
   av=`echo "${av}" | sed -e "s:/::"`
-  title=`python /data/share/movie/sh/title_get.py a "${av}" | sed -e "s:/::g"`
+  title=`python /home/swirhen/sh/title_get.py a "${av}" | sed -e "s:/::g"`
   if [ "${title}" = "NORESULTSFOUND" ]; then continue; fi
   rename "s/${av}/${title}/" ${av}
 done
@@ -64,7 +64,7 @@ run = """
 #!/usr/bin/env zsh
 for av in fantia*[0-9]/(N); do
   av=`echo "${av}" | sed -e "s:/::"`
-  title=`python /data/share/movie/sh/title_get.py f "${av}" | sed -e "s:/::g"`
+  title=`python /home/swirhen/sh/title_get.py f "${av}" | sed -e "s:/::g"`
   if [ "${title}" = "NORESULTSFOUND" ]; then continue; fi
   echo "rename 's/${av}/${title}/'" ${av}
 done
@@ -78,7 +78,7 @@ run = """
 #!/usr/bin/env zsh
 for av in fantia*[0-9]/(N); do
   av=`echo "${av}" | sed -e "s:/::"`
-  title=`python /data/share/movie/sh/title_get.py f "${av}" | sed -e "s:/::g"`
+  title=`python /home/swirhen/sh/title_get.py f "${av}" | sed -e "s:/::g"`
   if [ "${title}" = "NORESULTSFOUND" ]; then continue; fi
   rename "s/${av}/${title}/" ${av}
 done
