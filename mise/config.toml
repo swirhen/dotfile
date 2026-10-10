@@ -46,7 +46,7 @@ for av in [A-Z]*[0-9]/(N); do
   expressions+=("s/${av}/${title}/")
   print -r -- "rename 's/${av}/${title}/' '${av}'"
 done
-if (( ${#sources} == 0 )); then
+if (( $#sources == 0 )); then
   print -r -- "リネーム対象がありません。"
   exit 0
 fi
@@ -58,7 +58,7 @@ case "${answer}" in
   y|Y|yes|YES) ;;
   *) print -r -- "キャンセルしました。"; exit 0 ;;
 esac
-for (( i = 1; i <= ${#sources}; i++ )); do
+for (( i = 1; i <= $#sources; i++ )); do
   rename "${expressions[i]}" "${sources[i]}"
 done
 """
@@ -79,7 +79,7 @@ for av in fantia*[0-9]/(N); do
   expressions+=("s/${av}/${title}/")
   print -r -- "rename 's/${av}/${title}/' '${av}'"
 done
-if (( ${#sources} == 0 )); then
+if (( $#sources == 0 )); then
   print -r -- "リネーム対象がありません。"
   exit 0
 fi
@@ -91,7 +91,7 @@ case "${answer}" in
   y|Y|yes|YES) ;;
   *) print -r -- "キャンセルしました。"; exit 0 ;;
 esac
-for (( i = 1; i <= ${#sources}; i++ )); do
+for (( i = 1; i <= $#sources; i++ )); do
   rename "${expressions[i]}" "${sources[i]}"
 done
 """
