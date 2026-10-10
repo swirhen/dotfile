@@ -50,12 +50,12 @@ if (( $#sources == 0 )); then
   print -r -- "リネーム対象がありません。"
   exit 0
 fi
-if ! read -r "answer?上記の内容でリネームしますか？ [y/N] "; then
+if ! read -r "answer?上記の内容でリネームしますか？ [Y/n] "; then
   print -r -- "キャンセルしました。"
   exit 0
 fi
 case "${answer}" in
-  y|Y|yes|YES) ;;
+  ""|y|Y|yes|YES) ;;
   *) print -r -- "キャンセルしました。"; exit 0 ;;
 esac
 for (( i = 1; i <= $#sources; i++ )); do
@@ -83,12 +83,12 @@ if (( $#sources == 0 )); then
   print -r -- "リネーム対象がありません。"
   exit 0
 fi
-if ! read -r "answer?上記の内容でリネームしますか？ [y/N] "; then
+if ! read -r "answer?上記の内容でリネームしますか？ [Y/n] "; then
   print -r -- "キャンセルしました。"
   exit 0
 fi
 case "${answer}" in
-  y|Y|yes|YES) ;;
+  ""|y|Y|yes|YES) ;;
   *) print -r -- "キャンセルしました。"; exit 0 ;;
 esac
 for (( i = 1; i <= $#sources; i++ )); do
