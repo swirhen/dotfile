@@ -30,56 +30,68 @@ for d in */(N); do
 done
 """
 
-[tasks.avrt]
-description = "AVディレクトリリネーム・テスト(一般AV)"
-dir = "{{cwd}}"
-run = """
-#!/usr/bin/env zsh
-for av in [A-Z]*[0-9]/(N); do
-  av=`echo "${av}" | sed -e "s:/::"`
-  title=`python /home/swirhen/sh/title_get.py a "${av}" | sed -e "s:/::g"`
-  if [ "${title}" = "NORESULTSFOUND" ]; then continue; fi
-  echo "rename 's/${av}/${title}/'" ${av}
-done
-"""
-
 [tasks.avr]
-confirm = "ディレクトリをたくさんリネームします。テストした？"
-description = "AVディレクトリリネーム・本番(一般AV)"
+description = "AVディレクトリリネーム・テスト後に確認して実行(一般AV)"
 dir = "{{cwd}}"
 run = """
 #!/usr/bin/env zsh
+set -e
+set -o pipefail
+typeset -a sources expressions
 for av in [A-Z]*[0-9]/(N); do
-  av=`echo "${av}" | sed -e "s:/::"`
+  av="${av%/}"
   title=`python /home/swirhen/sh/title_get.py a "${av}" | sed -e "s:/::g"`
   if [ "${title}" = "NORESULTSFOUND" ]; then continue; fi
-  rename "s/${av}/${title}/" ${av}
+  sources+=("${av}")
+  expressions+=("s/${av}/${title}/")
+  print -r -- "rename 's/${av}/${title}/' '${av}'"
 done
-"""
-
-[tasks.ftrt]
-description = "AVディレクトリリネーム・テスト(fantia)"
-dir = "{{cwd}}"
-run = """
-#!/usr/bin/env zsh
-for av in fantia*[0-9]/(N); do
-  av=`echo "${av}" | sed -e "s:/::"`
-  title=`python /home/swirhen/sh/title_get.py f "${av}" | sed -e "s:/::g"`
-  if [ "${title}" = "NORESULTSFOUND" ]; then continue; fi
-  echo "rename 's/${av}/${title}/'" ${av}
+if (( ${#sources} == 0 )); then
+  print -r -- "リネーム対象がありません。"
+  exit 0
+fi
+if ! read -r "answer?上記の内容でリネームしますか？ [y/N] "; then
+  print -r -- "キャンセルしました。"
+  exit 0
+fi
+case "${answer}" in
+  y|Y|yes|YES) ;;
+  *) print -r -- "キャンセルしました。"; exit 0 ;;
+esac
+for (( i = 1; i <= ${#sources}; i++ )); do
+  rename "${expressions[i]}" "${sources[i]}"
 done
 """
 
 [tasks.ftr]
-confirm = "ディレクトリをたくさんリネームします。テストした？"
-description = "AVディレクトリリネーム・本番(fantia)"
+description = "AVディレクトリリネーム・テスト後に確認して実行(fantia)"
 dir = "{{cwd}}"
 run = """
 #!/usr/bin/env zsh
+set -e
+set -o pipefail
+typeset -a sources expressions
 for av in fantia*[0-9]/(N); do
-  av=`echo "${av}" | sed -e "s:/::"`
+  av="${av%/}"
   title=`python /home/swirhen/sh/title_get.py f "${av}" | sed -e "s:/::g"`
   if [ "${title}" = "NORESULTSFOUND" ]; then continue; fi
-  rename "s/${av}/${title}/" ${av}
+  sources+=("${av}")
+  expressions+=("s/${av}/${title}/")
+  print -r -- "rename 's/${av}/${title}/' '${av}'"
+done
+if (( ${#sources} == 0 )); then
+  print -r -- "リネーム対象がありません。"
+  exit 0
+fi
+if ! read -r "answer?上記の内容でリネームしますか？ [y/N] "; then
+  print -r -- "キャンセルしました。"
+  exit 0
+fi
+case "${answer}" in
+  y|Y|yes|YES) ;;
+  *) print -r -- "キャンセルしました。"; exit 0 ;;
+esac
+for (( i = 1; i <= ${#sources}; i++ )); do
+  rename "${expressions[i]}" "${sources[i]}"
 done
 """
